@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f2f8fc;
+  --surface: #ffffff;
+  --foreground: #0f2940;
+  --muted: #5b738e;
+  --brand: #5dc9d8;
+  --brand-strong: #39aec2;
+  --border: #d6e7f5;
+  --code-bg: #0d2038;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-noto-sans-sc);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    var(--font-noto-sans-sc),
+    "Noto Sans SC",
+    "PingFang SC",
+    "Microsoft YaHei",
+    sans-serif;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+}
+
+.docs-prose h2 {
+  margin-top: 2.2rem;
+  margin-bottom: 0.9rem;
+  font-size: 1.35rem;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #0c3a58;
+}
+
+.docs-prose p {
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  color: #334155;
+}
+
+.docs-prose ul {
+  margin-top: 0.85rem;
+  margin-bottom: 0.85rem;
+  padding-left: 1.2rem;
+  list-style: disc;
+  color: #334155;
+}
+
+.docs-prose li {
+  margin-top: 0.35rem;
+}
+
+.docs-prose pre {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.85rem;
+  background: var(--code-bg);
+  color: #e2e8f0;
+  font-family: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  overflow-x: auto;
+}
+
+.docs-prose code {
+  font-family: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
+}
