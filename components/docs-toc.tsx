@@ -1,24 +1,32 @@
-import type { DocSection } from "@/lib/docs";
+import type { MarkdownHeading } from "@/lib/execgo-data";
 
 type DocsTocProps = {
-  sections: DocSection[];
+  headings: MarkdownHeading[];
 };
 
-export function DocsToc({ sections }: DocsTocProps) {
+export function DocsToc({ headings }: DocsTocProps) {
+  if (headings.length === 0) {
+    return null;
+  }
+
   return (
     <aside className="hidden xl:block">
-      <div className="sticky top-24 rounded-2xl border border-sky-100 bg-white p-4 shadow-sm">
-        <p className="mb-2 text-xs font-semibold tracking-wide text-slate-500">
+      <div className="sticky top-24 rounded-[1.6rem] border border-white/10 bg-white/[0.06] p-4 shadow-2xl shadow-black/20 backdrop-blur-xl">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
           本页目录
         </p>
         <ul className="space-y-1">
-          {sections.map((section) => (
-            <li key={section.id}>
+          {headings.map((heading) => (
+            <li key={heading.id}>
               <a
-                href={`#${section.id}`}
-                className="block rounded-md px-2 py-1.5 text-sm text-slate-600 transition-colors hover:bg-sky-50 hover:text-sky-900"
+                href={`#${heading.id}`}
+                className={`block rounded-xl px-3 py-2 text-sm transition hover:bg-white/[0.08] hover:text-white ${
+                  heading.depth === 3
+                    ? "pl-6 text-slate-400"
+                    : "text-slate-200"
+                }`}
               >
-                {section.title}
+                {heading.title}
               </a>
             </li>
           ))}

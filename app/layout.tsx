@@ -1,26 +1,17 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Noto_Sans_SC } from "next/font/google";
+
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+
 import "./globals.css";
-
-const notoSans = Noto_Sans_SC({
-  variable: "--font-noto-sans-sc",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
 
 export const metadata: Metadata = {
   title: {
-    default: "execgo | 执行编排框架官网",
-    template: "%s | execgo",
+    default: "execgo 发布网站",
+    template: "%s | execgo 发布网站",
   },
   description:
-    "execgo 官方发布站点，提供框架介绍、快速开始、架构指南与完整文档。",
+    "围绕 execgo 仓库主线与集群预览线搭建的完整发布网站，展示分支能力、代码模块、文档入口、接口面与发布信息。",
 };
 
 export default function RootLayout({
@@ -29,11 +20,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="zh-CN"
-      className={`${notoSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="zh-CN" className="h-full scroll-smooth">
+      <body className="min-h-full">
+        <div className="site-bg" />
+        <div className="relative flex min-h-screen flex-col">
+          <SiteHeader />
+          <div className="flex-1">{children}</div>
+          <SiteFooter />
+        </div>
+      </body>
     </html>
   );
 }
