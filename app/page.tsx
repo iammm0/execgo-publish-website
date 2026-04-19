@@ -24,62 +24,61 @@ export default function Home() {
 
   return (
     <div>
-      <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_24%,rgba(255,122,24,0.22),transparent_30%),radial-gradient(circle_at_76%_12%,rgba(62,207,142,0.16),transparent_34%),radial-gradient(circle_at_70%_78%,rgba(70,172,255,0.15),transparent_36%)]" />
-        <div className="mx-auto grid w-full max-w-7xl gap-10 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-[1.2fr_0.8fr] lg:px-8 lg:pb-24 lg:pt-24">
-          <div className="relative">
-            <div className="inline-flex flex-wrap items-center gap-2 rounded-full border border-white/12 bg-white/[0.07] px-3 py-1 text-xs font-semibold text-amber-100 backdrop-blur">
-              <span>ExecGo 发布站</span>
-              <span className="h-1 w-1 rounded-full bg-amber-300" />
+      <section className="mx-auto w-full max-w-7xl px-4 pb-14 pt-14 sm:px-6 lg:px-8 lg:pb-18">
+        <div className="grid gap-8 lg:grid-cols-[1.18fr_0.82fr] lg:items-start">
+          <div className="rounded-[2rem] border border-[#d8e6de] bg-white px-6 py-8 shadow-sm sm:px-8 sm:py-10">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#cfe4d8] bg-[#f4fbf7] px-3 py-1 text-xs font-semibold text-[#007b46]">
+              <span>ExecGo Release Site</span>
+              <span className="h-1 w-1 rounded-full bg-[#009e5b]" />
               <span>{site.releaseVersion}</span>
-              <span className="h-1 w-1 rounded-full bg-amber-300" />
+              <span className="h-1 w-1 rounded-full bg-[#009e5b]" />
               <span>{site.releaseDate || "release line"}</span>
             </div>
 
-            <h1 className="mt-6 max-w-5xl text-5xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">
-              把 execgo 的两条分支都发布成
-              <span className="block bg-[linear-gradient(90deg,#ffb347,#3ecf8e,#58a6ff)] bg-clip-text text-transparent">
-                可阅读、可追溯、可落地的网站
+            <h1 className="mt-5 max-w-4xl text-5xl font-black leading-[0.95] tracking-tight text-[#113222] sm:text-6xl">
+              为 execgo 的两个分支
+              <span className="block text-[#009e5b]">
+                搭一套真正可发布的网站
               </span>
             </h1>
 
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">
-              本站直接围绕 `execgo` 目录下的 Go 代码、文档、测试、部署文件和
-              Git 分支差异生成。`main` 作为稳定发布线，`feat-add-cluster`
-              作为集群预览线，都会在页面里完整展开。
+            <p className="mt-5 max-w-3xl text-lg leading-8 text-[#4f6d60]">
+              参考 Gin 中文官网的思路，这里把重点放在文档优先、信息清晰、上手直接、
+              导航明确上。`main` 和 `feat-add-cluster` 两条线都会被拆开讲清楚，
+              同时文档内容来自项目内静态快照，而不是手写摘要。
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                href="/branches"
-                className="rounded-full bg-amber-300 px-5 py-3 text-sm font-black text-slate-950 shadow-[0_16px_40px_rgba(255,179,71,0.28)] transition hover:-translate-y-0.5 hover:bg-amber-200"
-              >
-                查看双分支全景
-              </Link>
-              <Link
                 href="/docs/main"
-                className="rounded-full border border-white/14 bg-white/[0.07] px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/[0.12]"
+                className="rounded-full bg-[#009e5b] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#007b46]"
               >
                 阅读主线文档
               </Link>
               <Link
-                href="/branches/feat-add-cluster"
-                className="rounded-full border border-emerald-300/30 bg-emerald-300/10 px-5 py-3 text-sm font-semibold text-emerald-100 transition hover:-translate-y-0.5 hover:bg-emerald-300/16"
+                href="/branches"
+                className="rounded-full border border-[#bfd9ca] bg-white px-5 py-3 text-sm font-semibold text-[#123222] transition hover:border-[#009e5b] hover:text-[#007b46]"
               >
-                进入集群预览线
+                查看双分支对比
+              </Link>
+              <Link
+                href="/docs/feat-add-cluster"
+                className="rounded-full border border-[#cfe4d8] bg-[#f4fbf7] px-5 py-3 text-sm font-semibold text-[#007b46] transition hover:bg-[#e8f7ef]"
+              >
+                进入集群预览文档
               </Link>
             </div>
 
-            <div className="mt-10 overflow-hidden rounded-[1.6rem] border border-white/10 bg-slate-950/80 shadow-2xl shadow-black/30">
-              <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
+            <div className="mt-8 overflow-hidden rounded-2xl border border-[#d8e6de] bg-[#10221a] shadow-sm">
+              <div className="flex items-center gap-2 border-b border-white/8 px-4 py-3">
                 <span className="h-3 w-3 rounded-full bg-[#ff5f57]" />
                 <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
                 <span className="h-3 w-3 rounded-full bg-[#28c840]" />
-                <span className="ml-2 text-xs font-medium text-slate-500">
-                  quick-start.sh
+                <span className="ml-2 text-xs font-medium text-[#b9dcca]">
+                  quick-start
                 </span>
               </div>
-              <pre className="overflow-x-auto p-5 text-sm leading-7 text-slate-200">
+              <pre className="overflow-x-auto p-5 text-sm leading-7 text-[#ebfff3]">
                 <code>{`git clone https://github.com/iammm0/execgo.git
 cd execgo
 go build -o execgo ./cmd/execgo
@@ -88,12 +87,12 @@ go build -o execgo ./cmd/execgo
             </div>
           </div>
 
-          <div className="relative grid content-start gap-4 lg:pt-8">
-            <div className="rounded-[2rem] border border-white/10 bg-white/[0.08] p-5 shadow-2xl shadow-black/25 backdrop-blur-xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-200">
-                当前代码证据
+          <div className="grid gap-4">
+            <div className="glass-card p-5">
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#009e5b]">
+                当前快照
               </p>
-              <div className="mt-5 grid grid-cols-2 gap-3">
+              <div className="mt-4 grid grid-cols-2 gap-3">
                 {[
                   ["发布版本", site.releaseVersion],
                   ["分支数量", "2"],
@@ -102,38 +101,30 @@ go build -o execgo ./cmd/execgo
                   ["HTTP 路由", String(mainBranch.stats.httpRoutes)],
                   ["gRPC 方法", String(clusterBranch.stats.grpcMethods)],
                 ].map(([label, value]) => (
-                  <div
-                    key={label}
-                    className="rounded-3xl border border-white/10 bg-slate-950/42 p-4"
-                  >
-                    <p className="text-xs text-slate-400">{label}</p>
-                    <p className="mt-1 text-2xl font-black text-white">{value}</p>
+                  <div key={label} className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4">
+                    <p className="text-xs text-[#7a9186]">{label}</p>
+                    <p className="mt-1 text-2xl font-black text-[#123222]">{value}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="rounded-[2rem] border border-emerald-300/20 bg-emerald-300/10 p-5 backdrop-blur-xl">
-              <p className="text-sm font-semibold text-emerald-100">
-                两条分支的定位
+            <div className="glass-card p-5">
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-[#009e5b]">
+                风格目标
               </p>
               <div className="mt-4 space-y-3">
-                {site.branches.map((branch) => (
-                  <Link
-                    key={branch.id}
-                    href={`/branches/${branch.id}`}
-                    className="block rounded-3xl border border-white/10 bg-slate-950/35 p-4 transition hover:-translate-y-0.5 hover:bg-slate-950/55"
+                {[
+                  "像 Gin 官网一样，把“先看懂、再上手、再进文档”作为主流程。",
+                  "首页保留产品概览，但避免厚重营销叙事，优先展示入口、分支差异和文档导航。",
+                  "文档页采用左侧目录、右侧 TOC、中间正文的结构，让站点更像官方文档站而不是演示页。",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-[#e1ebe5] bg-[#f4fbf7] px-4 py-3 text-sm leading-7 text-[#335646]"
                   >
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="font-semibold text-white">{branch.branchName}</p>
-                      <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs text-slate-200">
-                        {branch.channel}
-                      </span>
-                    </div>
-                    <p className="mt-2 text-sm leading-6 text-slate-300">
-                      {branch.summary}
-                    </p>
-                  </Link>
+                    {item}
+                  </div>
                 ))}
               </div>
             </div>
@@ -141,17 +132,17 @@ go build -o execgo ./cmd/execgo
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="section-eyebrow">Branch-by-branch</p>
-            <h2 className="section-title">两个分支都完整展示</h2>
+            <p className="section-eyebrow">Branches</p>
+            <h2 className="section-title">两个分支，各自成页</h2>
           </div>
           <Link
             href="/branches"
-            className="text-sm font-semibold text-amber-200 transition hover:text-amber-100"
+            className="text-sm font-semibold text-[#007b46] transition hover:text-[#009e5b]"
           >
-            打开分支总览
+            打开双分支总览
           </Link>
         </div>
 
@@ -160,32 +151,36 @@ go build -o execgo ./cmd/execgo
             <article key={branch.id} className="glass-card p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-400">
+                  <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#7a9186]">
                     {branch.badge}
                   </p>
-                  <h3 className="mt-2 text-3xl font-black text-white">
+                  <h3 className="mt-2 text-3xl font-black text-[#113222]">
                     {branch.branchName}
                   </h3>
                 </div>
-                <span className="rounded-full border border-white/10 bg-white/[0.07] px-3 py-1 text-xs font-semibold text-slate-200">
+                <span className="rounded-full bg-[#f4fbf7] px-3 py-1 text-xs font-semibold text-[#007b46]">
                   {branch.rollout}
                 </span>
               </div>
-              <p className="mt-4 text-sm leading-7 text-slate-300">
-                {branch.description}
+
+              <p className="mt-4 text-sm leading-7 text-[#4f6d60]">
+                {branch.summary}
               </p>
 
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
                 {[
                   ["Go 文件", branch.stats.goFiles],
-                  ["中文文档", branch.stats.zhDocs],
-                  ["测试", branch.stats.unitTests + branch.stats.moduleTests + branch.stats.integrationTests],
+                  ["文档总数", branch.stats.zhDocs + branch.stats.enDocs],
+                  [
+                    "测试总数",
+                    branch.stats.unitTests +
+                      branch.stats.moduleTests +
+                      branch.stats.integrationTests,
+                  ],
                 ].map(([label, value]) => (
-                  <div key={label} className="rounded-3xl bg-white/[0.06] p-4">
-                    <p className="text-xs text-slate-400">{label}</p>
-                    <p className="mt-1 text-2xl font-black text-white">
-                      {compactNumber(Number(value))}
-                    </p>
+                  <div key={label} className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4">
+                    <p className="text-xs text-[#7a9186]">{label}</p>
+                    <p className="mt-1 text-2xl font-black text-[#123222]">{value}</p>
                   </div>
                 ))}
               </div>
@@ -194,7 +189,7 @@ go build -o execgo ./cmd/execgo
                 {branch.focusAreas.map((item) => (
                   <span
                     key={item}
-                    className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-xs text-slate-200"
+                    className="rounded-full border border-[#d8e6de] bg-[#f7faf8] px-3 py-1 text-xs text-[#335646]"
                   >
                     {item}
                   </span>
@@ -205,10 +200,10 @@ go build -o execgo ./cmd/execgo
                 {branch.capabilities.slice(0, 3).map((capability) => (
                   <div
                     key={capability.title}
-                    className="rounded-3xl border border-white/10 bg-slate-950/35 p-4"
+                    className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4"
                   >
-                    <p className="font-semibold text-white">{capability.title}</p>
-                    <p className="mt-1 text-sm leading-6 text-slate-300">
+                    <p className="font-semibold text-[#123222]">{capability.title}</p>
+                    <p className="mt-1 text-sm leading-6 text-[#5f7b6f]">
                       {capability.description}
                     </p>
                   </div>
@@ -216,24 +211,22 @@ go build -o execgo ./cmd/execgo
               </div>
 
               {branch.diff ? (
-                <div className="mt-5 rounded-3xl border border-amber-300/18 bg-amber-300/10 p-4">
-                  <p className="text-sm font-semibold text-amber-100">
-                    相对 `main` 的变化：{branch.diff.filesChanged} 个文件，
-                    +{branch.diff.insertions} / -{branch.diff.deletions}
-                  </p>
+                <div className="mt-5 rounded-2xl border border-[#d8eadf] bg-[#f4fbf7] p-4 text-sm font-semibold text-[#007b46]">
+                  相对 `main` 变更 {branch.diff.filesChanged} 个文件，+
+                  {branch.diff.insertions} / -{branch.diff.deletions}
                 </div>
               ) : null}
 
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   href={`/branches/${branch.id}`}
-                  className="rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-950 transition hover:bg-amber-200"
+                  className="rounded-full bg-[#123222] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#009e5b]"
                 >
                   分支详情
                 </Link>
                 <Link
                   href={`/docs/${branch.id}`}
-                  className="rounded-full border border-white/12 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+                  className="rounded-full border border-[#bfd9ca] px-4 py-2 text-sm font-semibold text-[#123222] transition hover:border-[#009e5b] hover:text-[#007b46]"
                 >
                   文档目录
                 </Link>
@@ -243,31 +236,31 @@ go build -o execgo ./cmd/execgo
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="glass-card overflow-hidden">
-          <div className="border-b border-white/10 p-6">
+          <div className="border-b border-[#e1ebe5] p-6">
             <p className="section-eyebrow">Compare</p>
-            <h2 className="section-title">稳定线与集群线的核心差异</h2>
+            <h2 className="section-title">稳定线和集群线的核心差异</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[760px] text-left text-sm">
-              <thead className="bg-white/[0.04] text-xs uppercase tracking-[0.25em] text-slate-400">
+              <thead className="bg-[#f4f9f6] text-xs uppercase tracking-[0.2em] text-[#7a9186]">
                 <tr>
                   <th className="px-6 py-4 font-semibold">维度</th>
                   <th className="px-6 py-4 font-semibold">main</th>
                   <th className="px-6 py-4 font-semibold">feat-add-cluster</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/10">
+              <tbody className="divide-y divide-[#e1ebe5]">
                 {site.comparisonRows.map((row) => (
                   <tr key={row.aspect} className="align-top">
-                    <td className="px-6 py-5 font-semibold text-white">
+                    <td className="px-6 py-5 font-semibold text-[#123222]">
                       {row.aspect}
                     </td>
-                    <td className="px-6 py-5 leading-7 text-slate-300">
+                    <td className="px-6 py-5 leading-7 text-[#4f6d60]">
                       {row.main}
                     </td>
-                    <td className="px-6 py-5 leading-7 text-slate-300">
+                    <td className="px-6 py-5 leading-7 text-[#4f6d60]">
                       {row.cluster}
                     </td>
                   </tr>
@@ -278,27 +271,41 @@ go build -o execgo ./cmd/execgo
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-14 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
+      <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-12 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:px-8">
         <div className="glass-card p-6">
           <p className="section-eyebrow">Execution Surface</p>
-          <h2 className="section-title">接口、执行器、部署面都展开</h2>
-          <p className="mt-4 text-sm leading-7 text-slate-300">
-            发布网站里不只说“支持执行编排”，还会把实际接口、执行器类别、OS
-            工具、gRPC 方法、测试层级和部署资产都展示出来。
+          <h2 className="section-title">接口、执行器、部署资产都展开</h2>
+          <p className="mt-4 text-sm leading-7 text-[#4f6d60]">
+            这里不只说“支持执行编排”，而是把实际接口、执行器类别、OS 工具、
+            gRPC 方法和测试层级都直接展示出来。
           </p>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             {[
-              ["HTTP Routes", mainBranch.httpRoutes.map((route) => `${route.method} ${route.path}`).join(" · ")],
-              ["Executor Categories", mainBranch.executorSurface.categories.join(" · ")],
+              [
+                "HTTP Routes",
+                mainBranch.httpRoutes
+                  .map((route) => `${route.method} ${route.path}`)
+                  .join(" · "),
+              ],
+              [
+                "Executor Categories",
+                mainBranch.executorSurface.categories.join(" · "),
+              ],
               ["OS Tools", mainBranch.executorSurface.tools.join(" · ")],
-              ["WorkerControl", clusterBranch.grpcMethods.filter((method) => method.service === "WorkerControl").map((method) => method.rpc).join(" · ")],
+              [
+                "WorkerControl",
+                clusterBranch.grpcMethods
+                  .filter((method) => method.service === "WorkerControl")
+                  .map((method) => method.rpc)
+                  .join(" · "),
+              ],
             ].map(([label, value]) => (
-              <div key={label} className="rounded-3xl border border-white/10 bg-white/[0.06] p-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <div key={label} className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#7a9186]">
                   {label}
                 </p>
-                <p className="mt-2 text-sm leading-7 text-slate-200">{value}</p>
+                <p className="mt-2 text-sm leading-7 text-[#335646]">{value}</p>
               </div>
             ))}
           </div>
@@ -307,21 +314,21 @@ go build -o execgo ./cmd/execgo
         <div className="grid gap-4 md:grid-cols-2">
           {[mainBranch, clusterBranch].map((branch) => (
             <div key={branch.id} className="glass-card p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#7a9186]">
                 {branch.branchName}
               </p>
-              <h3 className="mt-2 text-xl font-black text-white">代码模块</h3>
+              <h3 className="mt-2 text-xl font-black text-[#123222]">模块地图</h3>
               <div className="mt-4 space-y-3">
                 {branch.moduleCards.slice(0, 5).map((module) => (
                   <div
                     key={module.path}
-                    className="rounded-2xl border border-white/10 bg-slate-950/34 p-3"
+                    className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4"
                   >
-                    <p className="font-semibold text-white">{module.title}</p>
-                    <p className="mt-1 font-mono text-xs text-emerald-200">
+                    <p className="font-semibold text-[#123222]">{module.title}</p>
+                    <p className="mt-1 font-mono text-xs text-[#007b46]">
                       {module.path}
                     </p>
-                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                    <p className="mt-2 text-sm leading-6 text-[#5f7b6f]">
                       {module.description}
                     </p>
                   </div>
@@ -332,24 +339,25 @@ go build -o execgo ./cmd/execgo
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-14 sm:px-6 lg:grid-cols-[1fr_0.8fr] lg:px-8">
+      <section className="mx-auto grid w-full max-w-7xl gap-6 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_0.82fr] lg:px-8">
         <div className="glass-card p-6">
-          <p className="section-eyebrow">Docs Atlas</p>
-          <h2 className="section-title">仓库文档会原样进入站点</h2>
-          <p className="mt-4 text-sm leading-7 text-slate-300">
-            文档页不是手写摘要，而是直接读取 `execgo/docs` 下的 Markdown。
-            左侧目录按分支、语言和目录分组，右侧会渲染正文和本页目录。
+          <p className="section-eyebrow">Docs</p>
+          <h2 className="section-title">两个分支的文档快照已内置进项目</h2>
+          <p className="mt-4 text-sm leading-7 text-[#4f6d60]">
+            文档页现在读取的是发布网站项目内的静态快照目录，不再依赖运行时直接去
+            `execgo` 仓库抓取 Markdown。这样部署更稳定，也更接近官方文档站的结构。
           </p>
+
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {site.branches.map((branch) => (
-              <div key={branch.id} className="rounded-3xl bg-white/[0.06] p-4">
-                <p className="font-semibold text-white">{branch.branchName}</p>
+              <div key={branch.id} className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4">
+                <p className="font-semibold text-[#123222]">{branch.branchName}</p>
                 <div className="mt-3 space-y-2">
                   {branch.recommendedDocs.slice(0, 5).map((doc) => (
                     <Link
                       key={doc.href}
                       href={doc.href}
-                      className="block rounded-2xl px-3 py-2 text-sm text-slate-300 transition hover:bg-white/[0.08] hover:text-white"
+                      className="block rounded-lg px-3 py-2 text-sm text-[#4f6d60] transition hover:bg-[#f4fbf7] hover:text-[#007b46]"
                     >
                       {doc.title}
                     </Link>
@@ -362,20 +370,18 @@ go build -o execgo ./cmd/execgo
 
         <div className="glass-card p-6">
           <p className="section-eyebrow">Timeline</p>
-          <h2 className="section-title">提交时间线</h2>
+          <h2 className="section-title">最近提交时间线</h2>
           <div className="mt-5 space-y-3">
             {site.timeline.slice(0, 7).map((commit) => (
               <div
                 key={`${commit.shortHash}-${commit.subject}`}
-                className="rounded-3xl border border-white/10 bg-slate-950/32 p-4"
+                className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4"
               >
-                <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                  <span className="font-mono text-emerald-200">
-                    {commit.shortHash}
-                  </span>
+                <div className="flex flex-wrap items-center gap-2 text-xs text-[#789487]">
+                  <span className="font-mono text-[#007b46]">{commit.shortHash}</span>
                   <span>{commit.date}</span>
                 </div>
-                <p className="mt-2 text-sm leading-6 text-slate-200">
+                <p className="mt-2 text-sm leading-6 text-[#335646]">
                   {commit.subject}
                 </p>
               </div>

@@ -25,7 +25,6 @@ export async function generateMetadata({
   }
 
   const snapshot = getBranchSnapshot(branchId);
-
   return {
     title: `${snapshot.branchName} 分支详情`,
     description: snapshot.summary,
@@ -48,23 +47,23 @@ export default async function BranchDetailPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-      <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+      <section className="grid gap-6 lg:grid-cols-[1.08fr_0.92fr]">
         <div className="glass-card p-7">
           <p className="section-eyebrow">{snapshot.badge}</p>
           <h1 className="section-title mt-2 text-4xl sm:text-5xl">
             {snapshot.branchName}
           </h1>
-          <p className="mt-5 text-lg leading-8 text-slate-300">
+          <p className="mt-5 text-lg leading-8 text-[#4f6d60]">
             {snapshot.description}
           </p>
-          <p className="mt-4 text-sm leading-7 text-slate-400">
+          <p className="mt-4 text-sm leading-7 text-[#5f7b6f]">
             目标用户：{snapshot.audience}
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href={`/docs/${snapshot.id}`}
-              className="rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-950 transition hover:bg-amber-200"
+              className="rounded-full bg-[#009e5b] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#007b46]"
             >
               浏览该分支文档
             </Link>
@@ -72,7 +71,7 @@ export default async function BranchDetailPage({ params }: PageProps) {
               href={snapshot.githubBranchUrl}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full border border-white/12 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+              className="rounded-full border border-[#bfd9ca] px-4 py-2 text-sm font-semibold text-[#123222] transition hover:border-[#009e5b] hover:text-[#007b46]"
             >
               打开 GitHub 分支
             </a>
@@ -80,7 +79,7 @@ export default async function BranchDetailPage({ params }: PageProps) {
 
           <div className="mt-8 space-y-4">
             {snapshot.narrative.map((paragraph) => (
-              <p key={paragraph} className="text-sm leading-7 text-slate-300">
+              <p key={paragraph} className="text-sm leading-7 text-[#4f6d60]">
                 {paragraph}
               </p>
             ))}
@@ -89,14 +88,14 @@ export default async function BranchDetailPage({ params }: PageProps) {
 
         <div className="grid gap-4">
           <div className="glass-card p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#009e5b]">
               Latest commit
             </p>
-            <p className="mt-3 text-sm font-semibold text-white">
+            <p className="mt-3 text-sm font-semibold text-[#123222]">
               {snapshot.latestCommit.subject}
             </p>
-            <div className="mt-3 flex flex-wrap gap-3 text-xs text-slate-400">
-              <span className="font-mono text-emerald-200">
+            <div className="mt-3 flex flex-wrap gap-3 text-xs text-[#789487]">
+              <span className="font-mono text-[#007b46]">
                 {snapshot.latestCommit.shortHash}
               </span>
               <span>{snapshot.latestCommit.authoredDateLabel}</span>
@@ -105,7 +104,7 @@ export default async function BranchDetailPage({ params }: PageProps) {
           </div>
 
           <div className="glass-card p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#009e5b]">
               Snapshot
             </p>
             <div className="mt-4 grid grid-cols-2 gap-3">
@@ -117,9 +116,9 @@ export default async function BranchDetailPage({ params }: PageProps) {
                 ["gRPC 方法", snapshot.stats.grpcMethods],
                 ["Contrib 模块", snapshot.stats.contribModules],
               ].map(([label, value]) => (
-                <div key={label} className="rounded-3xl border border-white/10 bg-white/[0.05] p-4">
-                  <p className="text-xs text-slate-500">{label}</p>
-                  <p className="mt-1 text-2xl font-black text-white">{value}</p>
+                <div key={label} className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4">
+                  <p className="text-xs text-[#7a9186]">{label}</p>
+                  <p className="mt-1 text-2xl font-black text-[#123222]">{value}</p>
                 </div>
               ))}
             </div>
@@ -127,7 +126,7 @@ export default async function BranchDetailPage({ params }: PageProps) {
         </div>
       </section>
 
-      <section className="mt-10 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+      <section className="mt-10 grid gap-6 lg:grid-cols-[0.96fr_1.04fr]">
         <div className="glass-card p-6">
           <p className="section-eyebrow">Capabilities</p>
           <h2 className="section-title">关键能力与证据文件</h2>
@@ -135,22 +134,22 @@ export default async function BranchDetailPage({ params }: PageProps) {
             {snapshot.capabilities.map((capability) => (
               <div
                 key={capability.title}
-                className="rounded-[1.4rem] border border-white/10 bg-slate-950/35 p-5"
+                className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-5"
               >
                 <div className="flex flex-wrap gap-2">
                   {capability.tags?.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full bg-white/[0.08] px-2.5 py-1 text-xs text-slate-200"
+                      className="rounded-full bg-[#f4fbf7] px-2.5 py-1 text-xs font-semibold text-[#007b46]"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <h3 className="mt-3 text-xl font-bold text-white">
+                <h3 className="mt-3 text-xl font-bold text-[#123222]">
                   {capability.title}
                 </h3>
-                <p className="mt-2 text-sm leading-7 text-slate-300">
+                <p className="mt-2 text-sm leading-7 text-[#5f7b6f]">
                   {capability.description}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -160,7 +159,7 @@ export default async function BranchDetailPage({ params }: PageProps) {
                       href={toBranchBlobUrl(snapshot, filePath)}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs font-mono text-emerald-100 transition hover:bg-emerald-300/16"
+                      className="rounded-full border border-[#d8e6de] bg-white px-3 py-1 text-xs font-mono text-[#007b46] transition hover:border-[#009e5b] hover:bg-[#f4fbf7]"
                     >
                       {filePath}
                     </a>
@@ -173,30 +172,30 @@ export default async function BranchDetailPage({ params }: PageProps) {
 
         <div className="grid gap-6">
           <div className="glass-card p-6">
-            <p className="section-eyebrow">Module Map</p>
+            <p className="section-eyebrow">Module map</p>
             <h2 className="section-title">模块分布</h2>
             <div className="mt-5 space-y-3">
               {snapshot.moduleCards.map((module) => (
                 <div
                   key={module.path}
-                  className="rounded-[1.4rem] border border-white/10 bg-white/[0.05] p-4"
+                  className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4"
                 >
                   <div className="flex flex-wrap items-center gap-3">
-                    <p className="font-semibold text-white">{module.title}</p>
+                    <p className="font-semibold text-[#123222]">{module.title}</p>
                     <a
                       href={toBranchBlobUrl(snapshot, module.path)}
                       target="_blank"
                       rel="noreferrer"
-                      className="font-mono text-xs text-amber-200"
+                      className="font-mono text-xs text-[#007b46]"
                     >
                       {module.path}
                     </a>
                   </div>
-                  <p className="mt-2 text-sm leading-7 text-slate-300">
+                  <p className="mt-2 text-sm leading-7 text-[#5f7b6f]">
                     {module.description}
                   </p>
                   {module.note ? (
-                    <p className="mt-2 text-xs leading-6 text-slate-400">
+                    <p className="mt-2 text-xs leading-6 text-[#789487]">
                       {module.note}
                     </p>
                   ) : null}
@@ -206,11 +205,11 @@ export default async function BranchDetailPage({ params }: PageProps) {
           </div>
 
           <div className="glass-card p-6">
-            <p className="section-eyebrow">Readme Signal</p>
+            <p className="section-eyebrow">Readme signal</p>
             <h2 className="section-title">README 关键信息</h2>
             <div className="mt-5 space-y-3">
               {snapshot.readmeExcerpt.map((paragraph) => (
-                <p key={paragraph} className="text-sm leading-7 text-slate-300">
+                <p key={paragraph} className="text-sm leading-7 text-[#4f6d60]">
                   {paragraph}
                 </p>
               ))}
@@ -219,18 +218,18 @@ export default async function BranchDetailPage({ params }: PageProps) {
         </div>
       </section>
 
-      <section className="mt-10 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+      <section className="mt-10 grid gap-6 lg:grid-cols-[0.96fr_1.04fr]">
         <div className="glass-card p-6">
-          <p className="section-eyebrow">API Surface</p>
+          <p className="section-eyebrow">API surface</p>
           <h2 className="section-title">接口面</h2>
           <div className="mt-5 grid gap-4 md:grid-cols-2">
-            <div className="rounded-[1.5rem] border border-white/10 bg-slate-950/34 p-4">
-              <p className="font-semibold text-white">HTTP Routes</p>
+            <div className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4">
+              <p className="font-semibold text-[#123222]">HTTP Routes</p>
               <div className="mt-3 space-y-2">
                 {snapshot.httpRoutes.map((route) => (
                   <div
                     key={`${route.method}-${route.path}`}
-                    className="rounded-2xl bg-white/[0.06] px-3 py-2 font-mono text-xs text-slate-200"
+                    className="rounded-xl bg-[#f4f9f6] px-3 py-2 font-mono text-xs text-[#335646]"
                   >
                     {route.method} {route.path}
                   </div>
@@ -238,19 +237,19 @@ export default async function BranchDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            <div className="rounded-[1.5rem] border border-white/10 bg-slate-950/34 p-4">
-              <p className="font-semibold text-white">gRPC Methods</p>
+            <div className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4">
+              <p className="font-semibold text-[#123222]">gRPC Methods</p>
               <div className="mt-3 space-y-2">
                 {snapshot.grpcMethods.map((method) => (
                   <div
                     key={`${method.service}-${method.rpc}`}
-                    className="rounded-2xl bg-white/[0.06] px-3 py-2 text-sm text-slate-200"
+                    className="rounded-xl bg-[#f4f9f6] px-3 py-2 text-sm text-[#335646]"
                   >
-                    <span className="font-semibold text-white">
+                    <span className="font-semibold text-[#123222]">
                       {method.service}
                     </span>
-                    <span className="mx-2 text-slate-500">/</span>
-                    <span className="font-mono text-emerald-200">{method.rpc}</span>
+                    <span className="mx-2 text-[#97a89f]">/</span>
+                    <span className="font-mono text-[#007b46]">{method.rpc}</span>
                   </div>
                 ))}
               </div>
@@ -263,7 +262,7 @@ export default async function BranchDetailPage({ params }: PageProps) {
             {snapshot.diff ? "Diff against main" : "Release highlights"}
           </p>
           <h2 className="section-title">
-            {snapshot.diff ? "相对 `main` 的改动" : "当前主线发布亮点"}
+            {snapshot.diff ? "相对 main 的改动" : "当前主线发布亮点"}
           </h2>
 
           {snapshot.diff ? (
@@ -276,10 +275,10 @@ export default async function BranchDetailPage({ params }: PageProps) {
                 ].map(([label, value]) => (
                   <div
                     key={label}
-                    className="rounded-3xl border border-white/10 bg-white/[0.06] p-4"
+                    className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4"
                   >
-                    <p className="text-xs text-slate-500">{label}</p>
-                    <p className="mt-1 text-2xl font-black text-white">{value}</p>
+                    <p className="text-xs text-[#7a9186]">{label}</p>
+                    <p className="mt-1 text-2xl font-black text-[#123222]">{value}</p>
                   </div>
                 ))}
               </div>
@@ -288,11 +287,11 @@ export default async function BranchDetailPage({ params }: PageProps) {
                 {snapshot.changedAreas.map((area) => (
                   <div
                     key={area.title}
-                    className="rounded-[1.4rem] border border-white/10 bg-slate-950/34 p-4"
+                    className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4"
                   >
                     <div className="flex items-center justify-between gap-3">
-                      <p className="font-semibold text-white">{area.title}</p>
-                      <span className="rounded-full bg-amber-300/12 px-2.5 py-1 text-xs text-amber-100">
+                      <p className="font-semibold text-[#123222]">{area.title}</p>
+                      <span className="rounded-full bg-[#f4fbf7] px-2.5 py-1 text-xs font-semibold text-[#007b46]">
                         {area.count}
                       </span>
                     </div>
@@ -303,7 +302,7 @@ export default async function BranchDetailPage({ params }: PageProps) {
                           href={toBranchBlobUrl(snapshot, sample)}
                           target="_blank"
                           rel="noreferrer"
-                          className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 font-mono text-xs text-slate-200"
+                          className="rounded-full border border-[#d8e6de] bg-white px-3 py-1 font-mono text-xs text-[#335646]"
                         >
                           {sample}
                         </a>
@@ -313,8 +312,8 @@ export default async function BranchDetailPage({ params }: PageProps) {
                 ))}
               </div>
 
-              <div className="mt-5 rounded-[1.4rem] border border-emerald-300/20 bg-emerald-300/10 p-4">
-                <p className="text-sm font-semibold text-emerald-100">
+              <div className="mt-5 rounded-2xl border border-[#d8eadf] bg-[#f4fbf7] p-4">
+                <p className="text-sm font-semibold text-[#007b46]">
                   典型改动文件
                 </p>
                 <div className="mt-3 grid gap-2">
@@ -324,9 +323,9 @@ export default async function BranchDetailPage({ params }: PageProps) {
                       href={toBranchBlobUrl(snapshot, item.path)}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-2xl border border-white/10 bg-slate-950/30 px-3 py-2 text-sm text-slate-200"
+                      className="rounded-xl border border-[#d8e6de] bg-white px-3 py-2 text-sm text-[#335646]"
                     >
-                      <span className="mr-2 font-mono text-xs text-amber-200">
+                      <span className="mr-2 font-mono text-xs text-[#007b46]">
                         {item.status}
                       </span>
                       {item.path}
@@ -340,7 +339,7 @@ export default async function BranchDetailPage({ params }: PageProps) {
               {snapshot.releaseHighlights.map((item) => (
                 <div
                   key={item}
-                  className="rounded-[1.4rem] border border-white/10 bg-white/[0.05] px-4 py-3 text-sm leading-7 text-slate-300"
+                  className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] px-4 py-3 text-sm leading-7 text-[#4f6d60]"
                 >
                   {item}
                 </div>
@@ -358,7 +357,7 @@ export default async function BranchDetailPage({ params }: PageProps) {
           </div>
           <Link
             href={`/docs/${snapshot.id}`}
-            className="text-sm font-semibold text-amber-200 transition hover:text-amber-100"
+            className="text-sm font-semibold text-[#007b46] transition hover:text-[#009e5b]"
           >
             打开完整文档树
           </Link>
@@ -369,13 +368,13 @@ export default async function BranchDetailPage({ params }: PageProps) {
             <Link
               key={doc.href}
               href={doc.href}
-              className="rounded-[1.4rem] border border-white/10 bg-white/[0.05] p-4 transition hover:-translate-y-0.5 hover:bg-white/[0.08]"
+              className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4 transition hover:-translate-y-0.5 hover:border-[#bfd9ca] hover:bg-[#f4fbf7]"
             >
-              <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
+              <p className="text-xs uppercase tracking-[0.2em] text-[#7a9186]">
                 {doc.localeLabel}
               </p>
-              <p className="mt-2 text-lg font-semibold text-white">{doc.title}</p>
-              <p className="mt-2 text-sm text-slate-400">{doc.repoPath}</p>
+              <p className="mt-2 text-lg font-semibold text-[#123222]">{doc.title}</p>
+              <p className="mt-2 text-sm text-[#789487]">{doc.repoPath}</p>
             </Link>
           ))}
         </div>

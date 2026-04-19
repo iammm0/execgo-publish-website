@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "sync:execgo-content": "node scripts/sync-execgo-content.mjs"
   },
   "dependencies": {
     "next": "16.2.3",

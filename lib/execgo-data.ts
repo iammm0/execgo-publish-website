@@ -1,17 +1,19 @@
 import { execFileSync } from "node:child_process";
+import fs from "node:fs";
 import path from "node:path";
 import { cache } from "react";
 
 const EXECGO_ROOT = path.join(process.cwd(), "execgo");
-const DEFAULT_DOC_SLUG = "zh";
+const CONTENT_ROOT = path.join(process.cwd(), "content", "execgo-branches");
 const GITHUB_REPO = "https://github.com/iammm0/execgo";
+const DEFAULT_DOC_SLUG = ["zh"];
 
 export type BranchId = "main" | "feat-add-cluster";
 
 type BranchCopy = {
   id: BranchId;
-  label: string;
   branchName: string;
+  label: string;
   badge: string;
   channel: string;
   summary: string;
@@ -20,7 +22,7 @@ type BranchCopy = {
   rollout: string;
   narrative: string[];
   focusAreas: string[];
-  branchRefCandidates: string[];
+  refCandidates: string[];
 };
 
 export type GitCommit = {
@@ -153,51 +155,70 @@ export type DocPageData = {
   excerpt: string[];
 };
 
-type BranchInput = Omit<BranchCopy, "id">;
+type SiteTimelineItem = {
+  shortHash: string;
+  date: string;
+  subject: string;
+  decoration: string;
+};
 
-const BRANCHES: Record<BranchId, BranchInput> = {
+type SiteData = {
+  releaseVersion: string;
+  releaseDate: string;
+  comparisonRows: Array<{
+    aspect: string;
+    main: string;
+    cluster: string;
+  }>;
+  branches: BranchSnapshot[];
+  timeline: SiteTimelineItem[];
+};
+
+const BRANCHES: Record<BranchId, BranchCopy> = {
   main: {
-    label: "稳定主线",
+    id: "main",
     branchName: "main",
+    label: "稳定主线",
     badge: "Stable Release",
     channel: "v1.0.0",
     summary:
-      "ExecGo 当前正式发布线，重点是稳定的 DAG 调度、内置执行器、HTTP/gRPC 接口、JSON 持久化和完整的发布链路。",
+      "当前正式发布线，强调稳定的 DAG 调度、内置执行器、HTTP/gRPC 接口、JSON 持久化和完整的发布链路。",
     description:
-      "适合直接作为单节点执行内核、内部任务编排服务，或嵌入到你自己的 Go 服务里。",
+      "适合直接作为单节点执行内核、内部任务编排服务，或者嵌入到你自己的 Go 服务中。",
     audience:
-      "平台工程师、Agent 平台研发、希望先落地执行内核而不是先做分布式控制面的团队。",
-    rollout: "生产可用主线",
+      "平台工程师、Agent 平台研发，以及希望优先落地执行内核而不是先搭建分布式控制面的团队。",
+    rollout: "生产可用",
     narrative: [
-      "从 `cmd/execgo/main.go` 可以看到主线运行时仍然保持极简：配置加载、日志与指标、JSON 文件持久化、调度器、HTTP/gRPC 服务依次装配。",
-      "从 `pkg/httpserver/engine.go` 与 `pkg/executor/os.go` 可以确认，主线已覆盖最常用的提交、查询、删除、健康检查、指标和 MCP 能力，同时把 shell、file、dns、tcp、sleep、noop、http 等工具统一收敛到 `os` 类别执行器里。",
-      "从 `pkg/store/jsonfile/jsonfile.go`、`docs/zh/releases/v1.0.0.md` 和 `CHANGELOG.md` 可以看出这条线已经围绕发布、测试、部署和文档做了完整闭环，是当前最适合对外发布的网站主叙事。",
+      "从 cmd/execgo/main.go 可以看到，这条线保持了非常清晰的装配顺序：配置、日志、指标、JSON 状态管理、调度器、HTTP 和可选 gRPC 服务逐步挂起。",
+      "从 pkg/httpserver/engine.go 与 pkg/executor/os.go 可以确认，主线已经覆盖任务提交、查询、健康检查、指标、MCP 以及 shell、file、dns、tcp、sleep、noop、http 等基础工具能力。",
+      "从 docs/、Dockerfile、Compose、Kubernetes 配置和 CHANGELOG 可以看出，它已经是一条文档、测试、部署、版本说明都闭环的发布线。",
     ],
     focusAreas: [
       "单节点执行内核",
       "HTTP / gRPC 双接口",
-      "JSON 文件持久化",
+      "JSON 持久化",
       "Task DSL 与 DAG 校验",
-      "v1.0.0 发布文档",
+      "v1.0.0 发布说明",
     ],
-    branchRefCandidates: ["main", "origin/main"],
+    refCandidates: ["main", "origin/main"],
   },
   "feat-add-cluster": {
-    label: "集群预览线",
+    id: "feat-add-cluster",
     branchName: "feat-add-cluster",
+    label: "集群预览线",
     badge: "Cluster Preview",
     channel: "Runtime v2",
     summary:
-      "在稳定内核之上，引入事件溯源存储、任务队列、远程 Worker、沙箱执行和 WorkerControl gRPC 协议，形成分布式控制面的雏形。",
+      "在稳定内核之上，引入事件溯源、任务队列、远程 Worker、沙箱执行和 WorkerControl gRPC 协议，形成分布式控制面的雏形。",
     description:
-      "适合需要跨节点执行、事件回放、幂等提交流水线、Redis 队列或 Postgres/SQLite 事件存储的场景。",
+      "适合需要跨节点执行、事件回放、幂等提交、Redis 队列或 Postgres/SQLite 事件存储的场景。",
     audience:
-      "正在建设 Agent Runtime、分布式任务平台或希望把 ExecGo 拓展为控制平面的团队。",
-    rollout: "预览 / 功能分支",
+      "正在建设 Agent Runtime、分布式任务平台，或者希望把 ExecGo 扩展为控制平面的团队。",
+    rollout: "预览功能线",
     narrative: [
-      "从 `cmd/execgo/main.go` 的新增初始化路径可以直接看到，运行时已经从“本地调度器 + JSON 存储”扩展为“事件存储 + 队列 + Worker + 沙箱 + 观测运行时”的组合。",
-      "从 `pkg/store/eventsourced/manager.go`、`pkg/events/*`、`pkg/taskqueue/*` 与 `pkg/worker/*` 可以确认这条分支核心不只是扩展了几个 API，而是把状态管理、调度与执行模型都重构成了事件驱动架构。",
-      "从 `contrib/grpcapi/proto/execgo/v1/execgo.proto` 的 `WorkerControl` 服务和新增远程 Worker 集成测试可以看出，这条线已经具备把控制面和执行面拆开的明确方向。",
+      "从 cmd/execgo/main.go 的初始化顺序可以直接看到，运行时已经扩展为事件存储、队列、Worker、沙箱和观测运行时的组合，而不再只是本地调度器加文件存储。",
+      "从 pkg/store/eventsourced、pkg/events、pkg/taskqueue 与 pkg/worker 可以确认，这条线不是增加几个接口，而是把状态管理、调度与执行模型重构成了事件驱动架构。",
+      "从 contrib/grpcapi/proto/execgo/v1/execgo.proto 的 WorkerControl 服务和新增端到端测试可以看出，控制面与执行面的拆分方向已经非常明确。",
     ],
     focusAreas: [
       "事件溯源状态管理",
@@ -206,7 +227,7 @@ const BRANCHES: Record<BranchId, BranchInput> = {
       "Docker / Local 沙箱",
       "WorkerControl gRPC",
     ],
-    branchRefCandidates: ["origin/feat-add-cluster", "feat-add-cluster"],
+    refCandidates: ["origin/feat-add-cluster", "feat-add-cluster"],
   },
 };
 
@@ -215,7 +236,7 @@ const CAPABILITIES: Record<BranchId, Capability[]> = {
     {
       title: "执行入口完整",
       description:
-        "主线已经暴露 `POST /tasks`、`GET /tasks/{id}`、`GET /health`、`GET /metrics` 以及 MCP 相关接口，可直接作为任务执行服务对外发布。",
+        "已经具备 POST /tasks、GET /tasks/{id}、GET /health、GET /metrics 以及 MCP 相关接口，可以直接作为任务执行服务对外发布。",
       evidence: [
         "pkg/httpserver/engine.go",
         "tests/integration/http_task_flow_integration_test.go",
@@ -224,9 +245,9 @@ const CAPABILITIES: Record<BranchId, Capability[]> = {
       tags: ["REST", "MCP", "Health"],
     },
     {
-      title: "DAG 调度和任务校验",
+      title: "DAG 调度与校验",
       description:
-        "任务图模型包含依赖校验、重试、超时和状态机约束，适合作为 Agent 或上层 Orchestrator 的执行后端。",
+        "任务图模型包含依赖校验、重试、超时和状态推进约束，适合充当上层 Agent 或 Orchestrator 的执行后端。",
       evidence: [
         "pkg/models/task.go",
         "pkg/scheduler/scheduler.go",
@@ -237,7 +258,7 @@ const CAPABILITIES: Record<BranchId, Capability[]> = {
     {
       title: "内置执行器矩阵",
       description:
-        "通过 `os` 类别聚合 shell、file、dns、tcp、sleep、noop、http 等基础工具，并补充 `mcp`、`cli-skills` 两类执行器。",
+        "通过 os 类别聚合 shell、file、dns、tcp、sleep、noop、http 等工具，同时补充 mcp 与 cli-skills 执行器。",
       evidence: [
         "pkg/executor/executor.go",
         "pkg/executor/os.go",
@@ -247,9 +268,9 @@ const CAPABILITIES: Record<BranchId, Capability[]> = {
       tags: ["Shell", "File", "HTTP", "MCP"],
     },
     {
-      title: "可嵌入与可部署",
+      title: "部署与接入闭环",
       description:
-        "主线同时提供 Dockerfile、Compose、Kubernetes、Go SDK 接入文档和 gRPC API，是完整的“能运行、能接入、能部署”发布线。",
+        "主线同时提供 Docker、Compose、Kubernetes、gRPC 协议和多语言接入文档，是可以直接拿来发布和接入的版本线。",
       evidence: [
         "Dockerfile",
         "docker-compose.yml",
@@ -263,7 +284,7 @@ const CAPABILITIES: Record<BranchId, Capability[]> = {
     {
       title: "事件溯源状态中心",
       description:
-        "运行时状态由事件驱动回放出来，天然支持历史追踪、幂等窗口和 Worker 状态建模，不再依赖单纯的 JSON 快照。",
+        "运行时状态由事件日志回放构建，支持历史追踪、幂等窗口与 Worker 状态建模，不再依赖单纯的 JSON 快照。",
       evidence: [
         "pkg/store/eventsourced/manager.go",
         "pkg/events/store.go",
@@ -275,7 +296,7 @@ const CAPABILITIES: Record<BranchId, Capability[]> = {
     {
       title: "队列化调度与远程执行",
       description:
-        "调度器把“可执行任务”写入队列，由 Worker 拉取、租约、执行、上报结果，从而把控制面与执行面拆分开。",
+        "调度器把可执行任务写入队列，由 Worker 拉取、租约、执行和上报结果，从而把控制面与执行面拆开。",
       evidence: [
         "pkg/scheduler/scheduler.go",
         "pkg/taskqueue/queue.go",
@@ -285,9 +306,9 @@ const CAPABILITIES: Record<BranchId, Capability[]> = {
       tags: ["Queue", "Lease", "Remote Worker"],
     },
     {
-      title: "WorkerControl gRPC 协议",
+      title: "WorkerControl 协议",
       description:
-        "新增 `WorkerControl` 服务，支持注册、心跳、拉取任务、Ack/Nack、进度和审计上报，使远程 Worker 接入成为一等能力。",
+        "新增 WorkerControl gRPC 服务，支持注册、心跳、拉取任务、Ack/Nack、进度与审计上报，让远程 Worker 接入成为一等能力。",
       evidence: [
         "contrib/grpcapi/proto/execgo/v1/execgo.proto",
         "contrib/grpcapi/pkg/grpcserver/worker_control.go",
@@ -298,7 +319,7 @@ const CAPABILITIES: Record<BranchId, Capability[]> = {
     {
       title: "沙箱与观测运行时",
       description:
-        "分支内置 Local / Docker 沙箱运行器，并把 HTTP 中间件、Prometheus、OpenTelemetry 运行时一起接入主进程。",
+        "分支内置 Local / Docker 沙箱运行器，并把 HTTP 中间件、Prometheus 和 OpenTelemetry 运行时接入主进程。",
       evidence: [
         "pkg/sandbox/runner.go",
         "pkg/observability/observability.go",
@@ -314,12 +335,12 @@ const MODULE_CARDS: Record<BranchId, ModuleCard[]> = {
     {
       title: "入口进程",
       path: "cmd/execgo/main.go",
-      description: "组装配置、日志、JSON 状态管理、调度器、HTTP 与可选 gRPC 服务。",
+      description: "负责装配配置、日志、JSON 状态管理、调度器以及 HTTP / gRPC 服务。",
     },
     {
       title: "HTTP API",
       path: "pkg/httpserver/engine.go",
-      description: "定义 `/tasks`、`/mcp/*`、`/health`、`/metrics` 等发布站必须展示的接口面。",
+      description: "定义 /tasks、/mcp/*、/health、/metrics 等核心对外接口。",
     },
     {
       title: "执行器系统",
@@ -330,24 +351,24 @@ const MODULE_CARDS: Record<BranchId, ModuleCard[]> = {
     {
       title: "调度器",
       path: "pkg/scheduler/scheduler.go",
-      description: "负责 DAG 拓扑、依赖计数、并发执行、状态推进和结果回写。",
+      description: "负责 DAG 拓扑、依赖计数、并发执行和结果回写。",
     },
     {
       title: "持久化",
       path: "pkg/store/jsonfile/jsonfile.go",
-      description: "默认 JSON 文件状态持久化，作为稳定发布线的最轻量部署方式。",
+      description: "默认 JSON 文件状态持久化，是主线最轻量的部署方式。",
     },
     {
-      title: "接入与部署",
+      title: "文档入口",
       path: "docs/zh",
-      description: "中文文档覆盖快速开始、DSL、执行器、API、部署、可观测性、扩展开发。",
+      description: "覆盖快速开始、DSL、执行器、API、部署、可观测性和扩展开发。",
     },
   ],
   "feat-add-cluster": [
     {
       title: "事件溯源 Store",
       path: "pkg/store/eventsourced/manager.go",
-      description: "以事件日志驱动任务、工作流、Worker 读模型，并支持回放恢复。",
+      description: "以事件日志驱动任务、工作流和 Worker 的读模型，并支持回放恢复。",
     },
     {
       title: "事件后端",
@@ -357,30 +378,27 @@ const MODULE_CARDS: Record<BranchId, ModuleCard[]> = {
     {
       title: "任务队列",
       path: "pkg/taskqueue",
-      description: "抽象 Memory 与 Redis 队列，为 Worker 拉取和租约控制提供基础设施。",
+      description: "抽象 Memory 与 Redis 队列，为 Worker 拉取和租约提供基础设施。",
     },
     {
       title: "Worker Runtime",
       path: "pkg/worker",
-      description: "本地 Worker 和远程 gRPC Worker 均从这里发起任务执行、上报进度和审计。",
+      description: "本地 Worker 和远程 gRPC Worker 都从这里发起执行和上报。",
     },
     {
-      title: "沙箱执行器",
+      title: "沙箱运行器",
       path: "pkg/sandbox/runner.go",
-      description: "把执行动作包装进 Local/Docker runner，为隔离与资源约束预留能力。",
+      description: "把执行动作封装进 Local / Docker runner，为隔离与资源约束预留能力。",
     },
     {
-      title: "协议与控制面",
+      title: "控制面协议",
       path: "contrib/grpcapi/proto/execgo/v1/execgo.proto",
       description: "新增 WorkerControl 服务，把控制面协议显式化。",
     },
   ],
 };
 
-const CHANGE_AREA_RULES: Array<{
-  title: string;
-  matches: string[];
-}> = [
+const CHANGE_AREA_RULES = [
   {
     title: "控制面与入口层",
     matches: ["cmd/execgo", "contrib/grpcapi", "pkg/httpserver", "pkg/config"],
@@ -401,7 +419,7 @@ const CHANGE_AREA_RULES: Array<{
     title: "测试回归",
     matches: ["tests/"],
   },
-];
+] as const;
 
 const PREFERRED_DOCS: Record<BranchId, string[]> = {
   main: [
@@ -446,11 +464,11 @@ const COMPARISON_ROWS = [
   {
     aspect: "扩展能力",
     main: "执行器、存储子模块、文档与部署模板",
-    cluster: "执行器之外再引入插件管理、沙箱运行器、任务租约和审计",
+    cluster: "插件管理、沙箱运行器、任务租约和审计",
   },
   {
     aspect: "适用阶段",
-    main: "对外发布、官网主介绍、直接落地",
+    main: "正式发布、官网主叙事、直接落地",
     cluster: "预研、灰度验证、集群演进路线展示",
   },
 ];
@@ -468,25 +486,56 @@ function runGit(args: string[], trim = true): string {
   return trim ? output.trim() : output;
 }
 
-const resolveBranchRef = cache((branchId: BranchId): string => {
-  const candidates = BRANCHES[branchId].branchRefCandidates;
+function normalizeRepoPath(filePath: string): string {
+  return filePath.split(path.sep).join(path.posix.sep);
+}
 
-  for (const candidate of candidates) {
+function branchContentRoot(branchId: BranchId): string {
+  return path.join(CONTENT_ROOT, branchId);
+}
+
+function walkFiles(root: string): string[] {
+  const results: string[] = [];
+
+  function walk(current: string) {
+    const entries = fs.readdirSync(current, { withFileTypes: true });
+    for (const entry of entries) {
+      const absolutePath = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        walk(absolutePath);
+        continue;
+      }
+      results.push(absolutePath);
+    }
+  }
+
+  walk(root);
+  return results;
+}
+
+const resolveBranchRef = cache((branchId: BranchId): string => {
+  for (const ref of BRANCHES[branchId].refCandidates) {
     try {
-      runGit(["rev-parse", "--verify", candidate]);
-      return candidate;
+      runGit(["rev-parse", "--verify", ref]);
+      return ref;
     } catch {
       continue;
     }
   }
 
-  throw new Error(`Unable to resolve git ref for branch "${branchId}"`);
+  throw new Error(`Unable to resolve git ref for branch ${branchId}`);
 });
 
-const listFiles = cache((ref: string): string[] => {
+const listGitFiles = cache((ref: string): string[] => {
   return runGit(["ls-tree", "-r", "--name-only", ref])
     .split(/\r?\n/)
     .filter(Boolean);
+});
+
+const listBranchContentFiles = cache((branchId: BranchId): string[] => {
+  return walkFiles(branchContentRoot(branchId))
+    .map((absoluteFile) => normalizeRepoPath(path.relative(branchContentRoot(branchId), absoluteFile)))
+    .sort((left, right) => left.localeCompare(right, "zh-CN"));
 });
 
 const readGitFile = cache((ref: string, repoPath: string): string => {
@@ -501,13 +550,10 @@ const readGitFileSafe = cache((ref: string, repoPath: string): string | null => 
   }
 });
 
-function ensureBranchId(branch: string): BranchId | null {
-  if (branch === "main" || branch === "feat-add-cluster") {
-    return branch;
-  }
-
-  return null;
-}
+const readStaticBranchFile = cache((branchId: BranchId, repoPath: string): string => {
+  const absolutePath = path.join(branchContentRoot(branchId), ...repoPath.split("/"));
+  return fs.readFileSync(absolutePath, "utf8");
+});
 
 function countMatching(files: string[], pattern: RegExp): number {
   return files.filter((file) => pattern.test(file)).length;
@@ -535,23 +581,19 @@ function parseLatestCommit(ref: string): GitCommit {
 }
 
 function parseDiffSummary(ref: string): DiffSummary {
-  const items = runGit(["diff", "--name-status", "main..".concat(ref)])
+  const items = runGit(["diff", "--name-status", `main..${ref}`])
     .split(/\r?\n/)
     .filter(Boolean)
     .map((line) => {
       const parts = line.split("\t");
-      const status = parts[0] ?? "";
-      const previousPath = parts.length === 3 ? parts[1] : undefined;
-      const filePath = parts[parts.length - 1] ?? "";
-
       return {
-        status,
-        path: filePath,
-        previousPath,
+        status: parts[0] ?? "",
+        previousPath: parts.length === 3 ? parts[1] : undefined,
+        path: parts[parts.length - 1] ?? "",
       };
     });
 
-  const shortStat = runGit(["diff", "--shortstat", "main..".concat(ref)]);
+  const shortStat = runGit(["diff", "--shortstat", `main..${ref}`]);
   const match =
     /(\d+)\s+files?\s+changed(?:,\s+(\d+)\s+insertions?\(\+\))?(?:,\s+(\d+)\s+deletions?\(-\))?/i.exec(
       shortStat,
@@ -567,15 +609,15 @@ function parseDiffSummary(ref: string): DiffSummary {
 
 function humanizeSegment(segment: string): string {
   if (!segment) {
-    return "概览";
+    return "总览";
   }
 
   if (segment === "zh") {
-    return "中文文档";
+    return "中文";
   }
 
   if (segment === "en") {
-    return "English Docs";
+    return "English";
   }
 
   return segment.replace(/[-_]/g, " ");
@@ -597,7 +639,7 @@ function docPathToSlug(repoPath: string): string[] {
   const withoutPrefix = repoPath.replace(/^docs\//, "").replace(/\.md$/i, "");
   const segments = withoutPrefix.split("/");
 
-  if (segments[segments.length - 1]?.toLowerCase() === "readme") {
+  if (segments.at(-1)?.toLowerCase() === "readme") {
     return segments.slice(0, -1);
   }
 
@@ -609,29 +651,28 @@ function slugToKey(slug: string[]): string {
 }
 
 function docTitleFromPath(repoPath: string): string {
-  const slug = docPathToSlug(repoPath);
   const fileName = path.posix.basename(repoPath, ".md");
+  const slug = docPathToSlug(repoPath);
 
   if (fileName.toLowerCase() === "readme") {
-    return humanizeSegment(slug[slug.length - 1] ?? DEFAULT_DOC_SLUG);
+    return humanizeSegment(slug.at(-1) ?? "docs");
   }
 
   return humanizeSegment(fileName);
 }
 
-function buildDocEntries(branchId: BranchId, ref: string): DocEntry[] {
-  return listFiles(ref)
+function buildDocEntries(branchId: BranchId): DocEntry[] {
+  return listBranchContentFiles(branchId)
     .filter((file) => file.startsWith("docs/") && file.endsWith(".md"))
     .map((repoPath) => {
       const slug = docPathToSlug(repoPath);
-      const locale = slug[0] ?? DEFAULT_DOC_SLUG;
+      const locale = slug[0] ?? "zh";
       const section =
         slug.length <= 1
           ? "overview"
           : slug[1] === "reference" && slug.length > 2
             ? slug[2]
             : slug[1] ?? "overview";
-      const sectionLabel = slug.length <= 1 ? "总览" : humanizeSegment(section);
 
       return {
         title: docTitleFromPath(repoPath),
@@ -641,7 +682,7 @@ function buildDocEntries(branchId: BranchId, ref: string): DocEntry[] {
         locale,
         localeLabel: localeLabel(locale),
         section,
-        sectionLabel,
+        sectionLabel: slug.length <= 1 ? "总览" : humanizeSegment(section),
         href: `/docs/${branchId}/${slug.join("/")}`,
       };
     })
@@ -649,20 +690,20 @@ function buildDocEntries(branchId: BranchId, ref: string): DocEntry[] {
 }
 
 function buildDocGroups(entries: DocEntry[]): DocNavGroup[] {
-  const localeMap = new Map<string, Map<string, DocEntry[]>>();
+  const locales = new Map<string, Map<string, DocEntry[]>>();
 
   for (const entry of entries) {
-    const sectionMap = localeMap.get(entry.locale) ?? new Map<string, DocEntry[]>();
-    const collection = sectionMap.get(entry.sectionLabel) ?? [];
-    collection.push(entry);
-    sectionMap.set(entry.sectionLabel, collection);
-    localeMap.set(entry.locale, sectionMap);
+    const sections = locales.get(entry.locale) ?? new Map<string, DocEntry[]>();
+    const items = sections.get(entry.sectionLabel) ?? [];
+    items.push(entry);
+    sections.set(entry.sectionLabel, items);
+    locales.set(entry.locale, sections);
   }
 
-  return Array.from(localeMap.entries())
+  return Array.from(locales.entries())
     .sort(([left], [right]) => {
-      const priority = (locale: string) => (locale === "zh" ? 0 : locale === "en" ? 1 : 2);
-      return priority(left) - priority(right) || left.localeCompare(right);
+      const order = (value: string) => (value === "zh" ? 0 : value === "en" ? 1 : 2);
+      return order(left) - order(right) || left.localeCompare(right);
     })
     .map(([locale, sections]) => ({
       locale,
@@ -681,18 +722,18 @@ function buildDocGroups(entries: DocEntry[]): DocNavGroup[] {
 function extractReleaseHighlights(changelog: string): string[] {
   const lines = changelog.split(/\r?\n/);
   const highlights: string[] = [];
-  let inCurrentRelease = false;
+  let inReleaseSection = false;
 
   for (const line of lines) {
     if (line.startsWith("## ")) {
-      if (inCurrentRelease) {
+      if (inReleaseSection) {
         break;
       }
-      inCurrentRelease = true;
+      inReleaseSection = true;
       continue;
     }
 
-    if (!inCurrentRelease) {
+    if (!inReleaseSection) {
       continue;
     }
 
@@ -764,13 +805,7 @@ function extractHeadings(markdown: string): MarkdownHeading[] {
 
       const depth = match[1].length;
       const title = match[2].replace(/\s+#*$/, "").trim();
-      return [
-        {
-          id: slugifyHeading(title),
-          title,
-          depth,
-        },
-      ];
+      return [{ id: slugifyHeading(title), title, depth }];
     });
 }
 
@@ -789,7 +824,6 @@ function extractGrpcMethods(ref: string): GrpcMethod[] {
     ref,
     "contrib/grpcapi/proto/execgo/v1/execgo.proto",
   );
-
   if (!content) {
     return [];
   }
@@ -816,40 +850,38 @@ function extractGrpcMethods(ref: string): GrpcMethod[] {
   return methods;
 }
 
-function extractExecutorSurface(ref: string): ExecutorSurface {
-  const osExecutor = readGitFile(ref, "pkg/executor/os.go");
-  const builtinRegistry = readGitFile(ref, "pkg/executor/executor.go");
-  const toolMatches = Array.from(osExecutor.matchAll(/"([^"]+)":\s+\w+\.Execute/g))
-    .map((match) => match[1] ?? "")
-    .filter(Boolean);
-  const categoryMatches = Array.from(
-    builtinRegistry.matchAll(/Register\(New([A-Za-z]+)Executor/g),
-  )
-    .map((match) => normalizeExecutorCategory(match[1] ?? ""))
-    .filter((value): value is string => Boolean(value));
-
-  return {
-    categories: Array.from(new Set(categoryMatches)),
-    tools: Array.from(new Set(toolMatches)).sort((left, right) =>
-      left.localeCompare(right),
-    ),
-  };
-}
-
-function normalizeExecutorCategory(name: string): string {
+function normalizeExecutorCategory(value: string): string {
   const known: Record<string, string> = {
     OS: "os",
     MCP: "mcp",
     CLISkills: "cli-skills",
   };
 
-  if (known[name]) {
-    return known[name];
+  if (known[value]) {
+    return known[value];
   }
 
-  return name
-    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
-    .toLowerCase();
+  return value.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+}
+
+function extractExecutorSurface(ref: string): ExecutorSurface {
+  const osExecutor = readGitFile(ref, "pkg/executor/os.go");
+  const builtinRegistry = readGitFile(ref, "pkg/executor/executor.go");
+
+  const tools = Array.from(osExecutor.matchAll(/"([^"]+)":\s+\w+\.Execute/g))
+    .map((match) => match[1] ?? "")
+    .filter(Boolean);
+
+  const categories = Array.from(
+    builtinRegistry.matchAll(/Register\(New([A-Za-z]+)Executor/g),
+  )
+    .map((match) => normalizeExecutorCategory(match[1] ?? ""))
+    .filter(Boolean);
+
+  return {
+    categories: Array.from(new Set(categories)),
+    tools: Array.from(new Set(tools)).sort((left, right) => left.localeCompare(right)),
+  };
 }
 
 function buildChangedAreas(diff?: DiffSummary): ChangedArea[] {
@@ -867,11 +899,11 @@ function buildChangedAreas(diff?: DiffSummary): ChangedArea[] {
       count: matched.length,
       samples: matched.slice(0, 3).map((item) => item.path),
     };
-  }).filter((area) => area.count > 0);
+  }).filter((entry) => entry.count > 0);
 }
 
-function parseVersion(content: string): string {
-  const match = content.match(/Current\s*=\s*"([^"]+)"/);
+function parseVersion(versionSource: string): string {
+  const match = versionSource.match(/Current\s*=\s*"([^"]+)"/);
   return match?.[1] ?? "v1";
 }
 
@@ -881,39 +913,62 @@ function parseReleaseDate(changelog: string): string {
 }
 
 function pickRecommendedDocs(branchId: BranchId, docs: DocEntry[]): DocEntry[] {
-  const pathSet = new Map(docs.map((doc) => [doc.repoPath, doc] as const));
-
+  const entries = new Map(docs.map((doc) => [doc.repoPath, doc] as const));
   return PREFERRED_DOCS[branchId]
-    .map((repoPath) => pathSet.get(repoPath))
+    .map((repoPath) => entries.get(repoPath))
     .filter((doc): doc is DocEntry => Boolean(doc));
 }
 
+function extractDocTitle(markdown: string, fallback: string): string {
+  const titleLine = markdown
+    .split(/\r?\n/)
+    .find((line) => line.trim().startsWith("# "));
+
+  if (!titleLine) {
+    return fallback;
+  }
+
+  return titleLine.replace(/^#\s+/, "").trim();
+}
+
+function ensureBranchId(value: string): BranchId | null {
+  if (value === "main" || value === "feat-add-cluster") {
+    return value;
+  }
+
+  return null;
+}
+
+function getDocEntry(branchId: BranchId, slugKey: string): DocEntry | null {
+  const branch = getBranchSnapshot(branchId);
+  const targetKey = slugKey || slugToKey(DEFAULT_DOC_SLUG);
+  return branch.docs.find((doc) => doc.slugKey === targetKey) ?? null;
+}
+
 export const getBranchSnapshot = cache((branchId: BranchId): BranchSnapshot => {
-  const copy = BRANCHES[branchId];
   const ref = resolveBranchRef(branchId);
-  const files = listFiles(ref);
-  const docs = buildDocEntries(branchId, ref);
-  const changelog = readGitFileSafe(ref, "CHANGELOG.md") ?? "";
-  const readme = readGitFile(ref, "README.md");
+  const gitFiles = listGitFiles(ref);
+  const docs = buildDocEntries(branchId);
+  const changelog = readStaticBranchFile(branchId, "CHANGELOG.md");
+  const readme = readStaticBranchFile(branchId, "README.md");
+  const versionSource = readStaticBranchFile(branchId, "pkg/version/version.go");
   const diff = branchId === "main" ? undefined : parseDiffSummary(ref);
-  const versionFile = readGitFile(ref, "pkg/version/version.go");
 
   return {
-    id: branchId,
-    ...copy,
+    ...BRANCHES[branchId],
     ref,
     latestCommit: parseLatestCommit(ref),
     stats: {
-      totalFiles: files.length,
-      goFiles: countMatching(files, /\.go$/),
-      zhDocs: countMatching(files, /^docs\/zh\/.*\.md$/),
-      enDocs: countMatching(files, /^docs\/en\/.*\.md$/),
-      unitTests: countMatching(files, /^tests\/unit\/.*_test\.go$/),
-      moduleTests: countMatching(files, /^tests\/module\/.*_test\.go$/),
-      integrationTests: countMatching(files, /^tests\/integration\/.*_test\.go$/),
+      totalFiles: gitFiles.length,
+      goFiles: countMatching(gitFiles, /\.go$/),
+      zhDocs: countMatching(docs.map((doc) => doc.repoPath), /^docs\/zh\/.*\.md$/),
+      enDocs: countMatching(docs.map((doc) => doc.repoPath), /^docs\/en\/.*\.md$/),
+      unitTests: countMatching(gitFiles, /^tests\/unit\/.*_test\.go$/),
+      moduleTests: countMatching(gitFiles, /^tests\/module\/.*_test\.go$/),
+      integrationTests: countMatching(gitFiles, /^tests\/integration\/.*_test\.go$/),
       contribModules: Array.from(
         new Set(
-          files
+          gitFiles
             .filter((file) => file.startsWith("contrib/"))
             .map((file) => file.split("/").slice(0, 2).join("/")),
         ),
@@ -933,27 +988,25 @@ export const getBranchSnapshot = cache((branchId: BranchId): BranchSnapshot => {
     executorSurface: extractExecutorSurface(ref),
     readmeExcerpt: extractExcerpt(readme),
     releaseHighlights: extractReleaseHighlights(changelog),
-    releaseVersion: parseVersion(versionFile),
+    releaseVersion: parseVersion(versionSource),
     releaseDate: parseReleaseDate(changelog),
-    githubBranchUrl: `${GITHUB_REPO}/tree/${copy.branchName}`,
+    githubBranchUrl: `${GITHUB_REPO}/tree/${BRANCHES[branchId].branchName}`,
     topChangedFiles: diff?.items.slice(0, 16) ?? [],
   };
 });
 
-export const getSiteData = cache(() => {
+export const getSiteData = cache((): SiteData => {
   const main = getBranchSnapshot("main");
   const cluster = getBranchSnapshot("feat-add-cluster");
 
-  const timelineRaw = runGit([
+  const timeline = runGit([
     "log",
     "--all",
     "--date=short",
     "--format=%h%x1f%ad%x1f%s%x1f%d",
     "-n",
     "10",
-  ]);
-
-  const timeline = timelineRaw
+  ])
     .split(/\r?\n/)
     .filter(Boolean)
     .map((line) => {
@@ -979,21 +1032,6 @@ export function getBranchIdOrNull(input: string): BranchId | null {
   return ensureBranchId(input);
 }
 
-export function getBranchSnapshotByInput(input: string): BranchSnapshot | null {
-  const branchId = ensureBranchId(input);
-  if (!branchId) {
-    return null;
-  }
-
-  return getBranchSnapshot(branchId);
-}
-
-function getDocEntry(branchId: BranchId, slugKey: string): DocEntry | null {
-  const branch = getBranchSnapshot(branchId);
-  const targetKey = slugKey || DEFAULT_DOC_SLUG;
-  return branch.docs.find((doc) => doc.slugKey === targetKey) ?? null;
-}
-
 export function getDocPageData(
   branchId: BranchId,
   slug: string[] = [],
@@ -1003,8 +1041,8 @@ export function getDocPageData(
     return null;
   }
 
+  const content = readStaticBranchFile(branchId, entry.repoPath);
   const branch = getBranchSnapshot(branchId);
-  const content = readGitFile(branch.ref, entry.repoPath);
 
   return {
     branch,
@@ -1017,24 +1055,39 @@ export function getDocPageData(
 }
 
 export function getDefaultDocPage(branchId: BranchId): DocPageData | null {
-  return getDocPageData(branchId, [DEFAULT_DOC_SLUG]);
+  return getDocPageData(branchId, DEFAULT_DOC_SLUG);
 }
 
-function extractDocTitle(markdown: string, fallback: string): string {
-  const titleLine = markdown
-    .split(/\r?\n/)
-    .find((line) => line.trim().startsWith("# "));
-
-  if (!titleLine) {
-    return fallback;
+function splitPathHash(repoPath: string): { pathname: string; hash: string } {
+  const hashIndex = repoPath.indexOf("#");
+  if (hashIndex === -1) {
+    return { pathname: repoPath, hash: "" };
   }
 
-  return titleLine.replace(/^#\s+/, "").trim();
+  return {
+    pathname: repoPath.slice(0, hashIndex),
+    hash: repoPath.slice(hashIndex),
+  };
 }
 
 export function toBranchBlobUrl(branch: BranchSnapshot, repoPath: string): string {
-  const kind = listFiles(branch.ref).includes(repoPath) ? "blob" : "tree";
-  return `${GITHUB_REPO}/${kind}/${branch.branchName}/${repoPath}`;
+  const { pathname, hash } = splitPathHash(repoPath);
+  const normalizedPath = pathname.replace(/^\/+/, "");
+  const looksLikeFile = Boolean(path.posix.extname(normalizedPath));
+  const kind =
+    listGitFiles(branch.ref).includes(normalizedPath) || looksLikeFile
+      ? "blob"
+      : "tree";
+
+  return `${GITHUB_REPO}/${kind}/${branch.branchName}/${normalizedPath}${hash}`;
+}
+
+function safeDecodeURIComponent(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
 }
 
 export function resolveMarkdownHref(
@@ -1060,16 +1113,16 @@ export function resolveMarkdownHref(
     return hash ? `#${hash}` : href;
   }
 
-  const normalizedTarget = safeDecodeURIComponent(targetPath).replace(/\\/g, "/");
-  let resolved = normalizedTarget;
-
-  if (normalizedTarget.startsWith("docs/")) {
-    resolved = path.posix.normalize(normalizedTarget);
-  } else {
-    resolved = path.posix.normalize(
-      path.posix.join(path.posix.dirname(currentDocPath), normalizedTarget),
-    );
-  }
+  const fileUrlTarget = targetPath.startsWith("file://");
+  const rawTarget = fileUrlTarget ? targetPath.replace(/^file:\/\//, "") : targetPath;
+  const normalizedTarget = safeDecodeURIComponent(rawTarget)
+    .replace(/\\/g, "/")
+    .replace(/^\/+/, "");
+  const resolved = normalizedTarget.startsWith("docs/") || fileUrlTarget
+    ? path.posix.normalize(normalizedTarget)
+    : path.posix.normalize(
+        path.posix.join(path.posix.dirname(currentDocPath), normalizedTarget),
+      );
 
   if (resolved.endsWith(".md") && resolved.startsWith("docs/")) {
     const slug = docPathToSlug(resolved);
@@ -1078,12 +1131,4 @@ export function resolveMarkdownHref(
   }
 
   return hash ? `${resolved}#${hash}` : resolved;
-}
-
-function safeDecodeURIComponent(value: string): string {
-  try {
-    return decodeURIComponent(value);
-  } catch {
-    return value;
-  }
 }

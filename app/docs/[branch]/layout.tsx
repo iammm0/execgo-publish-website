@@ -24,20 +24,20 @@ export default async function BranchDocsLayout({
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mb-6 rounded-[1.8rem] border border-white/10 bg-white/[0.06] p-5 shadow-2xl shadow-black/20 backdrop-blur-xl">
+      <div className="mb-6 rounded-[1.6rem] border border-[#d8e6de] bg-white p-5 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-400">
-              Docs Branch
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#009e5b]">
+              Docs snapshot
             </p>
-            <h1 className="mt-2 text-3xl font-black text-white">
+            <h1 className="mt-2 text-3xl font-black text-[#113222]">
               {snapshot.branchName} 文档目录
             </h1>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link
               href={`/branches/${snapshot.id}`}
-              className="rounded-full border border-white/12 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+              className="rounded-full border border-[#bfd9ca] px-4 py-2 text-sm font-semibold text-[#123222] transition hover:border-[#009e5b] hover:text-[#007b46]"
             >
               分支详情
             </Link>
@@ -45,48 +45,25 @@ export default async function BranchDocsLayout({
               href={snapshot.githubBranchUrl}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full border border-emerald-300/24 bg-emerald-300/10 px-4 py-2 text-sm font-semibold text-emerald-100 transition hover:bg-emerald-300/16"
+              className="rounded-full bg-[#123222] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#009e5b]"
             >
               GitHub 分支
             </a>
           </div>
         </div>
 
-        <p className="mt-4 max-w-4xl text-sm leading-7 text-slate-300">
-          这个文档区会直接读取 `{snapshot.branchName}` 分支下的
-          `docs/` Markdown 内容；左侧目录来自仓库文件树，而不是手工维护的静态数组。
+        <p className="mt-4 max-w-4xl text-sm leading-7 text-[#4f6d60]">
+          这里读取的是发布网站项目内的静态文档快照目录，而不是运行时直接访问
+          `execgo` 仓库。左侧目录来自快照文件树，右侧保留本页目录，整体布局参考官方文档站的结构。
         </p>
-      </div>
-
-      <div className="mb-4 rounded-[1.6rem] border border-white/10 bg-white/[0.05] p-4 xl:hidden">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
-          快速切换
-        </p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <Link
-            href="/docs/main"
-            className={`rounded-full px-4 py-2 text-sm ${
-              branchId === "main"
-                ? "bg-amber-300 text-slate-950"
-                : "bg-white/[0.06] text-white"
-            }`}
-          >
-            main
-          </Link>
-          <Link
-            href="/docs/feat-add-cluster"
-            className={`rounded-full px-4 py-2 text-sm ${
-              branchId === "feat-add-cluster"
-                ? "bg-amber-300 text-slate-950"
-                : "bg-white/[0.06] text-white"
-            }`}
-          >
-            feat-add-cluster
-          </Link>
+        <div className="mt-5 flex flex-wrap gap-4 text-xs font-semibold uppercase tracking-[0.18em] text-[#789487]">
+          <span>{snapshot.stats.zhDocs} 中文文档</span>
+          <span>{snapshot.stats.enDocs} English docs</span>
+          <span>{snapshot.docs.length} Markdown pages</span>
         </div>
       </div>
 
-      <div className="flex gap-8">
+      <div className="grid gap-6 xl:grid-cols-[18.5rem_minmax(0,1fr)] xl:items-start">
         <DocsSidebar branchId={branchId} groups={snapshot.docGroups} />
         <div className="min-w-0 flex-1">{children}</div>
       </div>

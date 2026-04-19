@@ -22,7 +22,6 @@ export async function generateMetadata({
   }
 
   const doc = getDocPageData(branchId, slug);
-
   if (!doc) {
     return {
       title: "文档未找到",
@@ -44,26 +43,25 @@ export default async function BranchDocArticlePage({ params }: PageProps) {
   }
 
   const doc = getDocPageData(branchId, slug);
-
   if (!doc) {
     notFound();
   }
 
   return (
-    <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_260px]">
+    <div className="grid gap-6 xl:grid-cols-[minmax(0,46rem)_15rem] xl:justify-between">
       <article className="glass-card overflow-hidden">
-        <div className="border-b border-white/10 p-6 sm:p-8">
+        <div className="mx-auto max-w-3xl border-b border-[#e1ebe5] px-6 py-6 sm:px-8 sm:py-8">
           <p className="section-eyebrow">{doc.entry.localeLabel}</p>
           <h1 className="section-title mt-2 text-3xl sm:text-4xl">
             {doc.title}
           </h1>
-          <p className="mt-4 font-mono text-xs text-emerald-200">
+          <p className="mt-4 font-mono text-xs text-[#007b46]">
             {doc.entry.repoPath}
           </p>
           {doc.excerpt.length > 0 ? (
             <div className="mt-4 space-y-2">
               {doc.excerpt.map((paragraph) => (
-                <p key={paragraph} className="text-sm leading-7 text-slate-300">
+                <p key={paragraph} className="text-sm leading-7 text-[#4f6d60]">
                   {paragraph}
                 </p>
               ))}
@@ -71,7 +69,7 @@ export default async function BranchDocArticlePage({ params }: PageProps) {
           ) : null}
         </div>
 
-        <div className="p-6 sm:p-8">
+        <div className="mx-auto max-w-3xl px-6 py-6 sm:px-8 sm:py-8">
           <RepoMarkdown
             branchId={branchId}
             currentDocPath={doc.entry.repoPath}

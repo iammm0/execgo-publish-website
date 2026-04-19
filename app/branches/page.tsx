@@ -16,9 +16,9 @@ export default function BranchesPage() {
         <h1 className="section-title text-4xl sm:text-5xl">
           ExecGo 双分支发布总览
         </h1>
-        <p className="mt-5 text-lg leading-8 text-slate-300">
+        <p className="mt-5 text-lg leading-8 text-[#4f6d60]">
           `main` 负责稳定交付，`feat-add-cluster` 负责展示向事件驱动控制面、
-          远程 Worker 和队列化运行时演进的方向。两条线都会在这里单独展开。
+          队列化运行时与远程 Worker 演进的方向。两条线都不是一句话带过，而是各自独立成页。
         </p>
       </div>
 
@@ -27,22 +27,22 @@ export default function BranchesPage() {
           <article key={branch.id} className="glass-card p-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#7a9186]">
                   {branch.badge}
                 </p>
-                <h2 className="mt-2 text-3xl font-black text-white">
+                <h2 className="mt-2 text-3xl font-black text-[#113222]">
                   {branch.branchName}
                 </h2>
               </div>
-              <span className="rounded-full bg-white/[0.08] px-3 py-1 text-xs text-slate-200">
+              <span className="rounded-full bg-[#f4fbf7] px-3 py-1 text-xs font-semibold text-[#007b46]">
                 {branch.channel}
               </span>
             </div>
 
-            <p className="mt-4 text-sm leading-7 text-slate-300">
+            <p className="mt-4 text-sm leading-7 text-[#4f6d60]">
               {branch.summary}
             </p>
-            <p className="mt-3 text-sm leading-7 text-slate-400">
+            <p className="mt-3 text-sm leading-7 text-[#5f7b6f]">
               适用人群：{branch.audience}
             </p>
 
@@ -58,16 +58,16 @@ export default function BranchesPage() {
                 ],
                 ["gRPC 方法", branch.stats.grpcMethods],
               ].map(([label, value]) => (
-                <div key={label} className="rounded-3xl border border-white/10 bg-white/[0.06] p-4">
-                  <p className="text-xs text-slate-500">{label}</p>
-                  <p className="mt-1 text-2xl font-black text-white">{value}</p>
+                <div key={label} className="rounded-2xl border border-[#e1ebe5] bg-[#fbfefd] p-4">
+                  <p className="text-xs text-[#7a9186]">{label}</p>
+                  <p className="mt-1 text-2xl font-black text-[#123222]">{value}</p>
                 </div>
               ))}
             </div>
 
             <div className="mt-6 space-y-3">
               {branch.narrative.map((paragraph) => (
-                <p key={paragraph} className="text-sm leading-7 text-slate-300">
+                <p key={paragraph} className="text-sm leading-7 text-[#4f6d60]">
                   {paragraph}
                 </p>
               ))}
@@ -77,7 +77,7 @@ export default function BranchesPage() {
               {branch.focusAreas.map((item) => (
                 <span
                   key={item}
-                  className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-xs text-slate-200"
+                  className="rounded-full border border-[#d8e6de] bg-[#f7faf8] px-3 py-1 text-xs text-[#335646]"
                 >
                   {item}
                 </span>
@@ -87,13 +87,13 @@ export default function BranchesPage() {
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href={`/branches/${branch.id}`}
-                className="rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-950 transition hover:bg-amber-200"
+                className="rounded-full bg-[#123222] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#009e5b]"
               >
                 查看详情
               </Link>
               <Link
                 href={`/docs/${branch.id}`}
-                className="rounded-full border border-white/12 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+                className="rounded-full border border-[#bfd9ca] px-4 py-2 text-sm font-semibold text-[#123222] transition hover:border-[#009e5b] hover:text-[#007b46]"
               >
                 查看文档
               </Link>

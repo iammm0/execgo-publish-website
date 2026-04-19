@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     template: "%s | execgo 发布网站",
   },
   description:
-    "围绕 execgo 仓库主线与集群预览线搭建的完整发布网站，展示分支能力、代码模块、文档入口、接口面与发布信息。",
+    "围绕 execgo 的稳定主线与集群预览线搭建的发布网站，展示分支能力、静态文档快照、代码模块、接口和发布信息。",
 };
 
 export default function RootLayout({
@@ -25,7 +25,7 @@ export default function RootLayout({
         <div className="site-bg" />
         <div className="relative flex min-h-screen flex-col">
           <SiteHeader />
-          <div className="flex-1">{children}</div>
+          <main className="flex-1">{children}</main>
           <SiteFooter />
         </div>
       </body>

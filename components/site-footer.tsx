@@ -2,34 +2,33 @@ import Link from "next/link";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/10 bg-[linear-gradient(180deg,rgba(8,16,28,0.94)_0%,rgba(6,10,18,1)_100%)]">
+    <footer className="border-t border-[#d8e6de] bg-white">
       <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[1.6fr_1fr_1fr] lg:px-8">
         <div>
-          <p className="text-sm font-semibold tracking-[0.28em] text-white/80">
+          <p className="text-sm font-bold tracking-[0.18em] text-[#123222]">
             EXECGO RELEASE SITE
           </p>
-          <p className="mt-3 max-w-xl text-sm leading-7 text-slate-300">
-            这个站点不是抽象宣传页，而是直接围绕 `execgo` 仓库、文档目录、
-            Git 分支和关键模块生成的发布网站，重点把 `main` 与
-            `feat-add-cluster` 两条线都讲清楚。
+          <p className="mt-3 max-w-xl text-sm leading-7 text-[#5f7b6f]">
+            这个站点直接围绕 execgo 仓库、双分支快照和静态文档内容构建，既展示
+            `main` 的稳定发布能力，也展示 `feat-add-cluster` 的演进方向。
           </p>
         </div>
 
         <div>
-          <p className="text-sm font-semibold text-white">快速入口</p>
-          <div className="mt-3 space-y-2 text-sm text-slate-300">
+          <p className="text-sm font-semibold text-[#123222]">快速入口</p>
+          <div className="mt-3 space-y-2 text-sm text-[#5f7b6f]">
             <div>
-              <Link href="/" className="transition hover:text-white">
-                发布概览
+              <Link href="/" className="transition hover:text-[#009e5b]">
+                发布首页
               </Link>
             </div>
             <div>
-              <Link href="/branches" className="transition hover:text-white">
+              <Link href="/branches" className="transition hover:text-[#009e5b]">
                 双分支总览
               </Link>
             </div>
             <div>
-              <Link href="/docs/main" className="transition hover:text-white">
+              <Link href="/docs/main" className="transition hover:text-[#009e5b]">
                 主线文档
               </Link>
             </div>
@@ -37,14 +36,14 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <p className="text-sm font-semibold text-white">仓库链接</p>
-          <div className="mt-3 space-y-2 text-sm text-slate-300">
+          <p className="text-sm font-semibold text-[#123222]">仓库链接</p>
+          <div className="mt-3 space-y-2 text-sm text-[#5f7b6f]">
             <div>
               <a
                 href="https://github.com/iammm0/execgo"
                 target="_blank"
                 rel="noreferrer"
-                className="transition hover:text-white"
+                className="transition hover:text-[#009e5b]"
               >
                 GitHub Repository
               </a>
@@ -54,9 +53,9 @@ export function SiteFooter() {
                 href="https://github.com/iammm0/execgo/tree/main"
                 target="_blank"
                 rel="noreferrer"
-                className="transition hover:text-white"
+                className="transition hover:text-[#009e5b]"
               >
-                `main` 分支
+                main
               </a>
             </div>
             <div>
@@ -64,9 +63,9 @@ export function SiteFooter() {
                 href="https://github.com/iammm0/execgo/tree/feat-add-cluster"
                 target="_blank"
                 rel="noreferrer"
-                className="transition hover:text-white"
+                className="transition hover:text-[#009e5b]"
               >
-                `feat-add-cluster` 分支
+                feat-add-cluster
               </a>
             </div>
           </div>

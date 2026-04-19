@@ -1,27 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  --background: #060b14;
-  --foreground: #edf3ff;
-  --muted: #9aacbf;
-  --surface: rgba(255, 255, 255, 0.05);
-  --surface-strong: rgba(255, 255, 255, 0.09);
-  --border: rgba(255, 255, 255, 0.12);
-  --accent-warm: #ffb347;
-  --accent-hot: #ff7a18;
-  --accent-fresh: #3ecf8e;
-  --accent-cool: #58a6ff;
+  --background: #f7faf8;
+  --background-soft: #eef5f1;
+  --foreground: #163126;
+  --muted: #5f7b6f;
+  --border: #d8e6de;
+  --panel: #ffffff;
+  --accent: #009e5b;
+  --accent-strong: #007b46;
+  --accent-soft: #e8f7ef;
+  --code-bg: #10221a;
   --font-sans:
-    "Sora",
-    "Manrope",
+    "Source Sans 3",
     "Noto Sans SC",
     "PingFang SC",
     "Microsoft YaHei",
     sans-serif;
   --font-mono:
     "JetBrains Mono",
-    "Cascadia Code",
     "IBM Plex Mono",
+    "Cascadia Code",
     "SFMono-Regular",
     Consolas,
     monospace;
@@ -40,15 +39,22 @@ body {
 }
 
 body {
-  position: relative;
   background:
-    radial-gradient(circle at top left, rgba(255, 122, 24, 0.18), transparent 28%),
-    radial-gradient(circle at 85% 0%, rgba(62, 207, 142, 0.16), transparent 30%),
-    radial-gradient(circle at 50% 100%, rgba(88, 166, 255, 0.12), transparent 35%),
-    var(--background);
+    radial-gradient(circle at top right, rgba(0, 158, 91, 0.12), transparent 26%),
+    radial-gradient(circle at top left, rgba(0, 158, 91, 0.06), transparent 22%),
+    linear-gradient(180deg, #fbfefd 0%, #f3f8f5 100%);
   color: var(--foreground);
   font-family: var(--font-sans);
   line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+}
+
+::selection {
+  background: rgba(0, 158, 91, 0.18);
+  color: #0b2519;
 }
 
 .site-bg {
@@ -57,85 +63,75 @@ body {
   inset: 0;
   z-index: 0;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(circle at center, black 42%, transparent 100%);
-}
-
-a {
-  text-decoration: none;
-}
-
-::selection {
-  background: rgba(255, 179, 71, 0.32);
-  color: white;
+    linear-gradient(rgba(0, 79, 45, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 79, 45, 0.04) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(circle at center, black 46%, transparent 100%);
 }
 
 .glass-card {
   border: 1px solid var(--border);
-  border-radius: 2rem;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border-radius: 1.5rem;
+  background: var(--panel);
   box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.26),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(16px);
+    0 18px 40px rgba(16, 54, 35, 0.06),
+    0 2px 8px rgba(16, 54, 35, 0.04);
 }
 
 .section-eyebrow {
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.32em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: #ffcf8b;
+  color: var(--accent);
 }
 
 .section-title {
-  margin-top: 0.75rem;
-  font-size: clamp(1.85rem, 2vw + 1rem, 3rem);
-  line-height: 1.04;
-  font-weight: 900;
-  color: white;
+  margin-top: 0.55rem;
+  color: #113222;
+  font-size: clamp(1.8rem, 2vw + 1rem, 3.1rem);
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
 .repo-markdown {
-  color: #d7e2ef;
+  color: #204032;
 }
 
 .repo-markdown h1 {
-  margin-top: 1.6rem;
+  margin-top: 1.5rem;
   margin-bottom: 1rem;
+  color: #143324;
   font-size: 2rem;
   line-height: 1.08;
-  font-weight: 900;
-  color: white;
+  font-weight: 800;
 }
 
 .repo-markdown h2 {
   margin-top: 2.2rem;
-  margin-bottom: 1rem;
-  font-size: 1.55rem;
-  line-height: 1.14;
+  margin-bottom: 0.9rem;
+  color: #143324;
+  font-size: 1.5rem;
+  line-height: 1.18;
   font-weight: 800;
-  color: white;
 }
 
 .repo-markdown h3 {
   margin-top: 1.7rem;
-  margin-bottom: 0.9rem;
+  margin-bottom: 0.8rem;
+  color: #173928;
   font-size: 1.15rem;
   line-height: 1.3;
-  font-weight: 800;
-  color: #f5f8ff;
+  font-weight: 700;
 }
 
 .repo-markdown p,
 .repo-markdown li,
 .repo-markdown blockquote {
-  font-size: 0.98rem;
+  color: #264536;
+  font-size: 1rem;
   line-height: 1.9;
-  color: #d7e2ef;
 }
 
 .repo-markdown p,
@@ -166,47 +162,45 @@ a {
 }
 
 .repo-markdown a {
-  color: #9bffd0;
+  color: var(--accent-strong);
   text-decoration: underline;
-  text-decoration-color: rgba(155, 255, 208, 0.42);
-  text-underline-offset: 0.22em;
+  text-decoration-color: rgba(0, 158, 91, 0.28);
+  text-underline-offset: 0.2em;
 }
 
 .repo-markdown a:hover {
-  color: #d9fff0;
+  color: var(--accent);
 }
 
 .repo-markdown blockquote {
-  border-left: 3px solid rgba(255, 179, 71, 0.6);
-  background: rgba(255, 179, 71, 0.08);
-  border-radius: 1rem;
-  padding: 1rem 1.15rem;
+  border-left: 3px solid rgba(0, 158, 91, 0.45);
+  border-radius: 0.95rem;
+  background: var(--accent-soft);
+  padding: 0.95rem 1rem;
 }
 
 .repo-markdown pre {
   overflow-x: auto;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1.25rem;
-  background:
-    linear-gradient(180deg, rgba(8, 16, 28, 0.98) 0%, rgba(5, 10, 18, 0.98) 100%);
-  padding: 1rem 1.15rem;
-  color: #edf3ff;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  border-radius: 1rem;
+  background: var(--code-bg);
+  padding: 1rem 1.1rem;
+  color: #e7fff2;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .repo-markdown pre code {
   display: block;
-  font-size: 0.9rem;
-  line-height: 1.8;
   white-space: pre;
+  font-size: 0.9rem;
+  line-height: 1.75;
 }
 
 .repo-markdown :not(pre) > code {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0.6rem;
-  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(0, 123, 70, 0.12);
+  border-radius: 0.55rem;
+  background: #edf7f1;
   padding: 0.1rem 0.42rem;
-  color: #ffd799;
+  color: #096a3b;
 }
 
 .repo-markdown code {
@@ -218,17 +212,18 @@ a {
   overflow: hidden;
   border-collapse: separate;
   border-spacing: 0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border);
   border-radius: 1rem;
+  background: white;
 }
 
 .repo-markdown thead {
-  background: rgba(255, 255, 255, 0.06);
+  background: #f0f6f2;
 }
 
 .repo-markdown th,
 .repo-markdown td {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--border);
   padding: 0.85rem 1rem;
   text-align: left;
   vertical-align: top;
@@ -240,5 +235,5 @@ a {
 
 .repo-markdown img {
   margin-top: 1rem;
-  border-radius: 1rem;
+  border-radius: 0.9rem;
 }
