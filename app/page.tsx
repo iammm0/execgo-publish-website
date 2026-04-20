@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { branchHasDocIndex } from "@/lib/execgo-data";
 import { hasRuntimeDocIndex } from "@/lib/runtime-data";
@@ -49,9 +50,19 @@ export default function Home() {
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
       <section>
-        <h1 className="text-4xl font-bold tracking-tight text-[var(--foreground)] sm:text-5xl">
-          execgo
-        </h1>
+        <div className="flex flex-wrap items-center gap-4">
+          <Image
+            src="/brand/execgo-logo-192.png"
+            alt="execgo logo"
+            width={72}
+            height={72}
+            priority
+            className="h-14 w-14 sm:h-[72px] sm:w-[72px]"
+          />
+          <h1 className="text-4xl font-bold tracking-tight text-[var(--foreground)] sm:text-5xl">
+            execgo
+          </h1>
+        </div>
         <p className="mt-4 max-w-2xl text-lg text-[var(--muted)]">
           面向 AI Agent 的任务执行内核与运行时。
         </p>
