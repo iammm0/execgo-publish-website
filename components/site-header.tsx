@@ -1,7 +1,5 @@
 import Link from "next/link";
 
-import { LocaleToggle } from "@/components/locale-toggle";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { branchHasDocIndex } from "@/lib/execgo-data";
 import { hasRuntimeDocIndex } from "@/lib/runtime-data";
 
@@ -44,8 +42,6 @@ export function SiteHeader() {
           >
             GitHub
           </a>
-          <LocaleToggle />
-          <ThemeToggle />
         </nav>
       </div>
     </header>
