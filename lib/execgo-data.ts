@@ -705,6 +705,22 @@ function slugToKey(slug: string[]): string {
   return slug.join("/");
 }
 
+/** Next.js 可能把路径段以百分号编码字面量传入，需解码后再与 doc.slugKey 对齐。 */
+function decodePathSegment(segment: string): string {
+  if (!segment.includes("%")) {
+    return segment;
+  }
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
+  }
+}
+
+export function normalizeDocRouteSlug(segments: string[]): string[] {
+  return segments.map((segment) => decodePathSegment(segment).normalize("NFC"));
+}
+
 function docTitleFromPath(repoPath: string): string {
   const fileName = path.posix.basename(repoPath, ".md");
   const slug = docPathToSlug(repoPath);
@@ -738,7 +754,7 @@ function buildDocEntries(branchId: BranchId): DocEntry[] {
         localeLabel: localeLabel(locale),
         section,
         sectionLabel: slug.length <= 1 ? "总览" : humanizeSegment(section),
-        href: `/docs/${branchId}/${slug.join("/")}`,
+        href: `/docs/execgo/${branchId}/${slug.join("/")}`,
       };
     })
     .sort((left, right) => left.repoPath.localeCompare(right.repoPath, "zh-CN"));
@@ -765,12 +781,20 @@ function buildDocGroups(entries: DocEntry[]): DocNavGroup[] {
       title: localeLabel(locale),
       sections: Array.from(sections.entries())
         .sort(([left], [right]) => left.localeCompare(right, "zh-CN"))
-        .map(([title, items]) => ({
-          title,
-          items: [...items].sort((left, right) =>
+        .map(([sectionTitle, items]) => {
+          const sorted = [...items].sort((left, right) =>
             left.repoPath.localeCompare(right.repoPath, "zh-CN"),
-          ),
-        })),
+          );
+          // 同一分组下若已有子页面，则省略与分组同名的「目录索引」页，避免侧栏重复且误导。
+          const navItems =
+            sorted.length > 1
+              ? sorted.filter((entry) => entry.title !== sectionTitle)
+              : sorted;
+          return {
+            title: sectionTitle,
+            items: navItems,
+          };
+        }),
     }));
 }
 
@@ -1112,7 +1136,8 @@ export function getDocPageData(
   branchId: BranchId,
   slug: string[] = [],
 ): DocPageData | null {
-  const entry = getDocEntry(branchId, slugToKey(slug));
+  const normalizedSlug = normalizeDocRouteSlug(slug);
+  const entry = getDocEntry(branchId, slugToKey(normalizedSlug));
   if (!entry) {
     return null;
   }
@@ -1132,6 +1157,11 @@ export function getDocPageData(
 
 export function getDefaultDocPage(branchId: BranchId): DocPageData | null {
   return getDocPageData(branchId, DEFAULT_DOC_SLUG);
+}
+
+/** 当前快照是否存在可打开的文档首页（用于隐藏无内容时的「文档目录」等入口）。 */
+export function branchHasDocIndex(branchId: BranchId): boolean {
+  return getDefaultDocPage(branchId) !== null;
 }
 
 function splitPathHash(repoPath: string): { pathname: string; hash: string } {
@@ -1202,7 +1232,7 @@ export function resolveMarkdownHref(
 
   if (resolved.endsWith(".md") && resolved.startsWith("docs/")) {
     const slug = docPathToSlug(resolved);
-    const base = `/docs/${branchId}/${slug.join("/")}`;
+    const base = `/docs/execgo/${branchId}/${slug.join("/")}`;
     return hash ? `${base}#${hash}` : base;
   }
 

@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import type { BranchId, DocNavGroup } from "@/lib/execgo-data";
+import type { BranchId, DocNavGroup, DocNavSection } from "@/lib/execgo-data";
+import { useLocale } from "@/lib/locale-context";
 
 type DocsSidebarProps = {
   branchId: BranchId;
@@ -11,9 +12,16 @@ type DocsSidebarProps = {
 };
 
 const branchLinks: Array<{ id: BranchId; label: string }> = [
-  { id: "main", label: "main 稳定线" },
-  { id: "feat-add-cluster", label: "feat-add-cluster 集群线" },
+  { id: "main", label: "main" },
+  { id: "feat-add-cluster", label: "feat-add-cluster" },
 ];
+
+/** 仅一条链接且与分组标题同名时，不再重复显示分组小标题。 */
+function isSoleSameTitleAsSection(section: DocNavSection): boolean {
+  return (
+    section.items.length === 1 && section.items[0].title === section.title
+  );
+}
 
 function samePath(pathname: string, href: string): boolean {
   if (pathname === href) {
@@ -29,27 +37,24 @@ function samePath(pathname: string, href: string): boolean {
 
 export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
   const pathname = usePathname();
+  const { locale } = useLocale();
+  const filteredGroups = groups.filter((g) => g.locale === locale);
 
   return (
     <>
-      <div className="space-y-4 xl:hidden">
-        <div className="rounded-2xl border border-[#d8e6de] bg-white p-4 shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#009e5b]">
-            文档导航
-          </p>
-          <p className="mt-2 text-sm leading-6 text-[#5f7b6f]">
-            按分支、语言和章节快速切换。
-          </p>
-          <div className="mt-4 grid gap-2">
+      <div className="space-y-6 xl:hidden">
+        <div className="border border-[var(--border)] bg-white px-4 py-4">
+          <p className="text-sm font-medium text-[var(--foreground)]">分支</p>
+          <div className="mt-3 flex flex-wrap gap-4 text-sm">
             {branchLinks.map((branch) => (
               <Link
                 key={branch.id}
                 href={`/docs/${branch.id}`}
-                className={`rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                className={
                   branchId === branch.id
-                    ? "bg-[#009e5b] text-white"
-                    : "bg-[#f4f9f6] text-[#335646] hover:bg-[#e8f7ef] hover:text-[#007b46]"
-                }`}
+                    ? "font-medium text-[var(--accent-strong)]"
+                    : "text-[var(--muted)] hover:text-[var(--accent-strong)]"
+                }
               >
                 {branch.label}
               </Link>
@@ -57,50 +62,48 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
           </div>
         </div>
 
-        <div className="space-y-3">
-          {groups.map((group, index) => (
+        <div className="space-y-4">
+          {filteredGroups.map((group, index) => (
             <details
               key={group.locale}
               open={index === 0}
-              className="overflow-hidden rounded-2xl border border-[#d8e6de] bg-white shadow-sm"
+              className="border border-[var(--border)] bg-white"
             >
-              <summary className="cursor-pointer list-none px-4 py-3">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-sm font-bold text-[#123222]">{group.title}</span>
-                  <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#789487]">
-                    {group.sections.length} sections
-                  </span>
-                </div>
+              <summary className="cursor-pointer list-none border-b border-[var(--border)] px-4 py-3 text-sm font-medium text-[var(--foreground)]">
+                {group.title}
               </summary>
-              <div className="border-t border-[#e3eee8] p-4">
+              <div className="p-4">
                 <div className="space-y-5">
-                  {group.sections.map((section) => (
-                    <div key={`${group.locale}-${section.title}`}>
-                      <p className="mb-2 text-xs font-bold text-[#335646]">
-                        {section.title}
-                      </p>
-                      <ul className="space-y-1">
-                        {section.items.map((item) => {
-                          const active = samePath(pathname, item.href);
+                  {group.sections.map((section) => {
+                    const hideSectionCaption = isSoleSameTitleAsSection(section);
+                    return (
+                      <div key={`${group.locale}-${section.title}`}>
+                        {hideSectionCaption ? null : (
+                          <p className="mb-2 text-xs text-[var(--muted)]">{section.title}</p>
+                        )}
+                        <ul className="space-y-0.5">
+                          {section.items.map((item) => {
+                            const active = samePath(pathname, item.href);
 
-                          return (
-                            <li key={item.href}>
-                              <Link
-                                href={item.href}
-                                className={`block rounded-lg px-3 py-2 text-sm leading-5 transition ${
-                                  active
-                                    ? "bg-[#e8f7ef] text-[#007b46]"
-                                    : "text-[#5f7b6f] hover:bg-[#f4f9f6] hover:text-[#123222]"
-                                }`}
-                              >
-                                {item.title}
-                              </Link>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  ))}
+                            return (
+                              <li key={item.href}>
+                                <Link
+                                  href={item.href}
+                                  className={`block py-1.5 pl-2 text-sm leading-snug ${
+                                    active
+                                      ? "border-l-2 border-[var(--accent-strong)] font-medium text-[var(--foreground)]"
+                                      : "border-l-2 border-transparent text-[var(--muted)] hover:text-[var(--foreground)]"
+                                  }`}
+                                >
+                                  {item.title}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </details>
@@ -109,21 +112,19 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
       </div>
 
       <aside className="hidden w-[18.5rem] shrink-0 xl:block">
-        <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-hidden rounded-2xl border border-[#d8e6de] bg-white shadow-sm">
-          <div className="border-b border-[#e3eee8] p-4">
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#009e5b]">
-              文档分支
-            </p>
-            <div className="mt-3 grid gap-2">
+        <div className="sticky top-16 max-h-[calc(100vh-5rem)] overflow-hidden border border-[var(--border)] bg-white">
+          <div className="border-b border-[var(--border)] px-4 py-3">
+            <p className="text-xs text-[var(--muted)]">分支</p>
+            <div className="mt-2 flex flex-col gap-1 text-sm">
               {branchLinks.map((branch) => (
                 <Link
                   key={branch.id}
                   href={`/docs/${branch.id}`}
-                  className={`rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                  className={
                     branchId === branch.id
-                      ? "bg-[#009e5b] text-white"
-                      : "bg-[#f4f9f6] text-[#335646] hover:bg-[#e8f7ef] hover:text-[#007b46]"
-                  }`}
+                      ? "font-medium text-[var(--accent-strong)]"
+                      : "text-[var(--muted)] hover:text-[var(--foreground)]"
+                  }
                 >
                   {branch.label}
                 </Link>
@@ -131,40 +132,41 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
             </div>
           </div>
 
-          <div className="max-h-[calc(100vh-17rem)] overflow-y-auto p-4">
-            {groups.map((group) => (
-              <section key={group.locale} className="mb-7 last:mb-0">
-                <h2 className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#789487]">
-                  {group.title}
-                </h2>
+          <div className="max-h-[calc(100vh-12rem)] overflow-y-auto px-4 py-3">
+            {filteredGroups.map((group) => (
+              <section key={group.locale} className="mb-8 last:mb-0">
+                <h2 className="mb-3 text-xs text-[var(--muted)]">{group.title}</h2>
                 <div className="space-y-5">
-                  {group.sections.map((section) => (
-                    <div key={`${group.locale}-${section.title}`}>
-                      <p className="mb-2 text-xs font-bold text-[#335646]">
-                        {section.title}
-                      </p>
-                      <ul className="space-y-1">
-                        {section.items.map((item) => {
-                          const active = samePath(pathname, item.href);
+                  {group.sections.map((section) => {
+                    const hideSectionCaption = isSoleSameTitleAsSection(section);
+                    return (
+                      <div key={`${group.locale}-${section.title}`}>
+                        {hideSectionCaption ? null : (
+                          <p className="mb-2 text-xs text-[var(--muted)]">{section.title}</p>
+                        )}
+                        <ul className="space-y-0.5">
+                          {section.items.map((item) => {
+                            const active = samePath(pathname, item.href);
 
-                          return (
-                            <li key={item.href}>
-                              <Link
-                                href={item.href}
-                                className={`block rounded-lg px-3 py-2 text-sm leading-5 transition ${
-                                  active
-                                    ? "bg-[#e8f7ef] text-[#007b46]"
-                                    : "text-[#5f7b6f] hover:bg-[#f4f9f6] hover:text-[#123222]"
-                                }`}
-                              >
-                                {item.title}
-                              </Link>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  ))}
+                            return (
+                              <li key={item.href}>
+                                <Link
+                                  href={item.href}
+                                  className={`block py-1.5 pl-2 text-sm leading-snug ${
+                                    active
+                                      ? "border-l-2 border-[var(--accent-strong)] font-medium text-[var(--foreground)]"
+                                      : "border-l-2 border-transparent text-[var(--muted)] hover:text-[var(--foreground)]"
+                                  }`}
+                                >
+                                  {item.title}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    );
+                  })}
                 </div>
               </section>
             ))}

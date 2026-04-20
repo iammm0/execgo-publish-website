@@ -20,7 +20,11 @@
 # production
 /build
 
+# staging repos
+.staging/
+
 # misc
+.npm-cache
 .DS_Store
 *.pem
 execgo/
