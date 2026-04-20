@@ -200,7 +200,13 @@ const BRANCHES: Record<BranchId, BranchCopy> = {
       "Task DSL 与 DAG 校验",
       "v1.0.0 发布说明",
     ],
-    refCandidates: ["main", "origin/main"],
+    refCandidates: [
+      "main",
+      "origin/main",
+      "master",
+      "origin/master",
+      "HEAD",
+    ],
   },
   "feat-add-cluster": {
     id: "feat-add-cluster",
@@ -513,7 +519,55 @@ function walkFiles(root: string): string[] {
   return results;
 }
 
-const resolveBranchRef = cache((branchId: BranchId): string => {
+type SnapshotManifest = {
+  branch?: string;
+  ref?: string;
+  generatedAt?: string;
+  files?: string[];
+};
+
+function readBranchSnapshotManifest(branchId: BranchId): SnapshotManifest | null {
+  const filePath = path.join(branchContentRoot(branchId), "snapshot.json");
+  if (!fs.existsSync(filePath)) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(fs.readFileSync(filePath, "utf8")) as SnapshotManifest;
+  } catch {
+    return null;
+  }
+}
+
+function emptyDiffSummary(): DiffSummary {
+  return {
+    filesChanged: 0,
+    insertions: 0,
+    deletions: 0,
+    items: [],
+  };
+}
+
+function staticPlaceholderCommit(branchId: BranchId): GitCommit {
+  const snap = readBranchSnapshotManifest(branchId);
+  const authoredAt = snap?.generatedAt ?? "";
+
+  return {
+    hash: "0000000000000000000000000000000000000000",
+    shortHash: "local",
+    subject: "使用 content 快照（未配置可解析的 execgo Git 引用）",
+    author: "execgo-publish-website",
+    authoredAt,
+    authoredDateLabel: authoredAt ? authoredAt.slice(0, 10) : "",
+  };
+}
+
+/** 在 ../execgo 仓库中解析分支引用；无法解析时返回 null，由调用方走静态快照逻辑。 */
+const resolveExecgoRef = cache((branchId: BranchId): string | null => {
+  if (!fs.existsSync(path.join(EXECGO_ROOT, ".git"))) {
+    return null;
+  }
+
   for (const ref of BRANCHES[branchId].refCandidates) {
     try {
       runGit(["rev-parse", "--verify", ref]);
@@ -523,7 +577,7 @@ const resolveBranchRef = cache((branchId: BranchId): string => {
     }
   }
 
-  throw new Error(`Unable to resolve git ref for branch ${branchId}`);
+  return null;
 });
 
 const listGitFiles = cache((ref: string): string[] => {
@@ -580,8 +634,9 @@ function parseLatestCommit(ref: string): GitCommit {
   };
 }
 
-function parseDiffSummary(ref: string): DiffSummary {
-  const items = runGit(["diff", "--name-status", `main..${ref}`])
+function parseDiffSummary(baseRef: string, headRef: string): DiffSummary {
+  const range = `${baseRef}..${headRef}`;
+  const items = runGit(["diff", "--name-status", range])
     .split(/\r?\n/)
     .filter(Boolean)
     .map((line) => {
@@ -593,7 +648,7 @@ function parseDiffSummary(ref: string): DiffSummary {
       };
     });
 
-  const shortStat = runGit(["diff", "--shortstat", `main..${ref}`]);
+  const shortStat = runGit(["diff", "--shortstat", range]);
   const match =
     /(\d+)\s+files?\s+changed(?:,\s+(\d+)\s+insertions?\(\+\))?(?:,\s+(\d+)\s+deletions?\(-\))?/i.exec(
       shortStat,
@@ -946,35 +1001,43 @@ function getDocEntry(branchId: BranchId, slugKey: string): DocEntry | null {
 }
 
 export const getBranchSnapshot = cache((branchId: BranchId): BranchSnapshot => {
-  const ref = resolveBranchRef(branchId);
-  const gitFiles = listGitFiles(ref);
+  const gitRef = resolveExecgoRef(branchId);
+  const useGit = gitRef !== null;
+  const ref = useGit ? gitRef : `content/execgo-branches/${branchId}`;
+  const fileIndex = useGit ? listGitFiles(gitRef) : listBranchContentFiles(branchId);
   const docs = buildDocEntries(branchId);
   const changelog = readStaticBranchFile(branchId, "CHANGELOG.md");
   const readme = readStaticBranchFile(branchId, "README.md");
   const versionSource = readStaticBranchFile(branchId, "pkg/version/version.go");
-  const diff = branchId === "main" ? undefined : parseDiffSummary(ref);
+  const mainRef = resolveExecgoRef("main");
+  const diff =
+    branchId === "main"
+      ? undefined
+      : useGit && mainRef
+        ? parseDiffSummary(mainRef, gitRef!)
+        : emptyDiffSummary();
 
   return {
     ...BRANCHES[branchId],
     ref,
-    latestCommit: parseLatestCommit(ref),
+    latestCommit: useGit ? parseLatestCommit(gitRef) : staticPlaceholderCommit(branchId),
     stats: {
-      totalFiles: gitFiles.length,
-      goFiles: countMatching(gitFiles, /\.go$/),
+      totalFiles: fileIndex.length,
+      goFiles: countMatching(fileIndex, /\.go$/),
       zhDocs: countMatching(docs.map((doc) => doc.repoPath), /^docs\/zh\/.*\.md$/),
       enDocs: countMatching(docs.map((doc) => doc.repoPath), /^docs\/en\/.*\.md$/),
-      unitTests: countMatching(gitFiles, /^tests\/unit\/.*_test\.go$/),
-      moduleTests: countMatching(gitFiles, /^tests\/module\/.*_test\.go$/),
-      integrationTests: countMatching(gitFiles, /^tests\/integration\/.*_test\.go$/),
+      unitTests: countMatching(fileIndex, /^tests\/unit\/.*_test\.go$/),
+      moduleTests: countMatching(fileIndex, /^tests\/module\/.*_test\.go$/),
+      integrationTests: countMatching(fileIndex, /^tests\/integration\/.*_test\.go$/),
       contribModules: Array.from(
         new Set(
-          gitFiles
+          fileIndex
             .filter((file) => file.startsWith("contrib/"))
             .map((file) => file.split("/").slice(0, 2).join("/")),
         ),
       ).length,
-      httpRoutes: extractHttpRoutes(ref).length,
-      grpcMethods: extractGrpcMethods(ref).length,
+      httpRoutes: useGit ? extractHttpRoutes(gitRef).length : 0,
+      grpcMethods: useGit ? extractGrpcMethods(gitRef).length : 0,
     },
     diff,
     changedAreas: buildChangedAreas(diff),
@@ -983,9 +1046,9 @@ export const getBranchSnapshot = cache((branchId: BranchId): BranchSnapshot => {
     recommendedDocs: pickRecommendedDocs(branchId, docs),
     capabilities: CAPABILITIES[branchId],
     moduleCards: MODULE_CARDS[branchId],
-    httpRoutes: extractHttpRoutes(ref),
-    grpcMethods: extractGrpcMethods(ref),
-    executorSurface: extractExecutorSurface(ref),
+    httpRoutes: useGit ? extractHttpRoutes(gitRef) : [],
+    grpcMethods: useGit ? extractGrpcMethods(gitRef) : [],
+    executorSurface: useGit ? extractExecutorSurface(gitRef) : { categories: [], tools: [] },
     readmeExcerpt: extractExcerpt(readme),
     releaseHighlights: extractReleaseHighlights(changelog),
     releaseVersion: parseVersion(versionSource),
@@ -999,25 +1062,38 @@ export const getSiteData = cache((): SiteData => {
   const main = getBranchSnapshot("main");
   const cluster = getBranchSnapshot("feat-add-cluster");
 
-  const timeline = runGit([
-    "log",
-    "--all",
-    "--date=short",
-    "--format=%h%x1f%ad%x1f%s%x1f%d",
-    "-n",
-    "10",
-  ])
-    .split(/\r?\n/)
-    .filter(Boolean)
-    .map((line) => {
-      const [shortHash, date, subject, decoration] = line.split("\x1f");
-      return {
-        shortHash,
-        date,
-        subject,
-        decoration: decoration?.replace(/[()]/g, "").trim() ?? "",
-      };
-    });
+  const canQueryExecgoGit =
+    resolveExecgoRef("main") !== null || resolveExecgoRef("feat-add-cluster") !== null;
+
+  const timeline = (() => {
+    if (!canQueryExecgoGit) {
+      return [];
+    }
+
+    try {
+      return runGit([
+        "log",
+        "--all",
+        "--date=short",
+        "--format=%h%x1f%ad%x1f%s%x1f%d",
+        "-n",
+        "10",
+      ])
+        .split(/\r?\n/)
+        .filter(Boolean)
+        .map((line) => {
+          const [shortHash, date, subject, decoration] = line.split("\x1f");
+          return {
+            shortHash,
+            date,
+            subject,
+            decoration: decoration?.replace(/[()]/g, "").trim() ?? "",
+          };
+        });
+    } catch {
+      return [];
+    }
+  })();
 
   return {
     releaseVersion: main.releaseVersion,
