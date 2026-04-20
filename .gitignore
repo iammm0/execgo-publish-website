@@ -28,6 +28,8 @@
 .DS_Store
 *.pem
 execgo/
+!app/docs/execgo/
+!app/docs/execgo/**
 
 # debug
 npm-debug.log*

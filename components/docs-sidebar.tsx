@@ -49,7 +49,7 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
             {branchLinks.map((branch) => (
               <Link
                 key={branch.id}
-                href={`/docs/${branch.id}`}
+                href={`/docs/execgo/${branch.id}`}
                 className={
                   branchId === branch.id
                     ? "font-medium text-[var(--accent-strong)]"
@@ -119,7 +119,7 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
               {branchLinks.map((branch) => (
                 <Link
                   key={branch.id}
-                  href={`/docs/${branch.id}`}
+                  href={`/docs/execgo/${branch.id}`}
                   className={
                     branchId === branch.id
                       ? "font-medium text-[var(--accent-strong)]"
