@@ -3,6 +3,8 @@ import Link from "next/link";
 import { branchHasDocIndex } from "@/lib/execgo-data";
 import { hasRuntimeDocIndex } from "@/lib/runtime-data";
 
+const GITHUB_ICON_SRC = "/github.svg";
+
 export function SiteHeader() {
   const navItems = [
     ...(branchHasDocIndex("main")
@@ -34,14 +36,36 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <a
-            href="https://github.com/iammm0/execgo"
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm text-[var(--muted)] hover:text-[var(--accent-strong)]"
-          >
-            GitHub
-          </a>
+          <div className="flex items-center gap-3">
+            <a
+              href="https://github.com/iammm0/execgo"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-[var(--muted)] hover:text-[var(--accent-strong)]"
+              aria-label="打开 execgo GitHub 仓库"
+            >
+              <img
+                src={GITHUB_ICON_SRC}
+                alt=""
+                className="h-4 w-4 opacity-80 dark:invert"
+              />
+              <span>execgo</span>
+            </a>
+            <a
+              href="https://github.com/iammm0/execgo-runtime"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-[var(--muted)] hover:text-[var(--accent-strong)]"
+              aria-label="打开 execgo-runtime GitHub 仓库"
+            >
+              <img
+                src={GITHUB_ICON_SRC}
+                alt=""
+                className="h-4 w-4 opacity-80 dark:invert"
+              />
+              <span>runtime</span>
+            </a>
+          </div>
         </nav>
       </div>
     </header>
