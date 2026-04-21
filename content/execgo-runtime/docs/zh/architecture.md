@@ -4,6 +4,24 @@
 
 `execgo-runtime` 是 ExecGo 的**执行后端（数据面）**：接收任务描述、落盘、调度执行，并通过 HTTP 暴露状态与运维接口。控制面（如 ExecGo 自身）通过 HTTP 与本服务交互，**不直接** fork 用户进程。
 
+## 面向的技术场景（分层）
+
+ExecGo 系列面向的是「上层 Agent 编排」与「底层真实执行」之间的工程化断层：上层希望只关心决策与工作流，而底层需要稳定地调度进程、隔离资源、持久化与可观测。
+
+![ExecGo 分层与职责对应](/docs-assets/execgo-runtime/layers.png)
+
+在这个分层里：
+
+- **编排层（Orchestration）**：LLM / Agent 框架侧输出“工具调用 / 子任务”，负责规划、提示词与决策循环（不属于 ExecGo）。
+- **执行层（Execution / Kernel）**：`execgo`（控制面）把“决策”翻译成“可执行任务图（TaskGraph）”，提供任务契约、调度策略与治理能力。
+- **运行时层（Runtime）**：`execgo-runtime`（数据面）做真正的脏活累活：进程执行、资源隔离（cgroup / sandbox）、持久化（SQLite + 文件目录）、队列与异步调度、指标与运维接口。
+
+## 任务契约化：连接点
+
+上层编排层输出的“工具调用 / 子任务”，可以映射为 ExecGo 的 Task DSL（`id + type + params + depends_on + retry + timeout` 等）。这样上层不需要再维护一套状态机、重试语义、DAG 依赖解析与失败语义（`failed` vs `skipped` 等），由执行层与运行时层统一处理，显著降低集成复杂度。
+
+![任务契约化与生产形态](/docs-assets/execgo-runtime/task-contract.png)
+
 ## 模块划分
 
 | 模块 | 路径 | 职责 |

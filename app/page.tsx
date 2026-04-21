@@ -43,6 +43,21 @@ const FEATURES: { title: string; body: string }[] = [
   },
 ];
 
+const LAYERS: { title: string; body: string }[] = [
+  {
+    title: "编排层（Orchestration）",
+    body: "连接 LLM，负责规划与决策循环（LangGraph / CrewAI / LangChain 等）。",
+  },
+  {
+    title: "执行层（Execution / Kernel）",
+    body: "`execgo` 负责把决策翻译为任务契约与 TaskGraph，提供调度与治理能力。",
+  },
+  {
+    title: "运行时层（Runtime）",
+    body: "`execgo-runtime` 负责真实执行：进程与资源隔离、持久化、队列与可观测。",
+  },
+];
+
 export default function Home() {
   const showExecgoDocs = branchHasDocIndex("main");
   const showRuntimeDocs = hasRuntimeDocIndex();
@@ -122,6 +137,27 @@ export default function Home() {
             是数据面运行时：在单进程内提供 HTTP 与 CLI，负责任务的提交、调度、执行与持久化。
           </p>
         </div>
+      </section>
+
+      <section className="mt-16 border-t border-[var(--border)] pt-12">
+        <h2 className="text-2xl font-bold text-[var(--foreground)]">
+          面向的技术场景
+        </h2>
+        <p className="mt-4 max-w-2xl text-[var(--muted)]">
+          ExecGo 系列用于打通“上层 Agent 编排”与“底层真实执行”的工程化断层：上层专注决策与工作流，底层交给内核与运行时稳定落地。
+        </p>
+        <ul className="mt-8 grid gap-x-8 gap-y-8 sm:grid-cols-3">
+          {LAYERS.map((item) => (
+            <li key={item.title}>
+              <h3 className="text-base font-semibold text-[var(--foreground)]">
+                {item.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+                {item.body}
+              </p>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="mt-16 border-t border-[var(--border)] pt-12">

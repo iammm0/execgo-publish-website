@@ -30,6 +30,7 @@
 execgo/
 !app/docs/execgo/
 !app/docs/execgo/**
+.idea/
 
 # debug
 npm-debug.log*
