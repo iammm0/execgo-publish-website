@@ -18,7 +18,7 @@ export default function PlaygroundDocsHomePage() {
   }
 
   return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(0,46rem)_14rem] xl:justify-between xl:gap-8">
+    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_12.5rem] xl:items-start xl:gap-6">
       <DocsToc headings={doc.headings} />
 
       <article className="min-w-0 border border-[var(--border)] bg-[var(--panel)] xl:order-first">

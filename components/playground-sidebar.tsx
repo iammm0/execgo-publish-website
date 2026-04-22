@@ -58,7 +58,7 @@ export function PlaygroundSidebar({ groups }: PlaygroundSidebarProps) {
         </details>
       </div>
 
-      <aside className="hidden w-[16rem] shrink-0 xl:block">
+      <aside className="hidden w-[15rem] shrink-0 xl:block">
         <div className="sticky top-16 border border-[var(--border)] bg-[var(--panel)] px-4 py-3">
           <p className="mb-3 text-xs text-[var(--muted)]">execgo-playground</p>
           {groups.map((group) => (

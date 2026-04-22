@@ -1,24 +1,18 @@
-import Image from "next/image";
 import Link from "next/link";
 
-import { branchHasDocIndex } from "@/lib/execgo-data";
+import { ExecgoDocsMenu } from "@/components/execgo-docs-menu";
+import { GitHubMenu } from "@/components/github-menu";
 import { hasPlaygroundDocIndex } from "@/lib/playground-data";
 import { hasRuntimeDocIndex } from "@/lib/runtime-data";
 
-const GITHUB_ICON_SRC = "/github.svg";
-
 export function SiteHeader() {
   const navItems = [
-    ...(branchHasDocIndex("main")
-      ? [{ label: "execgo 文档" as const, href: "/docs/execgo/main" }]
-      : []),
     ...(hasRuntimeDocIndex()
       ? [{ label: "runtime 文档" as const, href: "/docs/runtime" }]
       : []),
     ...(hasPlaygroundDocIndex()
       ? [{ label: "训练场" as const, href: "/docs/playground" }]
       : []),
-    { label: "分支" as const, href: "/branches" },
   ];
 
   return (
@@ -32,6 +26,13 @@ export function SiteHeader() {
         </Link>
 
         <nav className="hidden items-center gap-5 md:flex">
+          <ExecgoDocsMenu
+            triggerClassName="inline-flex cursor-pointer list-none items-center text-sm text-[var(--muted)] hover:text-[var(--accent-strong)]"
+            panelClassName="absolute left-0 top-full z-20 mt-3 grid w-80 gap-2 border border-[var(--border)] bg-[var(--panel)] p-3 shadow-sm"
+            itemClassName="block border border-[var(--border)] bg-[var(--background-soft)] px-3 py-2 hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]"
+            titleClassName="block text-sm font-medium text-[var(--foreground)]"
+            descriptionClassName="mt-1 block text-xs leading-relaxed text-[var(--muted)]"
+          />
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -41,40 +42,13 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <div className="flex items-center gap-3">
-            <a
-              href="https://github.com/iammm0/execgo"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-[var(--muted)] hover:text-[var(--accent-strong)]"
-              aria-label="打开 execgo GitHub 仓库"
-            >
-              <Image
-                src={GITHUB_ICON_SRC}
-                alt=""
-                width={16}
-                height={16}
-                className="h-4 w-4 opacity-80 dark:invert"
-              />
-              <span>execgo</span>
-            </a>
-            <a
-              href="https://github.com/iammm0/execgo-runtime"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-[var(--muted)] hover:text-[var(--accent-strong)]"
-              aria-label="打开 execgo-runtime GitHub 仓库"
-            >
-              <Image
-                src={GITHUB_ICON_SRC}
-                alt=""
-                width={16}
-                height={16}
-                className="h-4 w-4 opacity-80 dark:invert"
-              />
-              <span>runtime</span>
-            </a>
-          </div>
+          <GitHubMenu
+            triggerClassName="inline-flex cursor-pointer list-none items-center gap-2 text-sm text-[var(--muted)] hover:text-[var(--accent-strong)]"
+            panelClassName="absolute right-0 top-full z-20 mt-3 grid w-80 gap-2 border border-[var(--border)] bg-[var(--panel)] p-3 shadow-sm"
+            itemClassName="block border border-[var(--border)] bg-[var(--background-soft)] px-3 py-2 hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]"
+            titleClassName="block text-sm font-medium text-[var(--foreground)]"
+            descriptionClassName="mt-1 block text-xs leading-relaxed text-[var(--muted)]"
+          />
         </nav>
 
         <details className="group md:hidden">
@@ -83,6 +57,14 @@ export function SiteHeader() {
           </summary>
           <div className="absolute right-4 top-12 z-50 w-[calc(100vw-2rem)] max-w-sm border border-[var(--border)] bg-[var(--panel)] p-4 shadow-sm">
             <nav className="grid gap-1">
+              <ExecgoDocsMenu
+                wrapperClassName="block"
+                triggerClassName="block cursor-pointer list-none px-2 py-2 text-sm text-[var(--muted)] hover:bg-[var(--background-soft)] hover:text-[var(--accent-strong)]"
+                panelClassName="mt-1 grid gap-2 px-2 pb-2"
+                itemClassName="block border border-[var(--border)] bg-[var(--background-soft)] px-3 py-2 hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]"
+                titleClassName="block text-sm font-medium text-[var(--foreground)]"
+                descriptionClassName="mt-1 block text-xs leading-relaxed text-[var(--muted)]"
+              />
               {navItems.map((item) => (
                 <Link
                   key={item.href}
@@ -94,38 +76,14 @@ export function SiteHeader() {
               ))}
             </nav>
             <div className="mt-3 border-t border-[var(--border)] pt-3">
-              <a
-                href="https://github.com/iammm0/execgo"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 px-2 py-2 text-sm text-[var(--muted)] hover:bg-[var(--background-soft)] hover:text-[var(--accent-strong)]"
-                aria-label="打开 execgo GitHub 仓库"
-              >
-                <Image
-                  src={GITHUB_ICON_SRC}
-                  alt=""
-                  width={16}
-                  height={16}
-                  className="h-4 w-4 opacity-80 dark:invert"
-                />
-                <span>execgo</span>
-              </a>
-              <a
-                href="https://github.com/iammm0/execgo-runtime"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 px-2 py-2 text-sm text-[var(--muted)] hover:bg-[var(--background-soft)] hover:text-[var(--accent-strong)]"
-                aria-label="打开 execgo-runtime GitHub 仓库"
-              >
-                <Image
-                  src={GITHUB_ICON_SRC}
-                  alt=""
-                  width={16}
-                  height={16}
-                  className="h-4 w-4 opacity-80 dark:invert"
-                />
-                <span>runtime</span>
-              </a>
+              <GitHubMenu
+                wrapperClassName="block"
+                triggerClassName="flex cursor-pointer list-none items-center gap-2 px-2 py-2 text-sm text-[var(--muted)] hover:bg-[var(--background-soft)] hover:text-[var(--accent-strong)]"
+                panelClassName="mt-1 grid gap-2 px-2 pb-2"
+                itemClassName="block border border-[var(--border)] bg-[var(--background-soft)] px-3 py-2 hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]"
+                titleClassName="block text-sm font-medium text-[var(--foreground)]"
+                descriptionClassName="mt-1 block text-xs leading-relaxed text-[var(--muted)]"
+              />
             </div>
           </div>
         </details>

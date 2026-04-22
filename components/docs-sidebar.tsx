@@ -111,7 +111,7 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
         </div>
       </div>
 
-      <aside className="hidden w-[18.5rem] shrink-0 xl:block">
+      <aside className="hidden w-[17rem] shrink-0 xl:block">
         <div className="sticky top-16 max-h-[calc(100vh-5rem)] overflow-hidden border border-[var(--border)] bg-white">
           <div className="border-b border-[var(--border)] px-4 py-3">
             <p className="text-xs text-[var(--muted)]">分支</p>

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import { branchHasDocIndex } from "@/lib/execgo-data";
+import { ExecgoDocsMenu } from "@/components/execgo-docs-menu";
+import { GitHubMenu } from "@/components/github-menu";
 import { hasPlaygroundDocIndex } from "@/lib/playground-data";
 import { hasRuntimeDocIndex } from "@/lib/runtime-data";
 
@@ -59,26 +60,7 @@ const LAYERS: { title: string; body: string }[] = [
   },
 ];
 
-const GITHUB_REPOS = [
-  {
-    label: "execgo",
-    href: "https://github.com/iammm0/execgo",
-    description: "控制面与任务执行内核",
-  },
-  {
-    label: "execgo-runtime",
-    href: "https://github.com/iammm0/execgo-runtime",
-    description: "数据面运行时",
-  },
-  {
-    label: "execgo-playground",
-    href: "https://github.com/iammm0/execgo-playground",
-    description: "AI 编排可靠性训练场",
-  },
-];
-
 export default function Home() {
-  const showExecgoDocs = branchHasDocIndex("main");
   const showRuntimeDocs = hasRuntimeDocIndex();
   const showPlaygroundDocs = hasPlaygroundDocIndex();
 
@@ -102,14 +84,13 @@ export default function Home() {
           面向 AI Agent 的任务执行内核与运行时。
         </p>
         <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap sm:gap-4">
-          {showExecgoDocs ? (
-            <Link
-              href="/docs/execgo/main"
-              className="inline-flex items-center justify-center border border-[var(--accent-strong)] bg-[var(--accent-strong)] px-5 py-2 text-sm font-medium text-white hover:bg-[var(--accent)]"
-            >
-              execgo 文档
-            </Link>
-          ) : null}
+          <ExecgoDocsMenu
+            triggerClassName="inline-flex cursor-pointer list-none items-center justify-center border border-[var(--accent-strong)] bg-[var(--accent-strong)] px-5 py-2 text-sm font-medium text-white hover:bg-[var(--accent)]"
+            panelClassName="mt-2 grid gap-2 border border-[var(--border)] bg-[var(--panel)] p-3 shadow-sm sm:absolute sm:left-0 sm:top-full sm:z-20 sm:w-80"
+            itemClassName="block border border-[var(--border)] bg-[var(--background-soft)] px-3 py-2 hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]"
+            titleClassName="block text-sm font-medium text-[var(--foreground)]"
+            descriptionClassName="mt-1 block text-xs leading-relaxed text-[var(--muted)]"
+          />
           {showRuntimeDocs ? (
             <Link
               href="/docs/runtime"
@@ -126,29 +107,13 @@ export default function Home() {
               训练场
             </Link>
           ) : null}
-          <details className="relative">
-            <summary className="inline-flex cursor-pointer list-none items-center justify-center border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)]">
-              GitHub
-            </summary>
-            <div className="mt-2 grid gap-2 border border-[var(--border)] bg-[var(--panel)] p-3 shadow-sm sm:absolute sm:left-0 sm:top-full sm:z-20 sm:w-72">
-              {GITHUB_REPOS.map((repo) => (
-                <a
-                  key={repo.href}
-                  href={repo.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="block border border-[var(--border)] bg-[var(--background-soft)] px-3 py-2 text-sm hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]"
-                >
-                  <span className="block font-medium text-[var(--foreground)]">
-                    {repo.label}
-                  </span>
-                  <span className="mt-0.5 block text-xs text-[var(--muted)]">
-                    {repo.description}
-                  </span>
-                </a>
-              ))}
-            </div>
-          </details>
+          <GitHubMenu
+            triggerClassName="inline-flex cursor-pointer list-none items-center justify-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)]"
+            panelClassName="mt-2 grid gap-2 border border-[var(--border)] bg-[var(--panel)] p-3 shadow-sm sm:absolute sm:left-0 sm:top-full sm:z-20 sm:w-72"
+            itemClassName="block border border-[var(--border)] bg-[var(--background-soft)] px-3 py-2 text-sm hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]"
+            titleClassName="block font-medium text-[var(--foreground)]"
+            descriptionClassName="mt-0.5 block text-xs text-[var(--muted)]"
+          />
         </div>
       </section>
 

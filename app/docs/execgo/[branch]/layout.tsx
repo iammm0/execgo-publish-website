@@ -20,7 +20,7 @@ export default async function ExecgoDocsLayout({ children, params }: LayoutProps
   const snapshot = getBranchSnapshot(branchId);
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-3 py-6 sm:px-6 sm:py-10">
+    <div className="mx-auto w-full max-w-[96rem] px-3 py-6 sm:px-6 sm:py-10">
       <nav className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[var(--muted)] sm:mb-8">
         <Link href="/" className="hover:text-[var(--accent-strong)]">
           首页
@@ -35,7 +35,7 @@ export default async function ExecgoDocsLayout({ children, params }: LayoutProps
         <span className="text-[var(--foreground)]">{snapshot.branchName}</span>
       </nav>
 
-      <div className="grid gap-8 xl:grid-cols-[18.5rem_minmax(0,1fr)] xl:items-start">
+      <div className="grid gap-8 xl:grid-cols-[17rem_minmax(0,1fr)] xl:items-start xl:gap-10">
         <DocsSidebar branchId={branchId} groups={snapshot.docGroups} />
         <div className="min-w-0">{children}</div>
       </div>
