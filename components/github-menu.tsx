@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 
+import { DismissibleMenu } from "@/components/dismissible-menu";
+
 const GITHUB_ICON_SRC = "/github.svg";
 
 const GITHUB_REPOS = [
@@ -41,9 +43,12 @@ export function GitHubMenu({
   triggerContent,
 }: GitHubMenuProps) {
   return (
-    <details className={wrapperClassName}>
-      <summary className={triggerClassName}>
-        {triggerContent ?? (
+    <DismissibleMenu
+      wrapperClassName={wrapperClassName}
+      triggerClassName={triggerClassName}
+      panelClassName={panelClassName}
+      triggerContent={
+        triggerContent ?? (
           <>
             <Image
               src={GITHUB_ICON_SRC}
@@ -54,22 +59,21 @@ export function GitHubMenu({
             />
             <span>GitHub</span>
           </>
-        )}
-      </summary>
-      <div className={panelClassName}>
-        {GITHUB_REPOS.map((repo) => (
-          <a
-            key={repo.href}
-            href={repo.href}
-            target="_blank"
-            rel="noreferrer"
-            className={itemClassName}
-          >
-            <span className={titleClassName}>{repo.label}</span>
-            <span className={descriptionClassName}>{repo.description}</span>
-          </a>
-        ))}
-      </div>
-    </details>
+        )
+      }
+    >
+      {GITHUB_REPOS.map((repo) => (
+        <a
+          key={repo.href}
+          href={repo.href}
+          target="_blank"
+          rel="noreferrer"
+          className={itemClassName}
+        >
+          <span className={titleClassName}>{repo.label}</span>
+          <span className={descriptionClassName}>{repo.description}</span>
+        </a>
+      ))}
+    </DismissibleMenu>
   );
 }

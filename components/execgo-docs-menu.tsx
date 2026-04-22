@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { DismissibleMenu } from "@/components/dismissible-menu";
 import { branchHasDocIndex } from "@/lib/execgo-data";
 
 const EXECGO_DOC_BRANCHES = [
@@ -39,16 +40,18 @@ export function ExecgoDocsMenu({
   }
 
   return (
-    <details className={wrapperClassName}>
-      <summary className={triggerClassName}>execgo 文档</summary>
-      <div className={panelClassName}>
-        {EXECGO_DOC_BRANCHES.map((branch) => (
-          <Link key={branch.href} href={branch.href} className={itemClassName}>
-            <span className={titleClassName}>{branch.title}</span>
-            <span className={descriptionClassName}>{branch.description}</span>
-          </Link>
-        ))}
-      </div>
-    </details>
+    <DismissibleMenu
+      wrapperClassName={wrapperClassName}
+      triggerClassName={triggerClassName}
+      panelClassName={panelClassName}
+      triggerContent="execgo 文档"
+    >
+      {EXECGO_DOC_BRANCHES.map((branch) => (
+        <Link key={branch.href} href={branch.href} className={itemClassName}>
+          <span className={titleClassName}>{branch.title}</span>
+          <span className={descriptionClassName}>{branch.description}</span>
+        </Link>
+      ))}
+    </DismissibleMenu>
   );
 }
