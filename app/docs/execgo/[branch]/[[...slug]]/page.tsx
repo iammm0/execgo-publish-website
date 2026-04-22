@@ -38,14 +38,11 @@ export default async function ExecgoDocPage({ params }: PageProps) {
   }
 
   return (
-    <div className="grid gap-8 xl:grid-cols-[minmax(0,46rem)_14rem] xl:justify-between">
-      <article className="min-w-0 border border-[var(--border)] bg-[var(--panel)]">
-        <header className="border-b border-[var(--border)] px-5 py-6 sm:px-6">
-          <p className="text-xs text-[var(--muted)]">{doc.branch.badge}</p>
-          <h1 className="mt-2 text-2xl font-bold text-[var(--foreground)]">{doc.title}</h1>
-          <p className="mt-2 font-mono text-xs text-[var(--muted)]">{doc.entry.repoPath}</p>
-        </header>
-        <div className="px-5 py-6 sm:px-6">
+    <div className="grid gap-5 xl:grid-cols-[minmax(0,46rem)_14rem] xl:justify-between xl:gap-8">
+      <DocsToc headings={doc.headings} />
+
+      <article className="min-w-0 border border-[var(--border)] bg-[var(--panel)] xl:order-first">
+        <div className="px-4 py-5 sm:px-6 sm:py-6">
           <RepoMarkdown
             branchId={branchId}
             content={doc.content}
@@ -53,9 +50,6 @@ export default async function ExecgoDocPage({ params }: PageProps) {
           />
         </div>
       </article>
-
-      <DocsToc headings={doc.headings} />
     </div>
   );
 }
-

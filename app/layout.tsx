@@ -13,14 +13,14 @@ export const metadata: Metadata = {
     template: "%s | execgo",
   },
   description:
-    "execgo 控制面与 execgo-runtime 数据面运行时的文档与分支索引。",
+    "execgo 控制面、execgo-runtime 数据面运行时与 execgo-playground 训练场的文档入口。",
   icons: {
     icon: [{ url: "/favicon.ico" }],
     apple: [{ url: "/apple-touch-icon.png" }],
   },
   openGraph: {
     title: "execgo",
-    description: "execgo 控制面与 execgo-runtime 数据面运行时的文档与分支索引。",
+    description: "execgo 控制面、execgo-runtime 数据面运行时与 execgo-playground 训练场的文档入口。",
     images: [{ url: "/og.png", width: 1200, height: 630, alt: "execgo" }],
   },
 };
@@ -31,7 +31,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className="h-full scroll-smooth" suppressHydrationWarning>
+    <html
+      lang="zh-CN"
+      className="h-full scroll-smooth"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <body className="min-h-full">
         <Providers>
           <div className="relative flex min-h-screen flex-col">

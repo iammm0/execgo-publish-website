@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { DocsToc } from "@/components/docs-toc";
 import { RepoMarkdownSimple } from "@/components/repo-markdown-simple";
-import { getRuntimeDocPageData } from "@/lib/runtime-data";
+import { getPlaygroundDocPageData, resolvePlaygroundMarkdownHref } from "@/lib/playground-data";
 
 type PageProps = {
   params: Promise<{ slug: string[] }>;
@@ -11,16 +11,19 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const doc = getRuntimeDocPageData(slug);
+  const doc = getPlaygroundDocPageData(slug);
   if (!doc) {
     return { title: "文档未找到" };
   }
-  return { title: doc.title };
+  return {
+    title: doc.title,
+    description: doc.excerpt.join(" ").slice(0, 160),
+  };
 }
 
-export default async function RuntimeDocPage({ params }: PageProps) {
+export default async function PlaygroundDocPage({ params }: PageProps) {
   const { slug } = await params;
-  const doc = getRuntimeDocPageData(slug);
+  const doc = getPlaygroundDocPageData(slug);
 
   if (!doc) {
     notFound();
@@ -32,7 +35,10 @@ export default async function RuntimeDocPage({ params }: PageProps) {
 
       <article className="min-w-0 border border-[var(--border)] bg-[var(--panel)] xl:order-first">
         <div className="repo-markdown px-4 py-5 sm:px-6 sm:py-6">
-          <RepoMarkdownSimple content={doc.content} />
+          <RepoMarkdownSimple
+            content={doc.content}
+            resolveHref={(href) => resolvePlaygroundMarkdownHref(doc.entry.repoPath, href)}
+          />
         </div>
       </article>
     </div>

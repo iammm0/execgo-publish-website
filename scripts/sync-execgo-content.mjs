@@ -89,6 +89,37 @@ function syncRuntime() {
   console.log(`Synced execgo-runtime docs (${files.length} files) to ${runtimeOutput}`);
 }
 
+// --- execgo-playground project ---
+const playgroundRoot = path.join(projectRoot, "..", "execgo-playground");
+const playgroundOutput = path.join(projectRoot, "content", "execgo-playground", "docs", "zh");
+
+const playgroundDocs = [
+  { source: "README.md", target: "README.md" },
+  { source: "docs/getting-started.md", target: "getting-started.md" },
+  { source: "docs/architecture.md", target: "architecture.md" },
+  { source: "docs/scenarios.md", target: "scenarios.md" },
+  { source: "docs/benchmarks.md", target: "benchmarks.md" },
+  { source: "docs/chaos.md", target: "chaos.md" },
+  { source: "docs/observability.md", target: "observability.md" },
+  { source: "desktop-client/README.md", target: "desktop-client.md" },
+];
+
+function syncPlayground() {
+  fs.rmSync(playgroundOutput, { recursive: true, force: true });
+  fs.mkdirSync(playgroundOutput, { recursive: true });
+
+  const synced = [];
+  for (const doc of playgroundDocs) {
+    const sourceFile = path.join(playgroundRoot, doc.source);
+    if (!fs.existsSync(sourceFile)) continue;
+    const targetFile = path.join(playgroundOutput, doc.target);
+    fs.copyFileSync(sourceFile, targetFile);
+    synced.push(doc.source);
+  }
+
+  console.log(`Synced execgo-playground docs (${synced.length} files) to ${playgroundOutput}`);
+}
+
 // --- Run ---
 if (fs.existsSync(execgoRoot)) {
   fs.rmSync(execgoBranchesOutput, { recursive: true, force: true });
@@ -105,4 +136,10 @@ if (fs.existsSync(runtimeRoot)) {
   syncRuntime();
 } else {
   console.log(`Skipping runtime sync (${runtimeRoot} not found)`);
+}
+
+if (fs.existsSync(playgroundRoot)) {
+  syncPlayground();
+} else {
+  console.log(`Skipping playground sync (${playgroundRoot} not found)`);
 }

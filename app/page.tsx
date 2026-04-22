@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { branchHasDocIndex } from "@/lib/execgo-data";
+import { hasPlaygroundDocIndex } from "@/lib/playground-data";
 import { hasRuntimeDocIndex } from "@/lib/runtime-data";
 
 const FEATURES: { title: string; body: string }[] = [
@@ -58,12 +59,31 @@ const LAYERS: { title: string; body: string }[] = [
   },
 ];
 
+const GITHUB_REPOS = [
+  {
+    label: "execgo",
+    href: "https://github.com/iammm0/execgo",
+    description: "控制面与任务执行内核",
+  },
+  {
+    label: "execgo-runtime",
+    href: "https://github.com/iammm0/execgo-runtime",
+    description: "数据面运行时",
+  },
+  {
+    label: "execgo-playground",
+    href: "https://github.com/iammm0/execgo-playground",
+    description: "AI 编排可靠性训练场",
+  },
+];
+
 export default function Home() {
   const showExecgoDocs = branchHasDocIndex("main");
   const showRuntimeDocs = hasRuntimeDocIndex();
+  const showPlaygroundDocs = hasPlaygroundDocIndex();
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
+    <div className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6 sm:py-16">
       <section>
         <div className="flex flex-wrap items-center gap-4">
           <Image
@@ -78,10 +98,10 @@ export default function Home() {
             execgo
           </h1>
         </div>
-        <p className="mt-4 max-w-2xl text-lg text-[var(--muted)]">
+        <p className="mt-4 max-w-2xl text-base text-[var(--muted)] sm:text-lg">
           面向 AI Agent 的任务执行内核与运行时。
         </p>
-        <div className="mt-8 flex flex-wrap gap-4">
+        <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap sm:gap-4">
           {showExecgoDocs ? (
             <Link
               href="/docs/execgo/main"
@@ -98,14 +118,37 @@ export default function Home() {
               runtime 文档
             </Link>
           ) : null}
-          <a
-            href="https://github.com/iammm0/execgo"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center justify-center border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)]"
-          >
-            GitHub
-          </a>
+          {showPlaygroundDocs ? (
+            <Link
+              href="/docs/playground"
+              className="inline-flex items-center justify-center border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)]"
+            >
+              训练场
+            </Link>
+          ) : null}
+          <details className="relative">
+            <summary className="inline-flex cursor-pointer list-none items-center justify-center border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)]">
+              GitHub
+            </summary>
+            <div className="mt-2 grid gap-2 border border-[var(--border)] bg-[var(--panel)] p-3 shadow-sm sm:absolute sm:left-0 sm:top-full sm:z-20 sm:w-72">
+              {GITHUB_REPOS.map((repo) => (
+                <a
+                  key={repo.href}
+                  href={repo.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block border border-[var(--border)] bg-[var(--background-soft)] px-3 py-2 text-sm hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]"
+                >
+                  <span className="block font-medium text-[var(--foreground)]">
+                    {repo.label}
+                  </span>
+                  <span className="mt-0.5 block text-xs text-[var(--muted)]">
+                    {repo.description}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </details>
         </div>
       </section>
 
@@ -138,6 +181,55 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      {showPlaygroundDocs ? (
+        <section className="mt-16 border-t border-[var(--border)] pt-12">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="section-eyebrow">新手训练场</p>
+              <h2 className="mt-2 text-2xl font-bold text-[var(--foreground)]">
+                用 execgo-playground 学会真实执行闭环
+              </h2>
+              <p className="mt-4 max-w-2xl text-[var(--muted)]">
+                训练场把 LLM 规划、编排框架适配、ExecGo 调度、Runtime 执行、结果回放与故障注入放在同一套环境里。
+                新入手项目时，可以先用它跑通 replay 基线，再逐步理解 TaskGraph、场景校验和可观测证据链。
+              </p>
+            </div>
+            <Link
+              href="/docs/playground/zh/getting-started"
+              className="inline-flex shrink-0 items-center justify-center border border-[var(--accent-strong)] bg-[var(--accent-strong)] px-5 py-2 text-sm font-medium text-white hover:bg-[var(--accent)]"
+            >
+              查看上手指南
+            </Link>
+          </div>
+          <ul className="mt-8 grid gap-x-8 gap-y-8 sm:grid-cols-3">
+            <li>
+              <h3 className="text-base font-semibold text-[var(--foreground)]">
+                标准场景
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+                内建代码生成、漏洞扫描、多步骤代理和长链路 DAG，适合作为入门练习与回归基线。
+              </p>
+            </li>
+            <li>
+              <h3 className="text-base font-semibold text-[var(--foreground)]">
+                公平对比
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+                LangGraph、CrewAI、AutoGen 统一归一为 StandardPlan，并在同一 ExecGo + Runtime 环境里运行。
+              </p>
+            </li>
+            <li>
+              <h3 className="text-base font-semibold text-[var(--foreground)]">
+                可归因结果
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+                每次运行都会落盘 plan、trace、timeline、snapshots、result 和 summary，便于复盘执行可靠性。
+              </p>
+            </li>
+          </ul>
+        </section>
+      ) : null}
 
       <section className="mt-16 border-t border-[var(--border)] pt-12">
         <h2 className="text-2xl font-bold text-[var(--foreground)]">

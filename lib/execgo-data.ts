@@ -1357,8 +1357,10 @@ export function toBranchBlobUrl(branch: BranchSnapshot, repoPath: string): strin
   const { pathname, hash } = splitPathHash(repoPath);
   const normalizedPath = pathname.replace(/^\/+/, "");
   const looksLikeFile = Boolean(path.posix.extname(normalizedPath));
+  const gitRef = resolveExecgoRef(branch.id);
+  const knownFiles = gitRef ? listGitFiles(gitRef) : listBranchContentFiles(branch.id);
   const kind =
-    listGitFiles(branch.ref).includes(normalizedPath) || looksLikeFile
+    knownFiles.includes(normalizedPath) || looksLikeFile
       ? "blob"
       : "tree";
 

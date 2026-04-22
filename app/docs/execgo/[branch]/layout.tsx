@@ -20,18 +20,18 @@ export default async function ExecgoDocsLayout({ children, params }: LayoutProps
   const snapshot = getBranchSnapshot(branchId);
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-      <nav className="mb-8 text-sm text-[var(--muted)]">
+    <div className="mx-auto w-full max-w-6xl px-3 py-6 sm:px-6 sm:py-10">
+      <nav className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[var(--muted)] sm:mb-8">
         <Link href="/" className="hover:text-[var(--accent-strong)]">
           首页
         </Link>
-        <span className="mx-2">/</span>
+        <span>/</span>
         <span className="text-[var(--foreground)]">文档</span>
-        <span className="mx-2">/</span>
+        <span>/</span>
         <Link href="/docs/execgo/main" className="hover:text-[var(--accent-strong)]">
           execgo
         </Link>
-        <span className="mx-2">/</span>
+        <span>/</span>
         <span className="text-[var(--foreground)]">{snapshot.branchName}</span>
       </nav>
 

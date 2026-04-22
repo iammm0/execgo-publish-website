@@ -1,14 +1,14 @@
 import Link from "next/link";
 
-import { getRuntimeDocGroups } from "@/lib/runtime-data";
-import { RuntimeSidebar } from "@/components/runtime-sidebar";
+import { PlaygroundSidebar } from "@/components/playground-sidebar";
+import { getPlaygroundDocGroups } from "@/lib/playground-data";
 
 type LayoutProps = {
   children: React.ReactNode;
 };
 
-export default function RuntimeDocsLayout({ children }: LayoutProps) {
-  const groups = getRuntimeDocGroups();
+export default function PlaygroundDocsLayout({ children }: LayoutProps) {
+  const groups = getPlaygroundDocGroups();
 
   return (
     <div className="mx-auto w-full max-w-6xl px-3 py-6 sm:px-6 sm:py-10">
@@ -19,11 +19,11 @@ export default function RuntimeDocsLayout({ children }: LayoutProps) {
         <span>/</span>
         <span className="text-[var(--foreground)]">文档</span>
         <span>/</span>
-        <span className="text-[var(--foreground)]">execgo-runtime</span>
+        <span className="text-[var(--foreground)]">训练场</span>
       </nav>
 
       <div className="grid gap-8 xl:grid-cols-[16rem_minmax(0,1fr)] xl:items-start">
-        <RuntimeSidebar groups={groups} />
+        <PlaygroundSidebar groups={groups} />
         <div className="min-w-0">{children}</div>
       </div>
     </div>

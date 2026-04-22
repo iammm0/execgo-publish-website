@@ -3,15 +3,15 @@ import { notFound } from "next/navigation";
 
 import { DocsToc } from "@/components/docs-toc";
 import { RepoMarkdownSimple } from "@/components/repo-markdown-simple";
-import { getRuntimeDefaultDoc } from "@/lib/runtime-data";
+import { getPlaygroundDefaultDoc, resolvePlaygroundMarkdownHref } from "@/lib/playground-data";
 
 export const metadata: Metadata = {
-  title: "execgo-runtime 文档",
-  description: "ExecGo 数据面运行时文档",
+  title: "execgo-playground 训练场",
+  description: "ExecGo 训练场与 AI 编排可靠性实验平台文档",
 };
 
-export default function RuntimeDocsHomePage() {
-  const doc = getRuntimeDefaultDoc();
+export default function PlaygroundDocsHomePage() {
+  const doc = getPlaygroundDefaultDoc();
 
   if (!doc) {
     notFound();
@@ -23,7 +23,10 @@ export default function RuntimeDocsHomePage() {
 
       <article className="min-w-0 border border-[var(--border)] bg-[var(--panel)] xl:order-first">
         <div className="repo-markdown px-4 py-5 sm:px-6 sm:py-6">
-          <RepoMarkdownSimple content={doc.content} />
+          <RepoMarkdownSimple
+            content={doc.content}
+            resolveHref={(href) => resolvePlaygroundMarkdownHref(doc.entry.repoPath, href)}
+          />
         </div>
       </article>
     </div>
