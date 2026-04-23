@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { FlaskConical } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import type { DocNavGroup } from "@/lib/execgo-data";
@@ -25,7 +26,8 @@ export function PlaygroundSidebar({ groups }: PlaygroundSidebarProps) {
     <>
       <div className="xl:hidden">
         <details className="border border-[var(--border)] bg-[var(--panel)]" open>
-          <summary className="cursor-pointer list-none border-b border-[var(--border)] px-4 py-3 text-sm font-medium text-[var(--foreground)]">
+          <summary className="flex cursor-pointer list-none items-center gap-2 border-b border-[var(--border)] px-4 py-3 text-sm font-medium text-[var(--foreground)]">
+            <FlaskConical className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
             训练场文档目录
           </summary>
           <div className="p-4">
@@ -60,7 +62,10 @@ export function PlaygroundSidebar({ groups }: PlaygroundSidebarProps) {
 
       <aside className="hidden w-[15rem] shrink-0 xl:block">
         <div className="sticky top-16 border border-[var(--border)] bg-[var(--panel)] px-4 py-3">
-          <p className="mb-3 text-xs text-[var(--muted)]">execgo-playground</p>
+          <p className="mb-3 flex items-center gap-2 text-xs text-[var(--muted)]">
+            <FlaskConical className="h-3.5 w-3.5 text-[var(--accent-strong)]" aria-hidden="true" />
+            execgo-playground
+          </p>
           {groups.map((group) => (
             <div key={group.locale}>
               {group.sections.map((section) => (

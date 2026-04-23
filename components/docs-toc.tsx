@@ -1,4 +1,5 @@
 import type { MarkdownHeading } from "@/lib/execgo-data";
+import { ListTree } from "lucide-react";
 
 type DocsTocProps = {
   headings: MarkdownHeading[];
@@ -12,8 +13,9 @@ export function DocsToc({ headings }: DocsTocProps) {
   return (
     <>
       <div className="xl:hidden">
-        <details className="border border-[var(--border)] bg-white">
-          <summary className="cursor-pointer list-none border-b border-[var(--border)] px-4 py-3 text-sm font-medium text-[var(--foreground)]">
+        <details className="border border-[var(--border)] bg-[var(--panel)]">
+          <summary className="flex cursor-pointer list-none items-center gap-2 border-b border-[var(--border)] px-4 py-3 text-sm font-medium text-[var(--foreground)]">
+            <ListTree className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
             本页目录
           </summary>
           <div className="p-3">
@@ -38,8 +40,11 @@ export function DocsToc({ headings }: DocsTocProps) {
       </div>
 
       <aside className="hidden xl:block">
-        <div className="sticky top-16 border border-[var(--border)] bg-white px-4 py-3">
-          <p className="mb-3 text-xs text-[var(--muted)]">本页目录</p>
+        <div className="sticky top-16 border border-[var(--border)] bg-[var(--panel)] px-4 py-3">
+          <p className="mb-3 flex items-center gap-2 text-xs text-[var(--muted)]">
+            <ListTree className="h-3.5 w-3.5 text-[var(--accent-strong)]" aria-hidden="true" />
+            本页目录
+          </p>
           <ul className="space-y-0.5">
             {headings.map((heading) => (
               <li key={heading.id}>

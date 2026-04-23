@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { BookOpen, GitBranch } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import type { BranchId, DocNavGroup, DocNavSection } from "@/lib/execgo-data";
-import { useLocale } from "@/lib/locale-context";
 
 type DocsSidebarProps = {
   branchId: BranchId;
@@ -37,14 +37,16 @@ function samePath(pathname: string, href: string): boolean {
 
 export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
   const pathname = usePathname();
-  const { locale } = useLocale();
-  const filteredGroups = groups.filter((g) => g.locale === locale);
+  const filteredGroups = groups.filter((group) => group.locale === "zh");
 
   return (
     <>
       <div className="space-y-6 xl:hidden">
-        <div className="border border-[var(--border)] bg-white px-4 py-4">
-          <p className="text-sm font-medium text-[var(--foreground)]">分支</p>
+        <div className="border border-[var(--border)] bg-[var(--panel)] px-4 py-4">
+          <p className="flex items-center gap-2 text-sm font-medium text-[var(--foreground)]">
+            <GitBranch className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
+            分支
+          </p>
           <div className="mt-3 flex flex-wrap gap-4 text-sm">
             {branchLinks.map((branch) => (
               <Link
@@ -67,9 +69,10 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
             <details
               key={group.locale}
               open={index === 0}
-              className="border border-[var(--border)] bg-white"
+              className="border border-[var(--border)] bg-[var(--panel)]"
             >
-              <summary className="cursor-pointer list-none border-b border-[var(--border)] px-4 py-3 text-sm font-medium text-[var(--foreground)]">
+              <summary className="flex cursor-pointer list-none items-center gap-2 border-b border-[var(--border)] px-4 py-3 text-sm font-medium text-[var(--foreground)]">
+                <BookOpen className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
                 {group.title}
               </summary>
               <div className="p-4">
@@ -112,9 +115,12 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
       </div>
 
       <aside className="hidden w-[17rem] shrink-0 xl:block">
-        <div className="sticky top-16 max-h-[calc(100vh-5rem)] overflow-hidden border border-[var(--border)] bg-white">
+        <div className="sticky top-16 max-h-[calc(100vh-5rem)] overflow-hidden border border-[var(--border)] bg-[var(--panel)]">
           <div className="border-b border-[var(--border)] px-4 py-3">
-            <p className="text-xs text-[var(--muted)]">分支</p>
+            <p className="flex items-center gap-2 text-xs text-[var(--muted)]">
+              <GitBranch className="h-3.5 w-3.5 text-[var(--accent-strong)]" aria-hidden="true" />
+              分支
+            </p>
             <div className="mt-2 flex flex-col gap-1 text-sm">
               {branchLinks.map((branch) => (
                 <Link
@@ -135,7 +141,10 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
           <div className="max-h-[calc(100vh-12rem)] overflow-y-auto px-4 py-3">
             {filteredGroups.map((group) => (
               <section key={group.locale} className="mb-8 last:mb-0">
-                <h2 className="mb-3 text-xs text-[var(--muted)]">{group.title}</h2>
+                <h2 className="mb-3 flex items-center gap-2 text-xs text-[var(--muted)]">
+                  <BookOpen className="h-3.5 w-3.5 text-[var(--accent-strong)]" aria-hidden="true" />
+                  {group.title}
+                </h2>
                 <div className="space-y-5">
                   {group.sections.map((section) => {
                     const hideSectionCaption = isSoleSameTitleAsSection(section);

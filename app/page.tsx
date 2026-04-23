@@ -1,62 +1,89 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { LucideIcon } from "lucide-react";
+import {
+  Activity,
+  Boxes,
+  Database,
+  FlaskConical,
+  Layers,
+  Plug,
+  Power,
+  Route,
+  Server,
+  Terminal,
+  Timer,
+  Workflow,
+} from "lucide-react";
 
 import { ExecgoDocsMenu } from "@/components/execgo-docs-menu";
 import { GitHubMenu } from "@/components/github-menu";
 import { hasPlaygroundDocIndex } from "@/lib/playground-data";
 import { hasRuntimeDocIndex } from "@/lib/runtime-data";
 
-const FEATURES: { title: string; body: string }[] = [
+const FEATURES: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "Task DSL",
     body: "任务契约包含 id、type、params、依赖、重试与超时等字段，便于上层以结构化方式描述工作。",
+    Icon: Terminal,
   },
   {
     title: "DAG 编排",
     body: "按依赖图调度任务，并对环进行检测，保证执行顺序与数据流一致。",
+    Icon: Route,
   },
   {
     title: "并发执行",
     body: "基于 goroutine 与 channel 的并发模型，可通过信号量等方式限制最大并发。",
+    Icon: Workflow,
   },
   {
     title: "可插拔执行器",
     body: "执行器可按类型扩展；控制面可组合多种工具与运行方式，与具体业务解耦。",
+    Icon: Plug,
   },
   {
     title: "超时与重试",
     body: "支持基于 context 的超时控制，以及带退避策略的重试，减少瞬时故障影响。",
+    Icon: Timer,
   },
   {
     title: "状态持久化",
     body: "执行状态可落盘或接入可选存储后端，便于进程重启后恢复与审计。",
+    Icon: Database,
   },
   {
     title: "可观测性",
     body: "结构化日志、请求追踪与指标端点，便于在生产环境中排查问题。",
+    Icon: Activity,
   },
   {
     title: "优雅关闭",
     body: "在收到退出信号时依次停止接入、排空队列并持久化状态，避免任务丢失。",
+    Icon: Power,
   },
   {
     title: "HTTP API 与 CLI",
     body: "数据面运行时对外提供 HTTP 与命令行接口，便于本地调试与自动化集成。",
+    Icon: Server,
   },
 ];
 
-const LAYERS: { title: string; body: string }[] = [
+const LAYERS: { title: string; body: string; Icon: LucideIcon }[] = [
   {
     title: "编排层（Orchestration）",
     body: "连接 LLM，负责规划与决策循环（LangGraph / CrewAI / LangChain 等）。",
+    Icon: Layers,
   },
   {
     title: "执行层（Execution / Kernel）",
     body: "`execgo` 负责把决策翻译为任务契约与 TaskGraph，提供调度与治理能力。",
+    Icon: Boxes,
   },
   {
     title: "运行时层（Runtime）",
     body: "`execgo-runtime` 负责真实执行：进程与资源隔离、持久化、队列与可观测。",
+    Icon: Server,
   },
 ];
 
@@ -85,7 +112,7 @@ export default function Home() {
         </p>
         <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap sm:gap-4">
           <ExecgoDocsMenu
-            triggerClassName="inline-flex cursor-pointer list-none items-center justify-center border border-[var(--accent-strong)] bg-[var(--accent-strong)] px-5 py-2 text-sm font-medium text-white hover:bg-[var(--accent)]"
+            triggerClassName="inline-flex cursor-pointer list-none items-center justify-center gap-2 border border-[var(--button-primary)] bg-[var(--button-primary)] px-5 py-2 text-sm font-medium text-white hover:border-[var(--button-primary-hover)] hover:bg-[var(--button-primary-hover)]"
             panelClassName="mt-2 grid gap-2 border border-[var(--border)] bg-[var(--panel)] p-3 shadow-sm sm:absolute sm:left-0 sm:top-full sm:z-20 sm:w-80"
             itemClassName="block border border-[var(--border)] bg-[var(--background-soft)] px-3 py-2 hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]"
             titleClassName="block text-sm font-medium text-[var(--foreground)]"
@@ -94,16 +121,18 @@ export default function Home() {
           {showRuntimeDocs ? (
             <Link
               href="/docs/runtime"
-              className="inline-flex items-center justify-center border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)]"
+              className="inline-flex items-center justify-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)]"
             >
+              <Server className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
               runtime 文档
             </Link>
           ) : null}
           {showPlaygroundDocs ? (
             <Link
               href="/docs/playground"
-              className="inline-flex items-center justify-center border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)]"
+              className="inline-flex items-center justify-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)]"
             >
+              <FlaskConical className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
               训练场
             </Link>
           ) : null}
@@ -162,9 +191,10 @@ export default function Home() {
             </div>
             <Link
               href="/docs/playground/zh/getting-started"
-              className="inline-flex shrink-0 items-center justify-center border border-[var(--accent-strong)] bg-[var(--accent-strong)] px-5 py-2 text-sm font-medium text-white hover:bg-[var(--accent)]"
+              className="inline-flex shrink-0 items-center justify-center gap-2 border border-[var(--button-primary)] bg-[var(--button-primary)] px-5 py-2 text-sm font-medium text-white hover:border-[var(--button-primary-hover)] hover:bg-[var(--button-primary-hover)]"
             >
               查看上手指南
+              <FlaskConical className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
           <ul className="mt-8 grid gap-x-8 gap-y-8 sm:grid-cols-3">
@@ -206,7 +236,8 @@ export default function Home() {
         <ul className="mt-8 grid gap-x-8 gap-y-8 sm:grid-cols-3">
           {LAYERS.map((item) => (
             <li key={item.title}>
-              <h3 className="text-base font-semibold text-[var(--foreground)]">
+              <h3 className="flex items-center gap-2 text-base font-semibold text-[var(--foreground)]">
+                <item.Icon className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
                 {item.title}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
@@ -222,6 +253,9 @@ export default function Home() {
         <ul className="mt-8 grid gap-x-8 gap-y-10 sm:grid-cols-3">
           {FEATURES.map((item) => (
             <li key={item.title}>
+              <div className="mb-3 inline-flex h-9 w-9 items-center justify-center border border-[var(--border)] bg-[var(--panel)] text-[var(--accent-strong)]">
+                <item.Icon className="h-4 w-4" aria-hidden="true" />
+              </div>
               <h3 className="text-base font-semibold text-[var(--foreground)]">
                 {item.title}
               </h3>

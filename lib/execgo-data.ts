@@ -488,24 +488,6 @@ const CURATED_ZH_DOCS: Record<BranchId, string[]> = {
   ],
 };
 
-const EN_DOC_ORDER = [
-  "docs/en/README.md",
-  "docs/en/orchestrator/README.md",
-  "docs/en/orchestrator/mapping-dag-to-taskgraph.md",
-  "docs/en/orchestrator/failure-semantics.md",
-  "docs/en/orchestrator/polling-and-idempotency.md",
-  "docs/en/integration/client-go.md",
-  "docs/en/integration/client-java.md",
-  "docs/en/integration/client-python.md",
-  "docs/en/integration/client-nodejs-ts.md",
-  "docs/en/reference/task-dsl.md",
-  "docs/en/reference/api.md",
-  "docs/en/reference/executors.md",
-  "docs/en/deploy/compose.md",
-  "docs/en/deploy/kubernetes.md",
-  "docs/en/faqs.md",
-] as const;
-
 const COMPARISON_ROWS = [
   {
     aspect: "运行时形态",
@@ -731,20 +713,12 @@ function humanizeSegment(segment: string): string {
     return "中文";
   }
 
-  if (segment === "en") {
-    return "English";
-  }
-
   return segment.replace(/[-_]/g, " ");
 }
 
 function localeLabel(locale: string): string {
   if (locale === "zh") {
     return "中文";
-  }
-
-  if (locale === "en") {
-    return "English";
   }
 
   return locale.toUpperCase();
@@ -826,27 +800,6 @@ function docSectionMeta(
     }
   }
 
-  if (locale === "en") {
-    if (repoPath === "docs/en/README.md") {
-      return { section: "overview", sectionLabel: "Start Here" };
-    }
-    if (repoPath.startsWith("docs/en/orchestrator/")) {
-      return { section: "orchestrator", sectionLabel: "Orchestrator" };
-    }
-    if (repoPath.startsWith("docs/en/integration/")) {
-      return { section: "integration", sectionLabel: "Integration" };
-    }
-    if (repoPath.startsWith("docs/en/reference/")) {
-      return { section: "reference", sectionLabel: "Reference" };
-    }
-    if (repoPath.startsWith("docs/en/deploy/")) {
-      return { section: "deploy", sectionLabel: "Deploy" };
-    }
-    if (repoPath === "docs/en/faqs.md") {
-      return { section: "faq", sectionLabel: "FAQ" };
-    }
-  }
-
   const slug = docPathToSlug(repoPath);
   const section =
     slug.length <= 1
@@ -867,17 +820,13 @@ function docOrderIndex(branchId: BranchId, entry: DocEntry): number {
     return index === -1 ? Number.MAX_SAFE_INTEGER : index;
   }
 
-  if (entry.locale === "en") {
-    const index = EN_DOC_ORDER.indexOf(entry.repoPath as (typeof EN_DOC_ORDER)[number]);
-    return index === -1 ? Number.MAX_SAFE_INTEGER : index;
-  }
-
   return Number.MAX_SAFE_INTEGER;
 }
 
 function buildDocEntries(branchId: BranchId): DocEntry[] {
   return listBranchContentFiles(branchId)
     .filter((file) => file.startsWith("docs/") && file.endsWith(".md"))
+    .filter((file) => file.startsWith("docs/zh/"))
     .map((repoPath) => {
       const slug = docPathToSlug(repoPath);
       const locale = slug[0] ?? "zh";
@@ -903,11 +852,7 @@ function buildDocGroups(branchId: BranchId, entries: DocEntry[]): DocNavGroup[] 
   const locales = new Map<string, Map<string, DocEntry[]>>();
 
   const visibleEntries = entries.filter((entry) => {
-    if (entry.locale !== "zh") {
-      return true;
-    }
-
-    return CURATED_ZH_DOCS[branchId].includes(entry.repoPath);
+    return entry.locale === "zh" && CURATED_ZH_DOCS[branchId].includes(entry.repoPath);
   });
 
   for (const entry of visibleEntries) {
@@ -920,7 +865,7 @@ function buildDocGroups(branchId: BranchId, entries: DocEntry[]): DocNavGroup[] 
 
   return Array.from(locales.entries())
     .sort(([left], [right]) => {
-      const order = (value: string) => (value === "zh" ? 0 : value === "en" ? 1 : 2);
+      const order = (value: string) => (value === "zh" ? 0 : 1);
       return order(left) - order(right) || left.localeCompare(right);
     })
     .map(([locale, sections]) => ({

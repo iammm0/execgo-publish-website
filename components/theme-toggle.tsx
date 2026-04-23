@@ -1,18 +1,31 @@
 "use client";
 
+import { Monitor, Moon, Sun } from "lucide-react";
+
 import { useTheme } from "@/lib/theme-context";
 
 export function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
+  const { themeMode, cycleThemeMode } = useTheme();
+  const Icon =
+    themeMode === "system" ? Monitor : themeMode === "light" ? Sun : Moon;
+
+  const label =
+    themeMode === "system" ? "系统" : themeMode === "light" ? "浅色" : "深色";
+  const title =
+    themeMode === "system"
+      ? "主题：跟随系统，点击切换"
+      : `主题：${label}，点击切换`;
 
   return (
     <button
       type="button"
-      onClick={toggleTheme}
-      className="text-sm text-[var(--muted)] hover:text-[var(--accent-strong)]"
-      title={theme === "dark" ? "切换为浅色" : "切换为深色"}
+      onClick={cycleThemeMode}
+      className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--accent-strong)]"
+      title={title}
     >
-      {theme === "dark" ? "浅色" : "深色"}
+      <span className="sr-only">主题</span>
+      <Icon className="h-4 w-4" aria-hidden="true" />
+      <span className="font-medium text-[var(--foreground)]">{label}</span>
     </button>
   );
 }

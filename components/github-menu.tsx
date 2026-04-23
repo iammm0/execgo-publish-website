@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import type { LucideIcon } from "lucide-react";
+import { Code2, FlaskConical, Server } from "lucide-react";
 import Image from "next/image";
 
 import { DismissibleMenu } from "@/components/dismissible-menu";
@@ -10,18 +12,26 @@ const GITHUB_REPOS = [
     label: "execgo",
     href: "https://github.com/iammm0/execgo",
     description: "控制面与任务执行内核",
+    Icon: Code2,
   },
   {
     label: "execgo-runtime",
     href: "https://github.com/iammm0/execgo-runtime",
     description: "数据面运行时",
+    Icon: Server,
   },
   {
     label: "execgo-playground",
     href: "https://github.com/iammm0/execgo-playground",
     description: "AI 编排可靠性训练场",
+    Icon: FlaskConical,
   },
-];
+] satisfies Array<{
+  label: string;
+  href: string;
+  description: string;
+  Icon: LucideIcon;
+}>;
 
 type GitHubMenuProps = {
   wrapperClassName?: string;
@@ -70,8 +80,15 @@ export function GitHubMenu({
           rel="noreferrer"
           className={itemClassName}
         >
-          <span className={titleClassName}>{repo.label}</span>
-          <span className={descriptionClassName}>{repo.description}</span>
+          <span className="flex items-start gap-3">
+            <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center border border-[var(--border)] bg-[var(--panel)] text-[var(--accent-strong)]">
+              <repo.Icon className="h-4 w-4" aria-hidden="true" />
+            </span>
+            <span className="min-w-0">
+              <span className={titleClassName}>{repo.label}</span>
+              <span className={descriptionClassName}>{repo.description}</span>
+            </span>
+          </span>
         </a>
       ))}
     </DismissibleMenu>

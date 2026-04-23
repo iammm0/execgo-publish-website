@@ -10,7 +10,10 @@
   --accent: #2f80ed;
   --accent-strong: #1d5fc2;
   --accent-soft: #e8f2ff;
+  --button-primary: #1d5fc2;
+  --button-primary-hover: #174c9f;
   --code-bg: #f5f7fa;
+  --prose: #334e68;
   --font-sans:
     "Source Sans 3",
     "Noto Sans SC",
@@ -27,16 +30,19 @@
 }
 
 .dark {
-  --background: #1a202c;
-  --background-soft: #2d3748;
-  --foreground: #e2e8f0;
-  --muted: #a0aec0;
-  --border: #4a5568;
-  --panel: #2d3748;
+  --background: #000000;
+  --background-soft: #000000;
+  --foreground: #edf2f7;
+  --muted: #98a2b3;
+  --border: #1f2937;
+  --panel: #000000;
   --accent: #63b3ed;
   --accent-strong: #90cdf4;
-  --accent-soft: rgba(99, 179, 237, 0.15);
-  --code-bg: #2d3748;
+  --accent-soft: rgba(99, 179, 237, 0.2);
+  --button-primary: #174c9f;
+  --button-primary-hover: #1d5fc2;
+  --code-bg: #000000;
+  --prose: #d6deeb;
 }
 
 @theme inline {
@@ -101,7 +107,7 @@ a {
 }
 
 .repo-markdown {
-  color: #334e68;
+  color: var(--prose);
   min-width: 0;
   overflow-wrap: anywhere;
 }
@@ -136,7 +142,7 @@ a {
 .repo-markdown p,
 .repo-markdown li,
 .repo-markdown blockquote {
-  color: #334e68;
+  color: var(--prose);
   font-size: 1rem;
   line-height: 1.75;
 }
@@ -193,7 +199,7 @@ a {
   border: 1px solid var(--border);
   background: var(--code-bg);
   padding: 0.85rem 1rem;
-  color: #1f2933;
+  color: var(--foreground);
   box-shadow: none;
 }
 
@@ -225,7 +231,7 @@ a {
   border-spacing: 0;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: white;
+  background: var(--panel);
 }
 
 .repo-markdown thead {

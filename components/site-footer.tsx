@@ -1,15 +1,17 @@
 import Link from "next/link";
+import { Code2, FlaskConical, Server } from "lucide-react";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-[var(--border)] bg-white py-8">
+    <footer className="border-t border-[var(--border)] bg-[var(--panel)] py-8">
       <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-2 gap-y-1 px-4 text-center text-sm text-[var(--muted)] sm:px-6">
         <span>© 2026 execgo</span>
         <span className="text-[var(--border)]">·</span>
         <Link
           href="/docs/playground"
-          className="hover:text-[var(--accent-strong)]"
+          className="inline-flex items-center gap-1.5 hover:text-[var(--accent-strong)]"
         >
+          <FlaskConical className="h-3.5 w-3.5" aria-hidden="true" />
           训练场
         </Link>
         <span className="text-[var(--border)]">·</span>
@@ -17,8 +19,9 @@ export function SiteFooter() {
           href="https://github.com/iammm0/execgo-runtime"
           target="_blank"
           rel="noreferrer"
-          className="hover:text-[var(--accent-strong)]"
+          className="inline-flex items-center gap-1.5 hover:text-[var(--accent-strong)]"
         >
+          <Server className="h-3.5 w-3.5" aria-hidden="true" />
           execgo-runtime
         </a>
         <span className="text-[var(--border)]">·</span>
@@ -26,8 +29,9 @@ export function SiteFooter() {
           href="https://github.com/iammm0/execgo"
           target="_blank"
           rel="noreferrer"
-          className="hover:text-[var(--accent-strong)]"
+          className="inline-flex items-center gap-1.5 hover:text-[var(--accent-strong)]"
         >
+          <Code2 className="h-3.5 w-3.5" aria-hidden="true" />
           execgo
         </a>
       </div>
