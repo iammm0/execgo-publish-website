@@ -1,76 +1,65 @@
-# FAQ
+# FAQ：使用者疑惑导览（中文）
 
-这页聚焦 `feat-add-cluster` 分支最常见的判断问题，目标不是一次把所有实现细节讲完，而是先帮你判断这条分支适不适合你现在的阶段。
+下面把最常见的疑惑按“问题 -> 对应文档”方式导览，避免你在仓库里反复搜索。
 
-## 1. 这条分支和 main 最大的区别是什么
+## 常见疑惑
 
-`main` 更强调稳定交付的单节点执行内核；`feat-add-cluster` 更强调运行时演进，包括事件溯源、队列、Worker、沙箱以及更明确的控制面语义。
+1. 我是上层编排层，应该怎么把我的工作流映射成 ExecGo 的 `TaskGraph`？
+   - 见：[映射：DAG -> TaskGraph](./orchestrator/mapping-dag-to-taskgraph.md)
 
-继续阅读：
+2. `depends_on` 到底表达什么？为什么下游不会自动拿到上游结果？
+   - 见：[映射：DAG -> TaskGraph](./orchestrator/mapping-dag-to-taskgraph.md)
 
-- [文档总览](./README.md)
-- [Agent-First 路线图](./agent-kernel-roadmap.md)
+3. 任务失败后为什么下游会变成 `skipped`？
+   - 见：[失败语义：failed vs skipped](./orchestrator/failure-semantics.md)
 
-## 2. 接入方式会不会完全不一样
+4. 提交后如何拿到最终结果？是同步还是异步？
+   - 见：[轮询与幂等：稳定提交与读取结果](./orchestrator/polling-and-idempotency.md)
+   - 以及参考：[`GET /tasks/{id}`](./reference/api.md)
 
-不会。对上层编排层来说，最基本的接入动作依然是：提交任务图、轮询状态、读取结果。变化主要发生在运行时内部和更细的语义建模上。
+5. 为什么会收到 `400 Bad Request`？`TaskGraph.Validate()` 校验失败是什么意思？
+   - 见：[Task DSL 参考（索引）](./reference/task-dsl.md)
 
-继续阅读：
+6. 如何确定要设置多少 `retry` 和 `timeout`？
+   - 见：[任务 DSL 参考（索引）](./reference/task-dsl.md)
+   - 失败/重试语义：[`failed vs skipped`](./orchestrator/failure-semantics.md)
 
-- [编排接入指南](./orchestrator/README.md)
-- [执行运行时语义](./reference/runtime-semantics.md)
+7. `result`/`error` 的字段长什么样？我应该怎么解析？
+   - 见：[HTTP API 参考（索引）](./reference/api.md)
+   - 以及多语言客户端：[`integration` 示例](./integration/client-go.md)
 
-## 3. 我还需要关心 depends_on 和 TaskGraph 吗
+8. 我想把 ExecGo 部署到自己的集群，Docker Compose 怎么做？
+   - 见：[Docker Compose 部署示范](./deploy/compose.md)
 
-仍然需要。无论内部是不是队列化调度，对外暴露的基本编排契约依然是 `TaskGraph` 和任务依赖关系。
+9. 我想把 ExecGo 部署到 Kubernetes，怎么写 Deployment/Service/PVC？
+   - 见：[Kubernetes 部署示范](./deploy/kubernetes.md)
 
-继续阅读：
+10. Kubernetes 多副本能不能直接设 `replicas > 1`？
+   - 见：[Kubernetes 多副本注意事项](./deploy/kubernetes.md)
 
-- [DAG 到 TaskGraph 的映射](./orchestrator/mapping-dag-to-taskgraph.md)
-- [Task DSL 参考](./reference/task-dsl.md)
+11. 我想用 Go 调用 ExecGo，怎么写？
+   - 见：[Go（HTTP）接入示例](./integration/client-go.md)
 
-## 4. 运行时语义增强以后，我是不是必须改成新字段
+12. 我想用 Java 调用 ExecGo，怎么写？
+   - 见：[Java（HTTP）接入示例](./integration/client-java.md)
 
-不一定。如果你只是想保持兼容接入，继续消费 `status`、`result`、`error` 也可以。如果你想利用这条分支更丰富的状态、句柄和错误包络，再逐步接入 `runtime.*` 相关字段即可。
+13. 我想用 Python 调用 ExecGo，怎么写？
+   - 见：[Python（HTTP）接入示例](./integration/client-python.md)
+14. 我想用 Node.js + TypeScript 调用 ExecGo，怎么写？
+   - 见：[Node.js + TypeScript（HTTP）接入示例](./integration/client-nodejs-ts.md)
 
-继续阅读：
+15. shell 执行器是否安全？怎么避免任意命令执行风险？
+   - 见：[执行器与参数参考（索引）](./reference/executors.md)
+   - 以及更细：[`Shell 执行器参数`](./reference/任务%20DSL%20规范/执行参数规范/Shell%20执行器参数.md)
 
-- [执行运行时语义](./reference/runtime-semantics.md)
-- [API 参考](./reference/api.md)
+16. 任务状态存储在哪里？如何持久化/恢复？
+   - 见：[数据持久化策略](./reference/系统架构/数据持久化策略.md)
 
-## 5. 失败时我应该看 failed 还是 skipped
+17. 我怎么扩展执行器或实现自定义执行器？
+   - 见：[执行器与参数参考（索引）](./reference/executors.md)
 
-两者都要看，但用途不同：
+18. 我遇到“幂等/重复提交”问题，怎么处理？
+   - 见：[轮询与幂等：稳定提交与读取结果](./orchestrator/polling-and-idempotency.md)
 
-- `failed` 用来找真正执行失败的节点
-- `skipped` 用来判断哪些节点是被上游失败连带影响
+如果你希望我把这些 FAQ 再细化到“每条都包含更完整示例”，告诉我你最关心的 3-5 条。
 
-继续阅读：
-
-- [失败与跳过语义](./orchestrator/failure-semantics.md)
-
-## 6. 这条分支适合直接上生产吗
-
-如果你要的是稳定基线，优先用 `main`。如果你要的是提前评估集群化演进方向、验证更先进的运行时语义，这条分支才更值得投入。
-
-## 7. 如何避免重复提交
-
-结论和稳定版一致：关键还是 `task.id` 设计。内部架构变复杂，不会自动帮你解决客户端的重复提交问题。
-
-继续阅读：
-
-- [轮询与幂等](./orchestrator/polling-and-idempotency.md)
-
-## 8. 我该先看哪些文档
-
-如果你是评估方向，建议看：
-
-1. [Agent-First 路线图](./agent-kernel-roadmap.md)
-2. [执行运行时语义](./reference/runtime-semantics.md)
-3. [FAQ](./faqs.md)
-
-如果你是验证接入，建议看：
-
-1. [HTTP API 入门](./integration/http-api-getting-started.md)
-2. [Task DSL 参考](./reference/task-dsl.md)
-3. [API 参考](./reference/api.md)

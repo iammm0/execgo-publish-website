@@ -17,7 +17,7 @@ const branches = [
 const exportPaths = ["README.md", "CHANGELOG.md", "pkg/version/version.go", "docs"];
 
 function runGit(repoDir, args, options = {}) {
-  return execFileSync("git", ["-C", repoDir, ...args], {
+  return execFileSync("git", ["-c", "core.quotepath=false", "-C", repoDir, ...args], {
     encoding: "utf8",
     env: { ...process.env, LANG: "C.UTF-8", LC_ALL: "C.UTF-8" },
     ...options,
@@ -125,7 +125,11 @@ if (fs.existsSync(execgoRoot)) {
   fs.rmSync(execgoBranchesOutput, { recursive: true, force: true });
   fs.mkdirSync(execgoBranchesOutput, { recursive: true });
   for (const branch of branches) {
-    writeBranchSnapshot(branch);
+    try {
+      writeBranchSnapshot(branch);
+    } catch (err) {
+      console.warn(`Skipping execgo branch snapshot (${branch.id}): ${String(err)}`);
+    }
   }
   console.log(`Synced execgo branch snapshots to ${execgoBranchesOutput}`);
 } else {
