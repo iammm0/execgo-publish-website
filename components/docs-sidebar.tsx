@@ -14,6 +14,7 @@ type DocsSidebarProps = {
 const branchLinks: Array<{ id: BranchId; label: string }> = [
   { id: "main", label: "main" },
   { id: "feat-add-cluster", label: "feat-add-cluster" },
+  { id: "feat-add-adapter", label: "feat-add-adapter" },
 ];
 
 /** 仅一条链接且与分组标题同名时，不再重复显示分组小标题。 */

@@ -12,6 +12,7 @@ const execgoBranchesOutput = path.join(projectRoot, "content", "execgo-branches"
 const branches = [
   { id: "main", refs: ["main", "origin/main"] },
   { id: "feat-add-cluster", refs: ["origin/feat-add-cluster", "feat-add-cluster"] },
+  { id: "feat-add-adapter", refs: ["origin/feat-add-adapter", "feat-add-adapter"] },
 ];
 
 const exportPaths = ["README.md", "CHANGELOG.md", "pkg/version/version.go", "docs"];

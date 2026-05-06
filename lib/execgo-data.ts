@@ -8,7 +8,7 @@ const CONTENT_ROOT = path.join(process.cwd(), "content", "execgo-branches");
 const GITHUB_REPO = "https://github.com/iammm0/execgo";
 const DEFAULT_DOC_SLUG = ["zh"];
 
-export type BranchId = "main" | "feat-add-cluster";
+export type BranchId = "main" | "feat-add-cluster" | "feat-add-adapter";
 
 type BranchCopy = {
   id: BranchId;
@@ -169,6 +169,7 @@ type SiteData = {
     aspect: string;
     main: string;
     cluster: string;
+    adapter: string;
   }>;
   branches: BranchSnapshot[];
   timeline: SiteTimelineItem[];
@@ -235,6 +236,33 @@ const BRANCHES: Record<BranchId, BranchCopy> = {
     ],
     refCandidates: ["origin/feat-add-cluster", "feat-add-cluster"],
   },
+  "feat-add-adapter": {
+    id: "feat-add-adapter",
+    branchName: "feat-add-adapter",
+    label: "适配器与 Runtime 集成线",
+    badge: "Adapter + Runtime",
+    channel: "整合预览",
+    summary:
+      "在稳定 v1 内核上引入成熟 Agent 适配器 HTTP 面、execgo-runtime 执行器集成、execgocli 标准壳与 MCP HTTP 路由，便于 Agent 平台直接落地。",
+    description:
+      "适合需要结构化动作翻译、外部 runtime 执行平面、以及 Codex / Claude 共用轻量 CLI 的团队；可在不影响主线发布节奏的前提下验证集成。",
+    audience:
+      "Agent 工具链工程师、需要把 ExecGo 接到 execgo-runtime 或自研 Runtime 的平台团队。",
+    rollout: "能力整合预览",
+    narrative: [
+      "从 pkg/httpserver/engine.go 可见 /adapters/* 与 /mcp/* 与任务 API 并存，控制面可在同一端口服务编排器与工具发现。",
+      "从 pkg/executor/runtime.go 与 EXECGO_RUNTIME_URL 可把异步任务交给符合 execgo-runtime HTTP 契约的执行平面，并支持 control_context 与取消链路。",
+      "从 cmd/execgocli 与 internal/execgocli 可将适配器与任务轮询固化为单二进制工作流，降低各 IDE 插件重复实现成本。",
+    ],
+    focusAreas: [
+      "成熟 Agent 适配器",
+      "runtime 类型任务与外部 Runtime",
+      "execgocli HTTP 壳",
+      "MCP 工具 HTTP",
+      "双语文档与 CLI 契约",
+    ],
+    refCandidates: ["origin/feat-add-adapter", "feat-add-adapter"],
+  },
 };
 
 const CAPABILITIES: Record<BranchId, Capability[]> = {
@@ -266,10 +294,10 @@ const CAPABILITIES: Record<BranchId, Capability[]> = {
       description:
         "通过 os 类别聚合 shell、file、dns、tcp、sleep、noop、http 等工具，同时补充 mcp 与 cli-skills 执行器。",
       evidence: [
-        "pkg/executor/executor.go",
+        "pkg/executor/core.go",
         "pkg/executor/os.go",
         "pkg/executor/mcp.go",
-        "pkg/executor/cli_skills.go",
+        "pkg/executor/cli.go",
       ],
       tags: ["Shell", "File", "HTTP", "MCP"],
     },
@@ -332,6 +360,48 @@ const CAPABILITIES: Record<BranchId, Capability[]> = {
         "cmd/execgo/main.go",
       ],
       tags: ["Sandbox", "Prometheus", "OpenTelemetry"],
+    },
+  ],
+  "feat-add-adapter": [
+    {
+      title: "成熟 Agent 适配器 HTTP",
+      description:
+        "提供 /adapters/capabilities、/adapters/tools、/adapters/translate 与 /adapters/actions，统一结构化动作的翻译与提交。",
+      evidence: [
+        "pkg/httpserver/engine.go",
+        "pkg/adapter/adapter.go",
+        "docs/zh/integration/agent-adapter.md",
+      ],
+      tags: ["REST", "Adapter", "Agents"],
+    },
+    {
+      title: "execgo-runtime 执行器",
+      description:
+        "内置 runtime 任务类型，通过 EXECGO_RUNTIME_URL 调用外部 runtime HTTP API，支持 tenant/owner 注入与 Kill 请求头。",
+      evidence: [
+        "pkg/executor/runtime.go",
+        "docs/zh/integration/execgo-runtime.md",
+        "docs/zh/overview/execgo-and-runtime.md",
+      ],
+      tags: ["Runtime", "HTTP", "Cancel"],
+    },
+    {
+      title: "execgocli 标准壳",
+      description:
+        "cmd/execgocli 暴露 capabilities、tools、act、translate、wait、submit、ensure-running 等子命令，面向 Codex / Claude Code 共用路径。",
+      evidence: [
+        "cmd/execgocli/main.go",
+        "internal/execgocli",
+        "docs/zh/reference/execgo-cli-contract.md",
+      ],
+      tags: ["CLI", "Stdlib"],
+    },
+    {
+      title: "MCP 工具 HTTP 面",
+      description:
+        "提供 GET /mcp/tools、POST /mcp/call、GET /mcp/tasks/{id}，与任务 API 并列，便于工具发现与调试。",
+      evidence: ["pkg/httpserver/engine.go", "pkg/executor/mcp.go"],
+      tags: ["MCP", "Tools"],
     },
   ],
 };
@@ -402,6 +472,38 @@ const MODULE_CARDS: Record<BranchId, ModuleCard[]> = {
       description: "新增 WorkerControl 服务，把控制面协议显式化。",
     },
   ],
+  "feat-add-adapter": [
+    {
+      title: "适配器核心",
+      path: "pkg/adapter/adapter.go",
+      description: "成熟 Agent 动作契约、工具清单与 translate/actions 管线。",
+    },
+    {
+      title: "HTTP API",
+      path: "pkg/httpserver/engine.go",
+      description: "任务、适配器与 MCP 路由共存。",
+    },
+    {
+      title: "RuntimeExecutor",
+      path: "pkg/executor/runtime.go",
+      description: "向 execgo-runtime 提交与轮询异步执行句柄。",
+    },
+    {
+      title: "execgocli",
+      path: "cmd/execgocli/main.go",
+      description: "标准库 HTTP 客户端封装适配器子命令与任务轮询。",
+    },
+    {
+      title: "CLI 内部库",
+      path: "internal/execgocli",
+      description: "ensure-running、compose 提示与 JSON 输出。",
+    },
+    {
+      title: "适配器文档",
+      path: "docs/zh/integration/agent-adapter.md",
+      description: "适配器集成与模式说明入口。",
+    },
+  ],
 };
 
 const CHANGE_AREA_RULES = [
@@ -420,6 +522,10 @@ const CHANGE_AREA_RULES = [
   {
     title: "队列、插件与沙箱",
     matches: ["pkg/taskqueue", "pkg/plugins", "pkg/sandbox"],
+  },
+  {
+    title: "适配器与 CLI 壳层",
+    matches: ["pkg/adapter", "internal/execgocli", "cmd/execgocli"],
   },
   {
     title: "测试回归",
@@ -443,6 +549,16 @@ const PREFERRED_DOCS: Record<BranchId, string[]> = {
     "docs/zh/orchestrator/polling-and-idempotency.md",
     "docs/zh/reference/runtime-semantics.md",
     "docs/zh/reference/executors.md",
+  ],
+  "feat-add-adapter": [
+    "docs/zh/README.md",
+    "docs/zh/overview/execgo-and-runtime.md",
+    "docs/zh/integration/agent-adapter.md",
+    "docs/zh/integration/http-api-getting-started.md",
+    "docs/zh/reference/execgo-cli-contract.md",
+    "docs/zh/reference/task-dsl.md",
+    "docs/zh/reference/api.md",
+    "docs/zh/deploy/kubernetes.md",
   ],
 };
 
@@ -486,6 +602,31 @@ const CURATED_ZH_DOCS: Record<BranchId, string[]> = {
     "docs/zh/deploy/kubernetes.md",
     "docs/zh/faqs.md",
   ],
+  "feat-add-adapter": [
+    "docs/zh/README.md",
+    "docs/zh/overview/execgo-and-runtime.md",
+    "docs/zh/orchestrator/README.md",
+    "docs/zh/orchestrator/mapping-dag-to-taskgraph.md",
+    "docs/zh/orchestrator/failure-semantics.md",
+    "docs/zh/orchestrator/polling-and-idempotency.md",
+    "docs/zh/integration/agent-adapter.md",
+    "docs/zh/integration/execgo-runtime.md",
+    "docs/zh/integration/http-api-getting-started.md",
+    "docs/zh/integration/mode-a-cli.md",
+    "docs/zh/integration/mode-b-upgrade.md",
+    "docs/zh/integration/client-go.md",
+    "docs/zh/integration/client-java.md",
+    "docs/zh/integration/client-python.md",
+    "docs/zh/integration/client-nodejs-ts.md",
+    "docs/zh/reference/execgo-cli-contract.md",
+    "docs/zh/reference/task-dsl.md",
+    "docs/zh/reference/api.md",
+    "docs/zh/reference/executors.md",
+    "docs/zh/deploy/compose.md",
+    "docs/zh/deploy/kubernetes.md",
+    "docs/zh/faqs.md",
+    "docs/zh/releases/v1.0.0.md",
+  ],
 };
 
 const COMPARISON_ROWS = [
@@ -493,31 +634,37 @@ const COMPARISON_ROWS = [
     aspect: "运行时形态",
     main: "单节点服务 / 可嵌入执行内核",
     cluster: "控制面 + 队列 + Worker 的分布式预览架构",
+    adapter: "单节点控制面 + 外部 execgo-runtime HTTP 执行平面（runtime 执行器）",
   },
   {
     aspect: "状态管理",
     main: "JSON 文件持久化，按周期落盘",
     cluster: "事件溯源 Store，支持事件回放和幂等命中",
+    adapter: "与主线一致的控制面持久化；长生命周期任务态在外部 Runtime 侧维护",
   },
   {
     aspect: "执行拓扑",
     main: "进程内调度与执行",
     cluster: "队列化调度，支持本地和远程 Worker",
+    adapter: "调度仍在 ExecGo；重任务经 runtime 类型委派给外部进程",
   },
   {
     aspect: "协议面",
     main: "HTTP + 可选 gRPC ExecGo 服务",
     cluster: "HTTP + ExecGo gRPC + WorkerControl gRPC",
+    adapter: "HTTP 任务/适配器/MCP；Runtime 侧走 execgo-runtime HTTP API",
   },
   {
     aspect: "扩展能力",
     main: "执行器、存储子模块、文档与部署模板",
     cluster: "插件管理、沙箱运行器、任务租约和审计",
+    adapter: "适配器契约、execgocli、runtime 集成与租户/所有者上下文字段",
   },
   {
     aspect: "适用阶段",
     main: "正式发布、官网主叙事、直接落地",
     cluster: "预研、灰度验证、集群演进路线展示",
+    adapter: "验证 Agent 接入、Runtime 分流与 CLI 工作流，以便回流主线",
   },
 ];
 
@@ -773,6 +920,9 @@ function docSectionMeta(
   if (locale === "zh") {
     if (repoPath === "docs/zh/README.md") {
       return { section: "overview", sectionLabel: "开始这里" };
+    }
+    if (repoPath.startsWith("docs/zh/overview/")) {
+      return { section: "overview", sectionLabel: "总览与关系" };
     }
     if (repoPath === "docs/zh/agent-kernel-roadmap.md") {
       return { section: "roadmap", sectionLabel: "路线图" };
@@ -1046,7 +1196,7 @@ function normalizeExecutorCategory(value: string): string {
 
 function extractExecutorSurface(ref: string): ExecutorSurface {
   const osExecutor = readGitFile(ref, "pkg/executor/os.go");
-  const builtinRegistry = readGitFile(ref, "pkg/executor/executor.go");
+  const builtinRegistry = readGitFile(ref, "pkg/executor/core.go");
 
   const tools = Array.from(osExecutor.matchAll(/"([^"]+)":\s+\w+\.Execute/g))
     .map((match) => match[1] ?? "")
@@ -1132,7 +1282,7 @@ function stripLeadingTitle(markdown: string): string {
 }
 
 function ensureBranchId(value: string): BranchId | null {
-  if (value === "main" || value === "feat-add-cluster") {
+  if (value === "main" || value === "feat-add-cluster" || value === "feat-add-adapter") {
     return value;
   }
 
@@ -1206,9 +1356,12 @@ export const getBranchSnapshot = cache((branchId: BranchId): BranchSnapshot => {
 export const getSiteData = cache((): SiteData => {
   const main = getBranchSnapshot("main");
   const cluster = getBranchSnapshot("feat-add-cluster");
+  const adapter = getBranchSnapshot("feat-add-adapter");
 
   const canQueryExecgoGit =
-    resolveExecgoRef("main") !== null || resolveExecgoRef("feat-add-cluster") !== null;
+    resolveExecgoRef("main") !== null ||
+    resolveExecgoRef("feat-add-cluster") !== null ||
+    resolveExecgoRef("feat-add-adapter") !== null;
 
   const timeline = (() => {
     if (!canQueryExecgoGit) {
@@ -1244,7 +1397,7 @@ export const getSiteData = cache((): SiteData => {
     releaseVersion: main.releaseVersion,
     releaseDate: main.releaseDate,
     comparisonRows: COMPARISON_ROWS,
-    branches: [main, cluster],
+    branches: [main, cluster, adapter],
     timeline,
   };
 });
