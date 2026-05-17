@@ -5,6 +5,7 @@ import {
   Activity,
   Boxes,
   Database,
+  Download,
   FlaskConical,
   Layers,
   Plug,
@@ -265,6 +266,40 @@ export default function Home() {
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="mt-16 border-t border-[var(--border)] pt-12">
+        <div className="flex items-start justify-between gap-8">
+          <div>
+            <h2 className="text-2xl font-bold text-[var(--foreground)]">
+              下载训练场
+            </h2>
+            <p className="mt-4 max-w-2xl text-[var(--muted)]">
+              训练场包含完整的 Docker Compose 环境（runtime + execgo + fixtures）、标准场景、故障注入配置和桌面客户端源码。下载后即可在本地对 runtime 和 execgo 进行可靠性测试。
+            </p>
+            <ul className="mt-6 grid gap-3 text-sm text-[var(--muted)]">
+              <li className="flex items-center gap-2">
+                <Server className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
+                Docker Compose 一键启动 runtime + execgo
+              </li>
+              <li className="flex items-center gap-2">
+                <FlaskConical className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
+                4 个内建场景 + 故障注入配置
+              </li>
+              <li className="flex items-center gap-2">
+                <Terminal className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
+                桌面客户端源码（Tauri + React）
+              </li>
+            </ul>
+          </div>
+          <a
+            href="/downloads/execgo-playground-v0.1.0.tar.gz"
+            className="mt-2 inline-flex shrink-0 items-center gap-2 border border-[var(--button-primary)] bg-[var(--button-primary)] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[var(--button-primary-hover)]"
+          >
+            <Download className="h-4 w-4" aria-hidden="true" />
+            下载 v0.1.0
+          </a>
+        </div>
       </section>
     </div>
   );

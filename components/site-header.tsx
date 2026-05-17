@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
-import { FlaskConical, Menu, Server } from "lucide-react";
+import { Download, FlaskConical, Menu, Server } from "lucide-react";
 
 import { DismissibleMenu } from "@/components/dismissible-menu";
 import { ExecgoDocsMenu } from "@/components/execgo-docs-menu";
@@ -17,6 +17,7 @@ export function SiteHeader() {
     ...(hasPlaygroundDocIndex()
       ? [{ label: "训练场", href: "/docs/playground", Icon: FlaskConical }]
       : []),
+    { label: "下载", href: "/downloads/execgo-playground-v0.1.0.tar.gz", Icon: Download },
   ];
 
   return (
