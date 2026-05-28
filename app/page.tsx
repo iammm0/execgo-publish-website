@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
+  ExternalLink,
   CheckCircle2,
   Server,
 } from "lucide-react";
@@ -97,6 +98,24 @@ export default function Home() {
             titleClassName="block font-medium text-[var(--foreground)]"
             descriptionClassName="mt-0.5 block text-xs text-[var(--muted)]"
           />
+        </div>
+        <div className="mt-8 border-l-2 border-[var(--accent-strong)] bg-[var(--background-soft)] px-4 py-4 sm:px-5">
+          <p className="text-sm font-semibold text-[var(--foreground)]">
+            最佳接入方式：通过 execgo-skills 接入
+          </p>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--muted)]">
+            把 skill 链接给 Codex、Claude Code、Hermes Agent 或 OpenClaw，让 agent
+            从 execgo-agent-bridge 开始接入 ExecGo 与 execgo-runtime。
+          </p>
+          <a
+            href="https://github.com/iammm0/execgo-skills/tree/main/skills/execgo-agent-bridge"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-3 inline-flex min-w-0 items-center gap-2 break-all font-mono text-xs font-medium text-[var(--accent-strong)] underline decoration-[rgba(47,128,237,0.35)] underline-offset-2 hover:text-[var(--accent)] sm:text-sm"
+          >
+            https://github.com/iammm0/execgo-skills/tree/main/skills/execgo-agent-bridge
+            <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          </a>
         </div>
       </section>
 

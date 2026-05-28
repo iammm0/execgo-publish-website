@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { DocsToc } from "@/components/docs-toc";
 import { RepoMarkdown } from "@/components/repo-markdown";
@@ -8,6 +8,14 @@ import { getBranchIdOrNull, getDocPageData } from "@/lib/execgo-data";
 type PageProps = {
   params: Promise<{ branch: string; slug?: string[] }>;
 };
+
+function mainDocHref(slug: string[] = []): string {
+  if (slug.length === 0) {
+    return "/docs/execgo/main";
+  }
+
+  return `/docs/execgo/main/${slug.map(encodeURIComponent).join("/")}`;
+}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { branch, slug } = await params;
@@ -25,6 +33,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ExecgoDocPage({ params }: PageProps) {
   const { branch, slug } = await params;
+
+  if (branch === "feat-add-adapter") {
+    redirect(mainDocHref(slug ?? []));
+  }
+
   const branchId = getBranchIdOrNull(branch);
 
   if (!branchId) {

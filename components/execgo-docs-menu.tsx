@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
-import { BookOpen, Cpu, GitBranch, Network } from "lucide-react";
+import { BookOpen, GitBranch, Network } from "lucide-react";
 
 import { DismissibleMenu } from "@/components/dismissible-menu";
 import { branchHasDocIndex } from "@/lib/execgo-data";
@@ -9,26 +9,19 @@ const EXECGO_DOC_BRANCHES = [
   {
     id: "main" as const,
     href: "/docs/execgo/main",
-    title: "标准执行内核（main）",
-    description: "稳定主线文档，适合默认接入与日常使用。",
+    title: "适配器与 Runtime 主线（main）",
+    description: "main 分支已包含成熟 Agent 适配器、execgo-runtime 执行器与 execgocli。",
     Icon: GitBranch,
   },
   {
     id: "feat-add-cluster" as const,
     href: "/docs/execgo/feat-add-cluster",
-    title: "添加了分布式相关生产特性（feat-add-cluster）",
-    description: "包含集群与分布式相关生产能力的分支文档。",
+    title: "集群预览（feat-add-cluster）",
+    description: "包含集群、队列、远程 Worker 与分布式控制面预览能力。",
     Icon: Network,
   },
-  {
-    id: "feat-add-adapter" as const,
-    href: "/docs/execgo/feat-add-adapter",
-    title: "适配器与 Runtime 集成（feat-add-adapter）",
-    description: "成熟 Agent 适配器、execgo-runtime 执行器、execgocli 与 MCP HTTP 路由。",
-    Icon: Cpu,
-  },
 ].filter((branch) => branchHasDocIndex(branch.id)) satisfies Array<{
-  id: "main" | "feat-add-cluster" | "feat-add-adapter";
+  id: "main" | "feat-add-cluster";
   href: string;
   title: string;
   description: string;
