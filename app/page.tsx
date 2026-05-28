@@ -4,6 +4,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   Activity,
   Boxes,
+  Ban,
   Database,
   Layers,
   Plug,
@@ -44,6 +45,11 @@ const FEATURES: { title: string; body: string; Icon: LucideIcon }[] = [
     title: "超时与重试",
     body: "支持基于 context 的超时控制，以及带退避策略的重试，减少瞬时故障影响。",
     Icon: Timer,
+  },
+  {
+    title: "可取消执行",
+    body: "`POST /tasks/{id}/cancel` 会让任务进入 cancelling，再由本地 context 或 runtime handle 收敛到 cancelled。",
+    Icon: Ban,
   },
   {
     title: "状态持久化",
@@ -88,26 +94,26 @@ const LAYERS: { title: string; body: string; Icon: LucideIcon }[] = [
 const AGENT_EXPERIENCES: { name: string; signal: string; body: string; Icon: LucideIcon }[] = [
   {
     name: "Codex",
-    signal: "命令行与 schema 型工具接入最顺滑",
-    body: "Codex 可以先读取 ExecGo 暴露的工具 manifest，再提交结构化 action。输入 schema validation 能在本地拦住坏参数，适合把临时操作沉淀成可审计任务。",
+    signal: "最适合把临时操作变成可审计任务",
+    body: "Codex 读取工具 manifest 后提交结构化 action；本地 schema validation 先挡坏参数，长任务可用 execgocli cancel --wait 收敛到 cancelled。",
     Icon: Terminal,
   },
   {
     name: "Claude Code",
-    signal: "适合作为团队代码库里的安全执行层",
-    body: "把 shell、文件操作和 runtime 调用交给 ExecGo 后，任务 id、依赖、状态和错误语义能稳定保留，长脚本不必散落在会话上下文里。",
+    signal: "适合作为团队代码库里的安全动作层",
+    body: "把 shell、文件操作和 runtime 调用交给 ExecGo 后，任务 id、依赖、状态和错误语义能稳定保留；cancel 与 delete 分离，避免误删审计记录。",
     Icon: Workflow,
   },
   {
     name: "Hermes Agent",
     signal: "更像消息驱动 agent 的动作内核",
-    body: "上层只需要表达动作意图，ExecGo 负责调度、超时、重试和运行时分发；runtime artifact 可以继续作为后续推理或回放证据。",
+    body: "上层只表达动作意图，ExecGo 负责调度、超时、重试、取消和 runtime 分发；artifact 与事件可以继续作为后续推理或回放证据。",
     Icon: Route,
   },
   {
     name: "OpenClaw",
     signal: "适合开放工具生态的能力发现",
-    body: "`/adapters/tools` 暴露 machine-readable schema，agent 可以先发现能力再生成调用，减少手写 Task DSL 带来的字段漂移。",
+    body: "`/adapters/tools` 暴露 machine-readable schema，agent 可以先发现能力再生成调用；运行中任务可经历 running、cancelling、cancelled 的清晰状态链。",
     Icon: Plug,
   },
 ];
@@ -218,6 +224,22 @@ export default function Home() {
             </li>
           ))}
         </ul>
+        <div className="mt-10 grid gap-4 border border-[var(--border)] bg-[var(--panel)] p-5 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-center">
+          <div>
+            <p className="text-sm font-semibold text-[var(--foreground)]">running</p>
+            <p className="mt-1 text-sm text-[var(--muted)]">任务正在本地 executor 或 execgo-runtime 中执行。</p>
+          </div>
+          <span className="hidden text-[var(--muted)] sm:block">→</span>
+          <div>
+            <p className="text-sm font-semibold text-[var(--foreground)]">cancelling</p>
+            <p className="mt-1 text-sm text-[var(--muted)]">控制面已接收 cancel，正在触发 context 或 runtime handle。</p>
+          </div>
+          <span className="hidden text-[var(--muted)] sm:block">→</span>
+          <div>
+            <p className="text-sm font-semibold text-[var(--foreground)]">cancelled</p>
+            <p className="mt-1 text-sm text-[var(--muted)]">终态保留结果、错误码与事件，便于 agent 后续决策。</p>
+          </div>
+        </div>
       </section>
 
       <section className="mt-16 border-t border-[var(--border)] pt-12">
