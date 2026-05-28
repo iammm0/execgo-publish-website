@@ -5,8 +5,6 @@ import {
   Activity,
   Boxes,
   Database,
-  Download,
-  FlaskConical,
   Layers,
   Plug,
   Power,
@@ -19,7 +17,6 @@ import {
 
 import { ExecgoDocsMenu } from "@/components/execgo-docs-menu";
 import { GitHubMenu } from "@/components/github-menu";
-import { hasPlaygroundDocIndex } from "@/lib/playground-data";
 import { hasRuntimeDocIndex } from "@/lib/runtime-data";
 
 const FEATURES: { title: string; body: string; Icon: LucideIcon }[] = [
@@ -88,9 +85,35 @@ const LAYERS: { title: string; body: string; Icon: LucideIcon }[] = [
   },
 ];
 
+const AGENT_EXPERIENCES: { name: string; signal: string; body: string; Icon: LucideIcon }[] = [
+  {
+    name: "Codex",
+    signal: "命令行与 schema 型工具接入最顺滑",
+    body: "Codex 可以先读取 ExecGo 暴露的工具 manifest，再提交结构化 action。输入 schema validation 能在本地拦住坏参数，适合把临时操作沉淀成可审计任务。",
+    Icon: Terminal,
+  },
+  {
+    name: "Claude Code",
+    signal: "适合作为团队代码库里的安全执行层",
+    body: "把 shell、文件操作和 runtime 调用交给 ExecGo 后，任务 id、依赖、状态和错误语义能稳定保留，长脚本不必散落在会话上下文里。",
+    Icon: Workflow,
+  },
+  {
+    name: "Hermes Agent",
+    signal: "更像消息驱动 agent 的动作内核",
+    body: "上层只需要表达动作意图，ExecGo 负责调度、超时、重试和运行时分发；runtime artifact 可以继续作为后续推理或回放证据。",
+    Icon: Route,
+  },
+  {
+    name: "OpenClaw",
+    signal: "适合开放工具生态的能力发现",
+    body: "`/adapters/tools` 暴露 machine-readable schema，agent 可以先发现能力再生成调用，减少手写 Task DSL 带来的字段漂移。",
+    Icon: Plug,
+  },
+];
+
 export default function Home() {
   const showRuntimeDocs = hasRuntimeDocIndex();
-  const showPlaygroundDocs = hasPlaygroundDocIndex();
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6 sm:py-16">
@@ -126,15 +149,6 @@ export default function Home() {
             >
               <Server className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
               runtime 文档
-            </Link>
-          ) : null}
-          {showPlaygroundDocs ? (
-            <Link
-              href="/docs/playground"
-              className="inline-flex items-center justify-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)]"
-            >
-              <FlaskConical className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
-              训练场
             </Link>
           ) : null}
           <GitHubMenu
@@ -177,55 +191,34 @@ export default function Home() {
         </div>
       </section>
 
-      {showPlaygroundDocs ? (
-        <section className="mt-16 border-t border-[var(--border)] pt-12">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <p className="section-eyebrow">新手训练场</p>
-              <h2 className="mt-2 text-2xl font-bold text-[var(--foreground)]">
-                用 execgo-playground 学会真实执行闭环
-              </h2>
-              <p className="mt-4 max-w-2xl text-[var(--muted)]">
-                训练场把 LLM 规划、编排框架适配、ExecGo 调度、Runtime 执行、结果回放与故障注入放在同一套环境里。
-                新入手项目时，可以先用它跑通 replay 基线，再逐步理解 TaskGraph、场景校验和可观测证据链。
-              </p>
-            </div>
-            <Link
-              href="/docs/playground/zh/getting-started"
-              className="inline-flex shrink-0 items-center justify-center gap-2 border border-[var(--button-primary)] bg-[var(--button-primary)] px-5 py-2 text-sm font-medium text-white hover:border-[var(--button-primary-hover)] hover:bg-[var(--button-primary-hover)]"
-            >
-              查看上手指南
-              <FlaskConical className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </div>
-          <ul className="mt-8 grid gap-x-8 gap-y-8 sm:grid-cols-3">
-            <li>
+      <section className="mt-16 border-t border-[var(--border)] pt-12">
+        <p className="section-eyebrow">Agent 接入体验</p>
+        <h2 className="mt-2 text-2xl font-bold text-[var(--foreground)]">
+          把真实执行交给 ExecGo
+        </h2>
+        <p className="mt-4 max-w-2xl text-[var(--muted)]">
+          ExecGo 更像动作执行内核，而不是完整 agent 框架。Codex、Claude Code、Hermes Agent、OpenClaw
+          这类上层 agent 可以保留自己的规划循环，把真实工具调用交给 ExecGo 做结构化落地。
+        </p>
+        <ul className="mt-8 grid gap-x-8 gap-y-8 sm:grid-cols-2">
+          {AGENT_EXPERIENCES.map((item) => (
+            <li key={item.name}>
+              <div className="mb-3 inline-flex h-9 w-9 items-center justify-center border border-[var(--border)] bg-[var(--panel)] text-[var(--accent-strong)]">
+                <item.Icon className="h-4 w-4" aria-hidden="true" />
+              </div>
               <h3 className="text-base font-semibold text-[var(--foreground)]">
-                标准场景
+                {item.name}
               </h3>
+              <p className="mt-1 text-sm font-medium text-[var(--accent-strong)]">
+                {item.signal}
+              </p>
               <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-                内建代码生成、漏洞扫描、多步骤代理和长链路 DAG，适合作为入门练习与回归基线。
+                {item.body}
               </p>
             </li>
-            <li>
-              <h3 className="text-base font-semibold text-[var(--foreground)]">
-                公平对比
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-                LangGraph、CrewAI、AutoGen 统一归一为 StandardPlan，并在同一 ExecGo + Runtime 环境里运行。
-              </p>
-            </li>
-            <li>
-              <h3 className="text-base font-semibold text-[var(--foreground)]">
-                可归因结果
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-                每次运行都会落盘 plan、trace、timeline、snapshots、result 和 summary，便于复盘执行可靠性。
-              </p>
-            </li>
-          </ul>
-        </section>
-      ) : null}
+          ))}
+        </ul>
+      </section>
 
       <section className="mt-16 border-t border-[var(--border)] pt-12">
         <h2 className="text-2xl font-bold text-[var(--foreground)]">
@@ -268,39 +261,6 @@ export default function Home() {
         </ul>
       </section>
 
-      <section className="mt-16 border-t border-[var(--border)] pt-12">
-        <div className="flex items-start justify-between gap-8">
-          <div>
-            <h2 className="text-2xl font-bold text-[var(--foreground)]">
-              下载训练场
-            </h2>
-            <p className="mt-4 max-w-2xl text-[var(--muted)]">
-              训练场包含完整的 Docker Compose 环境（runtime + execgo + fixtures）、标准场景、故障注入配置和桌面客户端源码。下载后即可在本地对 runtime 和 execgo 进行可靠性测试。
-            </p>
-            <ul className="mt-6 grid gap-3 text-sm text-[var(--muted)]">
-              <li className="flex items-center gap-2">
-                <Server className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
-                Docker Compose 一键启动 runtime + execgo
-              </li>
-              <li className="flex items-center gap-2">
-                <FlaskConical className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
-                4 个内建场景 + 故障注入配置
-              </li>
-              <li className="flex items-center gap-2">
-                <Terminal className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
-                桌面客户端源码（Tauri + React）
-              </li>
-            </ul>
-          </div>
-          <a
-            href="/downloads/execgo-playground-v0.1.0.tar.gz"
-            className="mt-2 inline-flex shrink-0 items-center gap-2 border border-[var(--button-primary)] bg-[var(--button-primary)] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[var(--button-primary-hover)]"
-          >
-            <Download className="h-4 w-4" aria-hidden="true" />
-            下载 v0.1.0
-          </a>
-        </div>
-      </section>
     </div>
   );
 }

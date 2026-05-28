@@ -5,11 +5,10 @@
   "scripts": {
     "dev": "next dev --webpack",
     "dev:turbo": "next dev --turbo",
-    "build": "bash scripts/bundle-playground.sh && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "sync:execgo-content": "node scripts/sync-execgo-content.mjs",
-    "bundle:playground": "bash scripts/bundle-playground.sh"
+    "sync:execgo-content": "node scripts/sync-execgo-content.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.8.0",

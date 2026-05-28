@@ -13,14 +13,14 @@ export const metadata: Metadata = {
     template: "%s | execgo",
   },
   description:
-    "execgo 控制面、execgo-runtime 数据面运行时与 execgo-playground 训练场的文档入口。",
+    "execgo 控制面与 execgo-runtime 数据面运行时的文档入口。",
   icons: {
     icon: [{ url: "/favicon.ico" }],
     apple: [{ url: "/apple-touch-icon.png" }],
   },
   openGraph: {
     title: "execgo",
-    description: "execgo 控制面、execgo-runtime 数据面运行时与 execgo-playground 训练场的文档入口。",
+    description: "execgo 控制面与 execgo-runtime 数据面运行时的文档入口。",
     images: [{ url: "/og.png", width: 1200, height: 630, alt: "execgo" }],
   },
 };

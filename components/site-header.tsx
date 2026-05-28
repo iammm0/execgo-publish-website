@@ -1,12 +1,11 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
-import { Download, FlaskConical, Menu, Server } from "lucide-react";
+import { Menu, Server } from "lucide-react";
 
 import { DismissibleMenu } from "@/components/dismissible-menu";
 import { ExecgoDocsMenu } from "@/components/execgo-docs-menu";
 import { GitHubMenu } from "@/components/github-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { hasPlaygroundDocIndex } from "@/lib/playground-data";
 import { hasRuntimeDocIndex } from "@/lib/runtime-data";
 
 export function SiteHeader() {
@@ -14,10 +13,6 @@ export function SiteHeader() {
     ...(hasRuntimeDocIndex()
       ? [{ label: "runtime 文档", href: "/docs/runtime", Icon: Server }]
       : []),
-    ...(hasPlaygroundDocIndex()
-      ? [{ label: "训练场", href: "/docs/playground", Icon: FlaskConical }]
-      : []),
-    { label: "下载", href: "/downloads/execgo-playground-v0.1.0.tar.gz", Icon: Download },
   ];
 
   return (

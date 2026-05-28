@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
-import { Code2, FlaskConical, Server } from "lucide-react";
+import { Code2, Server } from "lucide-react";
 import Image from "next/image";
 
 import { DismissibleMenu } from "@/components/dismissible-menu";
@@ -19,12 +19,6 @@ const GITHUB_REPOS = [
     href: "https://github.com/iammm0/execgo-runtime",
     description: "数据面运行时",
     Icon: Server,
-  },
-  {
-    label: "execgo-playground",
-    href: "https://github.com/iammm0/execgo-playground",
-    description: "AI 编排可靠性训练场",
-    Icon: FlaskConical,
   },
 ] satisfies Array<{
   label: string;
