@@ -63,7 +63,7 @@ export function ExecgoDocsMenu({
       panelClassName={panelClassName}
       triggerContent={
         <>
-          <BookOpen className="h-4 w-4" aria-hidden="true" />
+          <BookOpen className="h-4 w-4 shrink-0" aria-hidden="true" />
           <span>execgo 文档</span>
         </>
       }

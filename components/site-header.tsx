@@ -8,6 +8,9 @@ import { GitHubMenu } from "@/components/github-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { hasRuntimeDocIndex } from "@/lib/runtime-data";
 
+const DESKTOP_NAV_ITEM_CLASS =
+  "inline-flex h-8 cursor-pointer list-none items-center gap-1.5 text-sm leading-none text-[var(--muted)] hover:text-[var(--accent-strong)]";
+
 export function SiteHeader() {
   const navItems: Array<{ label: string; href: string; Icon: LucideIcon }> = [
     ...(hasRuntimeDocIndex()
@@ -27,7 +30,7 @@ export function SiteHeader() {
 
         <nav className="hidden items-center gap-4 md:flex">
           <ExecgoDocsMenu
-            triggerClassName="inline-flex cursor-pointer list-none items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--accent-strong)]"
+            triggerClassName={DESKTOP_NAV_ITEM_CLASS}
             panelClassName="absolute left-0 top-full z-20 mt-3 grid w-80 gap-2 border border-[var(--border)] bg-[var(--panel)] p-3 shadow-sm"
             itemClassName="block border border-[var(--border)] bg-[var(--background-soft)] px-3 py-2 hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]"
             titleClassName="block text-sm font-medium text-[var(--foreground)]"
@@ -37,14 +40,14 @@ export function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--accent-strong)]"
+              className={DESKTOP_NAV_ITEM_CLASS}
             >
-              <item.Icon className="h-4 w-4" aria-hidden="true" />
+              <item.Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
               {item.label}
             </Link>
           ))}
           <GitHubMenu
-            triggerClassName="inline-flex cursor-pointer list-none items-center gap-2 text-sm text-[var(--muted)] hover:text-[var(--accent-strong)]"
+            triggerClassName={DESKTOP_NAV_ITEM_CLASS}
             panelClassName="absolute right-0 top-full z-20 mt-3 grid w-80 gap-2 border border-[var(--border)] bg-[var(--panel)] p-3 shadow-sm"
             itemClassName="block border border-[var(--border)] bg-[var(--background-soft)] px-3 py-2 hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]"
             titleClassName="block text-sm font-medium text-[var(--foreground)]"
@@ -55,12 +58,12 @@ export function SiteHeader() {
 
         <DismissibleMenu
           wrapperClassName="group md:hidden"
-          triggerClassName="inline-flex cursor-pointer items-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-3 py-1.5 text-sm font-medium text-[var(--foreground)]"
+          triggerClassName="inline-flex h-9 cursor-pointer items-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-3 text-sm font-medium leading-none text-[var(--foreground)]"
           panelClassName="absolute right-4 top-12 z-50 w-[calc(100vw-2rem)] max-w-sm border border-[var(--border)] bg-[var(--panel)] p-4 shadow-sm"
           triggerContent={
             <>
-              <Menu className="h-4 w-4" aria-hidden="true" />
-              <span>菜单</span>
+              <Menu className="h-4 w-4 shrink-0" aria-hidden="true" />
+              <span className="leading-none">菜单</span>
             </>
           }
         >

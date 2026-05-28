@@ -15,8 +15,8 @@ export function DocsToc({ headings }: DocsTocProps) {
       <div className="xl:hidden">
         <details className="border border-[var(--border)] bg-[var(--panel)]">
           <summary className="flex cursor-pointer list-none items-center gap-2 border-b border-[var(--border)] px-4 py-3 text-sm font-medium text-[var(--foreground)]">
-            <ListTree className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
-            本页目录
+            <ListTree className="h-4 w-4 shrink-0 text-[var(--accent-strong)]" aria-hidden="true" />
+            <span className="min-w-0 break-words">本页目录</span>
           </summary>
           <div className="p-3">
             <ul className="space-y-0.5">
@@ -24,7 +24,7 @@ export function DocsToc({ headings }: DocsTocProps) {
                 <li key={heading.id}>
                   <a
                     href={`#${heading.id}`}
-                    className={`block py-1.5 pl-2 text-sm ${
+                    className={`block break-words py-1.5 pl-2 text-sm ${
                       heading.depth === 3
                         ? "pl-6 text-[var(--muted)]"
                         : "text-[var(--muted)]"

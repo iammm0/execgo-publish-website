@@ -20,12 +20,12 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={cycleThemeMode}
-      className="inline-flex items-center gap-1.5 text-sm text-[var(--muted)] hover:text-[var(--accent-strong)]"
+      className="inline-flex h-8 items-center gap-1.5 text-sm leading-none text-[var(--muted)] hover:text-[var(--accent-strong)]"
       title={title}
     >
       <span className="sr-only">主题</span>
-      <Icon className="h-4 w-4" aria-hidden="true" />
-      <span className="font-medium text-[var(--foreground)]">{label}</span>
+      <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+      <span className="font-medium leading-none text-[var(--foreground)]">{label}</span>
     </button>
   );
 }

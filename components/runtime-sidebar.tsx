@@ -25,10 +25,10 @@ export function RuntimeSidebar({ groups }: RuntimeSidebarProps) {
   return (
     <>
       <div className="xl:hidden">
-        <details className="border border-[var(--border)] bg-[var(--panel)]" open>
+        <details className="border border-[var(--border)] bg-[var(--panel)]">
           <summary className="flex cursor-pointer list-none items-center gap-2 border-b border-[var(--border)] px-4 py-3 text-sm font-medium text-[var(--foreground)]">
-            <Server className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
-            Runtime 文档目录
+            <Server className="h-4 w-4 shrink-0 text-[var(--accent-strong)]" aria-hidden="true" />
+            <span className="min-w-0 break-words">Runtime 文档目录</span>
           </summary>
           <div className="p-4">
             {groups.map((group) => (
@@ -43,8 +43,8 @@ export function RuntimeSidebar({ groups }: RuntimeSidebarProps) {
                             href={item.href}
                             className={`block py-1.5 pl-2 text-sm leading-snug ${
                               active
-                                ? "border-l-2 border-[var(--accent-strong)] font-medium text-[var(--foreground)]"
-                                : "border-l-2 border-transparent text-[var(--muted)] hover:text-[var(--foreground)]"
+                                ? "break-words border-l-2 border-[var(--accent-strong)] font-medium text-[var(--foreground)]"
+                                : "break-words border-l-2 border-transparent text-[var(--muted)] hover:text-[var(--foreground)]"
                             }`}
                           >
                             {item.title}

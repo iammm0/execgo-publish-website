@@ -59,7 +59,7 @@ export function GitHubMenu({
               alt=""
               width={16}
               height={16}
-              className="h-4 w-4 opacity-80 dark:invert"
+              className="h-4 w-4 shrink-0 opacity-80 dark:invert"
             />
             <span>GitHub</span>
           </>

@@ -48,15 +48,15 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
             <GitBranch className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
             分支
           </p>
-          <div className="mt-3 flex flex-wrap gap-4 text-sm">
+          <div className="mt-3 flex flex-wrap gap-3 text-sm">
             {branchLinks.map((branch) => (
               <Link
                 key={branch.id}
                 href={`/docs/execgo/${branch.id}`}
                 className={
                   branchId === branch.id
-                    ? "font-medium text-[var(--accent-strong)]"
-                    : "text-[var(--muted)] hover:text-[var(--accent-strong)]"
+                    ? "break-words font-medium text-[var(--accent-strong)]"
+                    : "break-words text-[var(--muted)] hover:text-[var(--accent-strong)]"
                 }
               >
                 {branch.label}
@@ -66,15 +66,14 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
         </div>
 
         <div className="space-y-4">
-          {filteredGroups.map((group, index) => (
+          {filteredGroups.map((group) => (
             <details
               key={group.locale}
-              open={index === 0}
               className="border border-[var(--border)] bg-[var(--panel)]"
             >
               <summary className="flex cursor-pointer list-none items-center gap-2 border-b border-[var(--border)] px-4 py-3 text-sm font-medium text-[var(--foreground)]">
-                <BookOpen className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
-                {group.title}
+                <BookOpen className="h-4 w-4 shrink-0 text-[var(--accent-strong)]" aria-hidden="true" />
+                <span className="min-w-0 break-words">{group.title}</span>
               </summary>
               <div className="p-4">
                 <div className="space-y-5">
@@ -95,8 +94,8 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
                                   href={item.href}
                                   className={`block py-1.5 pl-2 text-sm leading-snug ${
                                     active
-                                      ? "border-l-2 border-[var(--accent-strong)] font-medium text-[var(--foreground)]"
-                                      : "border-l-2 border-transparent text-[var(--muted)] hover:text-[var(--foreground)]"
+                                      ? "break-words border-l-2 border-[var(--accent-strong)] font-medium text-[var(--foreground)]"
+                                      : "break-words border-l-2 border-transparent text-[var(--muted)] hover:text-[var(--foreground)]"
                                   }`}
                                 >
                                   {item.title}
