@@ -7,21 +7,21 @@ import { branchHasDocIndex } from "@/lib/execgo-data";
 
 const EXECGO_DOC_BRANCHES = [
   {
-    id: "main" as const,
-    href: "/docs/execgo/main",
-    title: "适配器与 Runtime 主线（main）",
-    description: "main 分支已包含成熟 Agent 适配器、execgo-runtime 执行器与 execgocli。",
+    id: "release-agent-adapter-runtime" as const,
+    href: "/docs/execgo/release-agent-adapter-runtime",
+    title: "适配器与 Runtime 发布线（release/agent-adapter-runtime）",
+    description: "发布线已包含成熟 Agent 适配器、execgo-runtime 执行器与 execgocli。",
     Icon: GitBranch,
   },
   {
-    id: "feat-add-cluster" as const,
-    href: "/docs/execgo/feat-add-cluster",
-    title: "集群预览（feat-add-cluster）",
-    description: "包含集群、队列、远程 Worker 与分布式控制面预览能力。",
+    id: "preview-distributed-runtime" as const,
+    href: "/docs/execgo/preview-distributed-runtime",
+    title: "分布式运行时预览（preview/distributed-runtime）",
+    description: "包含 lease recovery、cancel、dead-letter ops 与能力感知调度预览能力。",
     Icon: Network,
   },
 ].filter((branch) => branchHasDocIndex(branch.id)) satisfies Array<{
-  id: "main" | "feat-add-cluster";
+  id: "release-agent-adapter-runtime" | "preview-distributed-runtime";
   href: string;
   title: string;
   description: string;

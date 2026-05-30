@@ -104,6 +104,18 @@ EXECGO_WORKER_CONCURRENCY=16 \
 ./execgo
 ```
 
+配置会在启动时显式校验，避免拼写错误静默回退到内存模式：
+
+- `EXECGO_EVENT_STORE_BACKEND`: `memory` | `sqlite` | `postgres`
+- `EXECGO_QUEUE_BACKEND`: `memory` | `redis`
+- `EXECGO_SANDBOX_MODE`: `local` | `docker`
+- `postgres` 事件日志必须提供 `EXECGO_EVENT_STORE_POSTGRES_DSN`
+- `redis` 队列必须提供 `EXECGO_REDIS_ADDR`
+- `EXECGO_LEASE_SWEEP_INTERVAL_SECONDS`: lease 回收扫描间隔，默认 `5`
+- `EXECGO_WORKER_STALE_SECONDS`: worker stale 判定阈值，默认 `EXECGO_HEARTBEAT_SECONDS * 3`
+- `EXECGO_REDIS_CLAIM_MIN_IDLE_SECONDS`: Redis pending message reclaim 阈值，默认 `EXECGO_LEASE_SECONDS`
+- `EXECGO_REDIS_CLAIM_BATCH`: Redis pending reclaim 批量大小，默认 `10`
+
 可选沙箱：
 
 ```bash
@@ -172,6 +184,11 @@ curl http://localhost:8080/tasks
 # 查询单个任务 / Get single task
 curl http://localhost:8080/tasks/fetch-data
 
+# 取消任务 / Cancel task
+curl -X PUT http://localhost:8080/tasks/fetch-data/cancel \
+  -H "Content-Type: application/json" \
+  -d '{"reason":"user requested"}'
+
 # 删除任务 / Delete task
 curl -X DELETE http://localhost:8080/tasks/fetch-data
 
@@ -183,7 +200,57 @@ curl http://localhost:8080/metrics
 
 # Prometheus 拉取端点 / Prometheus scrape endpoint
 curl http://localhost:8080/metrics/prometheus
+
+# Worker 注册表 / Worker registry
+curl http://localhost:8080/workers
+
+# 事件日志 / Runtime event log
+curl 'http://localhost:8080/events?after=0&limit=100'
+
+# 队列深度 / Queue depth
+curl http://localhost:8080/queue
+
+# 死信队列 / Dead-letter queue
+curl 'http://localhost:8080/queue/dead?limit=100'
+
+# 重新入队死信消息 / Requeue a dead-letter message
+curl -X POST http://localhost:8080/queue/dead/requeue \
+  -H "Content-Type: application/json" \
+  -d '{"message_id":"execgo:dead|1710000000000-0","delay_ms":0}'
 ```
+
+### 能力感知调度 | Capability-aware Dispatch
+
+分布式 worker 注册时会上报 capabilities，例如本地内置 worker 默认包含：
+
+```json
+{
+  "executor": "cli-skills,dns,file,http,mcp,noop,os,shell,sleep,tcp",
+  "sandbox": "local"
+}
+```
+
+任务会隐式要求 `executor=<task.type>`，并可通过 `required_capabilities` 增加约束：
+
+```bash
+curl -X POST http://localhost:8080/tasks \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tasks": [
+      {
+        "id": "docker-only",
+        "type": "os",
+        "tool_name": "shell",
+        "params": {"command": "echo hello"},
+        "required_capabilities": {"sandbox": "docker"}
+      }
+    ]
+  }'
+```
+
+worker capability value 支持逗号分隔 token，例如 `executor=os,noop` 可匹配 `os` 或 `noop` 任务。若 worker 不满足任务需求，control plane 不会 lease 该任务，而是短暂 requeue；因此 `/queue` depth 可能短暂包含正在等待合适 worker 的任务。
+
+取消采用状态优先语义：已经在 ready/delayed queue 中的取消任务不会立即从队列物理删除，后续 worker 取到后会直接 ack 且不会执行。因此 `/queue` 的 depth 可能短暂包含已取消但尚未被 worker 清理的消息。
 
 ---
 ## 发布流程 | Release Flow

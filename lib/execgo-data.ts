@@ -8,7 +8,14 @@ const CONTENT_ROOT = path.join(process.cwd(), "content", "execgo-branches");
 const GITHUB_REPO = "https://github.com/iammm0/execgo";
 const DEFAULT_DOC_SLUG = ["zh"];
 
-export type BranchId = "main" | "feat-add-cluster";
+export type BranchId = "release-agent-adapter-runtime" | "preview-distributed-runtime";
+
+const DEFAULT_BRANCH_ID: BranchId = "release-agent-adapter-runtime";
+const LEGACY_BRANCH_ALIASES: Record<string, BranchId> = {
+  main: "release-agent-adapter-runtime",
+  "feat-add-cluster": "preview-distributed-runtime",
+  "feat-add-adapter": "release-agent-adapter-runtime",
+};
 
 type BranchCopy = {
   id: BranchId;
@@ -167,27 +174,27 @@ type SiteData = {
   releaseDate: string;
   comparisonRows: Array<{
     aspect: string;
-    main: string;
-    cluster: string;
+    release: string;
+    preview: string;
   }>;
   branches: BranchSnapshot[];
   timeline: SiteTimelineItem[];
 };
 
 const BRANCHES: Record<BranchId, BranchCopy> = {
-  main: {
-    id: "main",
-    branchName: "main",
-    label: "适配器与 Runtime 主线",
-    badge: "Main",
-    channel: "main",
+  "release-agent-adapter-runtime": {
+    id: "release-agent-adapter-runtime",
+    branchName: "release/agent-adapter-runtime",
+    label: "适配器与 Runtime 发布线",
+    badge: "Release",
+    channel: "release",
     summary:
-      "main 分支已集成成熟 Agent 适配器、execgo-runtime 执行器、execgocli 标准壳与 MCP HTTP 路由，是当前推荐接入线。",
+      "release/agent-adapter-runtime 已集成成熟 Agent 适配器、execgo-runtime 执行器、execgocli 标准壳与 MCP HTTP 路由，是当前稳定接入线。",
     description:
       "适合需要结构化动作翻译、外部 runtime 执行平面，以及 Codex / Claude Code / Hermes Agent / OpenClaw 共用接入路径的团队。",
     audience:
       "Agent 工具链工程师、需要把 ExecGo 接到 execgo-runtime 或自研 Runtime 的平台团队。",
-    rollout: "main 分支可用",
+    rollout: "release/agent-adapter-runtime 可用",
     narrative: [
       "从 pkg/httpserver/engine.go 可见 /adapters/* 与 /mcp/* 与任务 API 并存，控制面可在同一端口服务编排器与工具发现。",
       "从 pkg/executor/runtime.go 与 EXECGO_RUNTIME_URL 可把异步任务交给符合 execgo-runtime HTTP 契约的执行平面，并支持 control_context 与取消链路。",
@@ -201,19 +208,18 @@ const BRANCHES: Record<BranchId, BranchCopy> = {
       "execgo-skills 接入",
     ],
     refCandidates: [
-      "origin/main",
-      "main",
-      "HEAD",
+      "origin/release/agent-adapter-runtime",
+      "release/agent-adapter-runtime",
     ],
   },
-  "feat-add-cluster": {
-    id: "feat-add-cluster",
-    branchName: "feat-add-cluster",
-    label: "集群预览线",
-    badge: "Cluster Preview",
-    channel: "Runtime v2",
+  "preview-distributed-runtime": {
+    id: "preview-distributed-runtime",
+    branchName: "preview/distributed-runtime",
+    label: "分布式运行时预览线",
+    badge: "Preview",
+    channel: "preview",
     summary:
-      "在稳定内核之上，引入事件溯源、任务队列、远程 Worker、沙箱执行和 WorkerControl gRPC 协议，形成分布式控制面的雏形。",
+      "在事件溯源、队列、Worker 和租约恢复之上，继续完善 cancel、dead-letter ops 与 capability-aware dispatch 的分布式运行时预览线。",
     description:
       "适合需要跨节点执行、事件回放、幂等提交、Redis 队列或 Postgres/SQLite 事件存储的场景。",
     audience:
@@ -221,22 +227,25 @@ const BRANCHES: Record<BranchId, BranchCopy> = {
     rollout: "预览功能线",
     narrative: [
       "从 cmd/execgo/main.go 的初始化顺序可以直接看到，运行时已经扩展为事件存储、队列、Worker、沙箱和观测运行时的组合，而不再只是本地调度器加文件存储。",
-      "从 pkg/store/eventsourced、pkg/events、pkg/taskqueue 与 pkg/worker 可以确认，这条线不是增加几个接口，而是把状态管理、调度与执行模型重构成了事件驱动架构。",
-      "从 contrib/grpcapi/proto/execgo/v1/execgo.proto 的 WorkerControl 服务和新增端到端测试可以看出，控制面与执行面的拆分方向已经非常明确。",
+      "从 pkg/scheduler/scheduler.go、pkg/taskqueue 与 pkg/worker 可以确认，任务租约回收、取消和 capability-aware dispatch 已经形成一条分布式控制路径。",
+      "从 contrib/grpcapi/proto/execgo/v1/execgo.proto 的 WorkerControl 服务和端到端测试可以看出，控制面与执行面的拆分方向已经非常明确。",
     ],
     focusAreas: [
       "事件溯源状态管理",
       "Redis / Memory 队列",
       "本地与远程 Worker",
-      "Docker / Local 沙箱",
-      "WorkerControl gRPC",
+      "任务取消与 lease recovery",
+      "WorkerControl 与 capability-aware dispatch",
     ],
-    refCandidates: ["origin/feat-add-cluster", "feat-add-cluster"],
+    refCandidates: [
+      "origin/preview/distributed-runtime",
+      "preview/distributed-runtime",
+    ],
   },
 };
 
 const CAPABILITIES: Record<BranchId, Capability[]> = {
-  main: [
+  "release-agent-adapter-runtime": [
     {
       title: "成熟 Agent 适配器 HTTP",
       description:
@@ -278,58 +287,56 @@ const CAPABILITIES: Record<BranchId, Capability[]> = {
       tags: ["MCP", "Tools"],
     },
   ],
-  "feat-add-cluster": [
+  "preview-distributed-runtime": [
     {
-      title: "事件溯源状态中心",
+      title: "事件驱动状态与恢复",
       description:
-        "运行时状态由事件日志回放构建，支持历史追踪、幂等窗口与 Worker 状态建模，不再依赖单纯的 JSON 快照。",
+        "运行时状态由事件日志回放构建，Scheduler 可回收过期 lease，并标记失联 worker 为 stale。",
       evidence: [
         "pkg/store/eventsourced/manager.go",
         "pkg/events/store.go",
-        "pkg/events/sqlite/store.go",
-        "pkg/events/postgres/store.go",
+        "pkg/scheduler/scheduler.go",
       ],
-      tags: ["Event Sourcing", "Replay", "Idempotency"],
+      tags: ["Event Sourcing", "Recovery", "Worker"],
     },
     {
-      title: "队列化调度与远程执行",
+      title: "队列恢复与死信运维",
       description:
-        "调度器把可执行任务写入队列，由 Worker 拉取、租约、执行和上报结果，从而把控制面与执行面拆开。",
+        "Memory / Redis 队列支持 dead-letter 列表与 requeue，Redis Streams 可以 reclaim pending message。",
+      evidence: [
+        "pkg/taskqueue/queue.go",
+        "pkg/taskqueue/memory.go",
+        "pkg/taskqueue/redis.go",
+      ],
+      tags: ["Queue", "Dead Letter", "Redis"],
+    },
+    {
+      title: "协作式取消",
+      description:
+        "PUT /tasks/{id}/cancel 可取消 ready/running/retrying 任务，运行中 worker 通过 context 尽快停止，并跳过未终态下游。",
       evidence: [
         "pkg/scheduler/scheduler.go",
-        "pkg/taskqueue/queue.go",
-        "pkg/taskqueue/redis.go",
         "pkg/worker/worker.go",
+        "pkg/fsm/fsm.go",
       ],
-      tags: ["Queue", "Lease", "Remote Worker"],
+      tags: ["Cancel", "FSM", "Cooperative"],
     },
     {
-      title: "WorkerControl 协议",
+      title: "能力感知分派",
       description:
-        "新增 WorkerControl gRPC 服务，支持注册、心跳、拉取任务、Ack/Nack、进度与审计上报，让远程 Worker 接入成为一等能力。",
+        "任务可声明 required_capabilities，WorkerControl 和本地 Worker 只 lease 匹配 executor / sandbox 的任务。",
       evidence: [
         "contrib/grpcapi/proto/execgo/v1/execgo.proto",
-        "contrib/grpcapi/pkg/grpcserver/worker_control.go",
         "pkg/worker/remote_grpc_worker.go",
+        "pkg/worker/worker.go",
       ],
-      tags: ["gRPC", "Control Plane", "Audit"],
-    },
-    {
-      title: "沙箱与观测运行时",
-      description:
-        "分支内置 Local / Docker 沙箱运行器，并把 HTTP 中间件、Prometheus 和 OpenTelemetry 运行时接入主进程。",
-      evidence: [
-        "pkg/sandbox/runner.go",
-        "pkg/observability/observability.go",
-        "cmd/execgo/main.go",
-      ],
-      tags: ["Sandbox", "Prometheus", "OpenTelemetry"],
+      tags: ["Dispatch", "gRPC", "Capabilities"],
     },
   ],
 };
 
 const MODULE_CARDS: Record<BranchId, ModuleCard[]> = {
-  main: [
+  "release-agent-adapter-runtime": [
     {
       title: "适配器核心",
       path: "pkg/adapter/adapter.go",
@@ -361,36 +368,36 @@ const MODULE_CARDS: Record<BranchId, ModuleCard[]> = {
       description: "适配器集成与模式说明入口。",
     },
   ],
-  "feat-add-cluster": [
+  "preview-distributed-runtime": [
     {
       title: "事件溯源 Store",
       path: "pkg/store/eventsourced/manager.go",
       description: "以事件日志驱动任务、工作流和 Worker 的读模型，并支持回放恢复。",
     },
     {
-      title: "事件后端",
-      path: "pkg/events",
-      description: "提供 memory / sqlite / postgres 三套事件存储实现。",
+      title: "Scheduler Recovery",
+      path: "pkg/scheduler/scheduler.go",
+      description: "处理 lease 过期、worker stale、取消和 capability-aware dispatch。",
     },
     {
-      title: "任务队列",
+      title: "队列平面",
       path: "pkg/taskqueue",
-      description: "抽象 Memory 与 Redis 队列，为 Worker 拉取和租约提供基础设施。",
+      description: "抽象 Memory 与 Redis 队列，支持 pending reclaim 与 dead-letter requeue。",
     },
     {
       title: "Worker Runtime",
       path: "pkg/worker",
-      description: "本地 Worker 和远程 gRPC Worker 都从这里发起执行和上报。",
-    },
-    {
-      title: "沙箱运行器",
-      path: "pkg/sandbox/runner.go",
-      description: "把执行动作封装进 Local / Docker runner，为隔离与资源约束预留能力。",
+      description: "本地 Worker 和远程 gRPC Worker 都从这里注册能力、执行任务和上报状态。",
     },
     {
       title: "控制面协议",
       path: "contrib/grpcapi/proto/execgo/v1/execgo.proto",
-      description: "新增 WorkerControl 服务，把控制面协议显式化。",
+      description: "ExecGo 与 WorkerControl gRPC 协议承载远程 worker、取消和能力上报。",
+    },
+    {
+      title: "观测与运维",
+      path: "pkg/observability/observability.go",
+      description: "HTTP 指标、Prometheus 与运行时队列/取消/分派观测入口。",
     },
   ],
 };
@@ -423,7 +430,7 @@ const CHANGE_AREA_RULES = [
 ] as const;
 
 const PREFERRED_DOCS: Record<BranchId, string[]> = {
-  main: [
+  "release-agent-adapter-runtime": [
     "docs/zh/README.md",
     "docs/zh/overview/execgo-and-runtime.md",
     "docs/zh/integration/agent-adapter.md",
@@ -432,8 +439,9 @@ const PREFERRED_DOCS: Record<BranchId, string[]> = {
     "docs/zh/reference/task-dsl.md",
     "docs/zh/reference/api.md",
     "docs/zh/deploy/kubernetes.md",
+    "docs/zh/releases/v1.1.0.md",
   ],
-  "feat-add-cluster": [
+  "preview-distributed-runtime": [
     "docs/zh/README.md",
     "docs/zh/agent-kernel-roadmap.md",
     "docs/zh/orchestrator/polling-and-idempotency.md",
@@ -443,7 +451,7 @@ const PREFERRED_DOCS: Record<BranchId, string[]> = {
 };
 
 const CURATED_ZH_DOCS: Record<BranchId, string[]> = {
-  main: [
+  "release-agent-adapter-runtime": [
     "docs/zh/README.md",
     "docs/zh/overview/execgo-and-runtime.md",
     "docs/zh/orchestrator/README.md",
@@ -467,8 +475,9 @@ const CURATED_ZH_DOCS: Record<BranchId, string[]> = {
     "docs/zh/deploy/kubernetes.md",
     "docs/zh/faqs.md",
     "docs/zh/releases/v1.0.0.md",
+    "docs/zh/releases/v1.1.0.md",
   ],
-  "feat-add-cluster": [
+  "preview-distributed-runtime": [
     "docs/zh/README.md",
     "docs/zh/agent-kernel-roadmap.md",
     "docs/zh/orchestrator/README.md",
@@ -493,33 +502,33 @@ const CURATED_ZH_DOCS: Record<BranchId, string[]> = {
 const COMPARISON_ROWS = [
   {
     aspect: "运行时形态",
-    main: "单节点控制面 + 外部 execgo-runtime HTTP 执行平面",
-    cluster: "控制面 + 队列 + Worker 的分布式预览架构",
+    release: "单节点控制面 + 外部 execgo-runtime HTTP 执行平面",
+    preview: "控制面 + 队列 + Worker 的分布式预览架构",
   },
   {
     aspect: "状态管理",
-    main: "控制面状态在 ExecGo，长生命周期任务态在外部 Runtime 侧维护",
-    cluster: "事件溯源 Store，支持事件回放和幂等命中",
+    release: "控制面状态在 ExecGo，长生命周期任务态在外部 Runtime 侧维护",
+    preview: "事件溯源 Store，支持事件回放、lease recovery 和幂等命中",
   },
   {
     aspect: "执行拓扑",
-    main: "调度仍在 ExecGo；重任务经 runtime 类型委派给外部进程",
-    cluster: "队列化调度，支持本地和远程 Worker",
+    release: "调度仍在 ExecGo；重任务经 runtime 类型委派给外部进程",
+    preview: "队列化调度，支持本地和远程 Worker",
   },
   {
     aspect: "协议面",
-    main: "HTTP 任务 / 适配器 / MCP；Runtime 侧走 execgo-runtime HTTP API",
-    cluster: "HTTP + ExecGo gRPC + WorkerControl gRPC",
+    release: "HTTP 任务 / 适配器 / MCP；Runtime 侧走 execgo-runtime HTTP API",
+    preview: "HTTP + ExecGo gRPC + WorkerControl gRPC",
   },
   {
     aspect: "扩展能力",
-    main: "适配器契约、execgocli、runtime 集成与租户/所有者上下文字段",
-    cluster: "插件管理、沙箱运行器、任务租约和审计",
+    release: "适配器契约、execgocli、runtime 集成与租户/所有者上下文字段",
+    preview: "沙箱运行器、任务取消、死信运维和 capability-aware dispatch",
   },
   {
     aspect: "适用阶段",
-    main: "推荐接入线，面向 Codex / Claude Code / Hermes Agent / OpenClaw",
-    cluster: "预研、灰度验证、集群演进路线展示",
+    release: "推荐接入线，面向 Codex / Claude Code / Hermes Agent / OpenClaw",
+    preview: "预研、灰度验证、分布式运行时演进路线展示",
   },
 ];
 
@@ -1137,15 +1146,14 @@ function stripLeadingTitle(markdown: string): string {
 }
 
 function ensureBranchId(value: string): BranchId | null {
-  if (value === "main" || value === "feat-add-cluster") {
+  if (
+    value === "release-agent-adapter-runtime" ||
+    value === "preview-distributed-runtime"
+  ) {
     return value;
   }
 
-  if (value === "feat-add-adapter") {
-    return "main";
-  }
-
-  return null;
+  return LEGACY_BRANCH_ALIASES[value] ?? null;
 }
 
 function getDocEntry(branchId: BranchId, slugKey: string): DocEntry | null {
@@ -1163,12 +1171,12 @@ export const getBranchSnapshot = cache((branchId: BranchId): BranchSnapshot => {
   const changelog = readStaticBranchFile(branchId, "CHANGELOG.md");
   const readme = readStaticBranchFile(branchId, "README.md");
   const versionSource = readStaticBranchFile(branchId, "pkg/version/version.go");
-  const mainRef = resolveExecgoRef("main");
+  const releaseRef = resolveExecgoRef(DEFAULT_BRANCH_ID);
   const diff =
-    branchId === "main"
+    branchId === DEFAULT_BRANCH_ID
       ? undefined
-      : useGit && mainRef
-        ? parseDiffSummary(mainRef, gitRef!)
+      : useGit && releaseRef
+        ? parseDiffSummary(releaseRef, gitRef!)
         : emptyDiffSummary();
 
   return {
@@ -1213,12 +1221,12 @@ export const getBranchSnapshot = cache((branchId: BranchId): BranchSnapshot => {
 });
 
 export const getSiteData = cache((): SiteData => {
-  const main = getBranchSnapshot("main");
-  const cluster = getBranchSnapshot("feat-add-cluster");
+  const releaseBranch = getBranchSnapshot(DEFAULT_BRANCH_ID);
+  const previewBranch = getBranchSnapshot("preview-distributed-runtime");
 
   const canQueryExecgoGit =
-    resolveExecgoRef("main") !== null ||
-    resolveExecgoRef("feat-add-cluster") !== null;
+    resolveExecgoRef(DEFAULT_BRANCH_ID) !== null ||
+    resolveExecgoRef("preview-distributed-runtime") !== null;
 
   const timeline = (() => {
     if (!canQueryExecgoGit) {
@@ -1251,10 +1259,10 @@ export const getSiteData = cache((): SiteData => {
   })();
 
   return {
-    releaseVersion: main.releaseVersion,
-    releaseDate: main.releaseDate,
+    releaseVersion: releaseBranch.releaseVersion,
+    releaseDate: releaseBranch.releaseDate,
     comparisonRows: COMPARISON_ROWS,
-    branches: [main, cluster],
+    branches: [releaseBranch, previewBranch],
     timeline,
   };
 });

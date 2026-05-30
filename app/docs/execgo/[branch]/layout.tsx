@@ -28,7 +28,10 @@ export default async function ExecgoDocsLayout({ children, params }: LayoutProps
         <span>/</span>
         <span className="text-[var(--foreground)]">文档</span>
         <span>/</span>
-        <Link href="/docs/execgo/main" className="hover:text-[var(--accent-strong)]">
+        <Link
+          href="/docs/execgo/release-agent-adapter-runtime"
+          className="hover:text-[var(--accent-strong)]"
+        >
           execgo
         </Link>
         <span>/</span>
