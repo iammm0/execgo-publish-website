@@ -6,6 +6,7 @@ import type { DocEntry, DocNavGroup, DocNavSection, MarkdownHeading } from "./ex
 import { normalizeDocRouteSlug, slugifyHeading } from "./execgo-data";
 
 const RUNTIME_CONTENT_ROOT = path.join(process.cwd(), "content", "execgo-runtime", "docs");
+const RUNTIME_GITHUB_REPO = "https://github.com/iammm0/execgo-runtime";
 
 export type RuntimeDocPageData = {
   entry: DocEntry;
@@ -86,7 +87,7 @@ export const getRuntimeDocEntries = cache((): DocEntry[] => {
       title,
       slug,
       slugKey: slug.join("/"),
-      repoPath: `docs/zh/${filename}`,
+      repoPath: `docs/${filename}`,
       locale: "zh",
       localeLabel: "中文",
       section: "runtime",
@@ -137,6 +138,86 @@ export function getRuntimeDocPageData(slug: string[]): RuntimeDocPageData | null
 
 export function getRuntimeDefaultDoc(): RuntimeDocPageData | null {
   return getRuntimeDocPageData(["zh"]);
+}
+
+function safeDecodeRuntimeHref(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+function runtimeRouteForSourceDoc(sourcePath: string): string | null {
+  if (sourcePath === "docs/README.md") {
+    return "/docs/runtime/zh";
+  }
+
+  if (!sourcePath.startsWith("docs/") || !sourcePath.endsWith(".md")) {
+    return null;
+  }
+
+  const filename = path.posix.basename(sourcePath);
+  const contentPath = path.join(RUNTIME_CONTENT_ROOT, "zh", filename);
+  if (!fs.existsSync(contentPath)) {
+    return null;
+  }
+
+  const slug = filename.toLowerCase() === "readme.md"
+    ? "zh"
+    : `zh/${filename.replace(/\.md$/i, "").toLowerCase()}`;
+  return `/docs/runtime/${slug}`;
+}
+
+export function resolveRuntimeMarkdownHref(
+  currentDocPath: string,
+  href?: string,
+): string | null {
+  if (!href) {
+    return null;
+  }
+
+  if (
+    href.startsWith("http://") ||
+    href.startsWith("https://") ||
+    href.startsWith("mailto:") ||
+    href.startsWith("#")
+  ) {
+    return href;
+  }
+
+  const [targetPath, hash] = href.split("#");
+  if (!targetPath) {
+    return hash ? `#${hash}` : href;
+  }
+
+  const fileUrlTarget = targetPath.startsWith("file://");
+  const rawTarget = fileUrlTarget ? targetPath.replace(/^file:\/\//, "") : targetPath;
+  const normalizedTarget = safeDecodeRuntimeHref(rawTarget)
+    .replace(/\\/g, "/")
+    .replace(/^\/+/, "");
+  const resolved = normalizedTarget.startsWith("docs/") || fileUrlTarget
+    ? path.posix.normalize(normalizedTarget)
+    : path.posix.normalize(
+        path.posix.join(path.posix.dirname(currentDocPath), normalizedTarget),
+      );
+
+  const runtimeRoute = runtimeRouteForSourceDoc(resolved);
+  if (runtimeRoute) {
+    return hash ? `${runtimeRoute}#${hash}` : runtimeRoute;
+  }
+
+  if (resolved === "README.md") {
+    const githubHref = `${RUNTIME_GITHUB_REPO}/blob/main/README.md`;
+    return hash ? `${githubHref}#${hash}` : githubHref;
+  }
+
+  if (resolved.endsWith(".md")) {
+    const githubHref = `${RUNTIME_GITHUB_REPO}/blob/main/${resolved}`;
+    return hash ? `${githubHref}#${hash}` : githubHref;
+  }
+
+  return hash ? `${resolved}#${hash}` : resolved;
 }
 
 /** 是否存在可打开的 runtime 文档首页（用于隐藏无内容时的文档入口）。 */

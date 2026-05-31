@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { DocsToc } from "@/components/docs-toc";
 import { RepoMarkdownSimple } from "@/components/repo-markdown-simple";
-import { getRuntimeDefaultDoc } from "@/lib/runtime-data";
+import { getRuntimeDefaultDoc, resolveRuntimeMarkdownHref } from "@/lib/runtime-data";
 
 export const metadata: Metadata = {
   title: "execgo-runtime 文档",
@@ -23,7 +23,10 @@ export default function RuntimeDocsHomePage() {
 
       <article className="min-w-0 border border-[var(--border)] bg-[var(--panel)] xl:order-first">
         <div className="repo-markdown px-4 py-5 sm:px-6 sm:py-6">
-          <RepoMarkdownSimple content={doc.content} />
+          <RepoMarkdownSimple
+            content={doc.content}
+            resolveHref={(href) => resolveRuntimeMarkdownHref(doc.entry.repoPath, href)}
+          />
         </div>
       </article>
     </div>
