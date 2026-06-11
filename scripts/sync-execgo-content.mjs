@@ -76,7 +76,7 @@ function writeBranchSnapshot(branch) {
 
 // --- execgo-runtime repo ---
 const runtimeRoot = path.join(stagingRoot, "execgo-runtime");
-const runtimeOutput = path.join(projectRoot, "content", "execgo-runtime", "docs", "zh");
+const runtimeOutput = path.join(projectRoot, "content", "execgo-runtime", "docs", "en");
 
 function syncRuntime() {
   fs.rmSync(runtimeOutput, { recursive: true, force: true });

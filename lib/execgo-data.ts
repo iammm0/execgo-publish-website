@@ -6,7 +6,8 @@ import { cache } from "react";
 const EXECGO_ROOT = path.join(process.cwd(), "execgo");
 const CONTENT_ROOT = path.join(process.cwd(), "content", "execgo-branches");
 const GITHUB_REPO = "https://github.com/iammm0/execgo";
-const DEFAULT_DOC_SLUG = ["zh"];
+const DEFAULT_DOC_SLUG = ["en"];
+const DEFAULT_DOC_LOCALE = "en";
 
 export type BranchId = "release-agent-adapter-runtime" | "preview-distributed-runtime";
 
@@ -253,7 +254,7 @@ const CAPABILITIES: Record<BranchId, Capability[]> = {
       evidence: [
         "pkg/httpserver/engine.go",
         "pkg/adapter/adapter.go",
-        "docs/zh/integration/agent-adapter.md",
+        "docs/en/integration/agent-adapter.md",
       ],
       tags: ["REST", "Adapter", "Agents"],
     },
@@ -263,8 +264,7 @@ const CAPABILITIES: Record<BranchId, Capability[]> = {
         "内置 runtime 任务类型，通过 EXECGO_RUNTIME_URL 调用外部 runtime HTTP API，支持 tenant/owner 注入与 Kill 请求头。",
       evidence: [
         "pkg/executor/runtime.go",
-        "docs/zh/integration/execgo-runtime.md",
-        "docs/zh/overview/execgo-and-runtime.md",
+        "docs/en/overview/execgo-and-runtime.md",
       ],
       tags: ["Runtime", "HTTP", "Cancel"],
     },
@@ -275,7 +275,7 @@ const CAPABILITIES: Record<BranchId, Capability[]> = {
       evidence: [
         "cmd/execgocli/main.go",
         "internal/execgocli",
-        "docs/zh/reference/execgo-cli-contract.md",
+        "docs/en/reference/execgo-cli-contract.md",
       ],
       tags: ["CLI", "Stdlib"],
     },
@@ -364,7 +364,7 @@ const MODULE_CARDS: Record<BranchId, ModuleCard[]> = {
     },
     {
       title: "适配器文档",
-      path: "docs/zh/integration/agent-adapter.md",
+      path: "docs/en/integration/agent-adapter.md",
       description: "适配器集成与模式说明入口。",
     },
   ],
@@ -431,71 +431,60 @@ const CHANGE_AREA_RULES = [
 
 const PREFERRED_DOCS: Record<BranchId, string[]> = {
   "release-agent-adapter-runtime": [
-    "docs/zh/README.md",
-    "docs/zh/overview/execgo-and-runtime.md",
-    "docs/zh/integration/agent-adapter.md",
-    "docs/zh/integration/http-api-getting-started.md",
-    "docs/zh/reference/execgo-cli-contract.md",
-    "docs/zh/reference/task-dsl.md",
-    "docs/zh/reference/api.md",
-    "docs/zh/deploy/kubernetes.md",
-    "docs/zh/releases/v1.1.0.md",
+    "docs/en/README.md",
+    "docs/en/overview/execgo-and-runtime.md",
+    "docs/en/integration/agent-adapter.md",
+    "docs/en/reference/execgo-cli-contract.md",
+    "docs/en/reference/task-dsl.md",
+    "docs/en/reference/api.md",
+    "docs/en/deploy/kubernetes.md",
   ],
   "preview-distributed-runtime": [
-    "docs/zh/README.md",
-    "docs/zh/agent-kernel-roadmap.md",
-    "docs/zh/orchestrator/polling-and-idempotency.md",
-    "docs/zh/reference/runtime-semantics.md",
-    "docs/zh/reference/executors.md",
+    "docs/en/README.md",
+    "docs/en/orchestrator/polling-and-idempotency.md",
+    "docs/en/reference/executors.md",
   ],
 };
 
-const CURATED_ZH_DOCS: Record<BranchId, string[]> = {
+const CURATED_EN_DOCS: Record<BranchId, string[]> = {
   "release-agent-adapter-runtime": [
-    "docs/zh/README.md",
-    "docs/zh/overview/execgo-and-runtime.md",
-    "docs/zh/orchestrator/README.md",
-    "docs/zh/orchestrator/mapping-dag-to-taskgraph.md",
-    "docs/zh/orchestrator/failure-semantics.md",
-    "docs/zh/orchestrator/polling-and-idempotency.md",
-    "docs/zh/integration/agent-adapter.md",
-    "docs/zh/integration/execgo-runtime.md",
-    "docs/zh/integration/http-api-getting-started.md",
-    "docs/zh/integration/mode-a-cli.md",
-    "docs/zh/integration/mode-b-upgrade.md",
-    "docs/zh/integration/client-go.md",
-    "docs/zh/integration/client-java.md",
-    "docs/zh/integration/client-python.md",
-    "docs/zh/integration/client-nodejs-ts.md",
-    "docs/zh/reference/execgo-cli-contract.md",
-    "docs/zh/reference/task-dsl.md",
-    "docs/zh/reference/api.md",
-    "docs/zh/reference/executors.md",
-    "docs/zh/deploy/compose.md",
-    "docs/zh/deploy/kubernetes.md",
-    "docs/zh/faqs.md",
-    "docs/zh/releases/v1.0.0.md",
-    "docs/zh/releases/v1.1.0.md",
+    "docs/en/README.md",
+    "docs/en/overview/execgo-and-runtime.md",
+    "docs/en/orchestrator/README.md",
+    "docs/en/orchestrator/mapping-dag-to-taskgraph.md",
+    "docs/en/orchestrator/failure-semantics.md",
+    "docs/en/orchestrator/polling-and-idempotency.md",
+    "docs/en/integration/agent-adapter.md",
+    "docs/en/integration/mode-a-cli.md",
+    "docs/en/integration/mode-b-upgrade.md",
+    "docs/en/integration/client-go.md",
+    "docs/en/integration/client-java.md",
+    "docs/en/integration/client-python.md",
+    "docs/en/integration/client-nodejs-ts.md",
+    "docs/en/reference/execgo-cli-contract.md",
+    "docs/en/reference/task-dsl.md",
+    "docs/en/reference/api.md",
+    "docs/en/reference/executors.md",
+    "docs/en/deploy/compose.md",
+    "docs/en/deploy/kubernetes.md",
+    "docs/en/faqs.md",
   ],
   "preview-distributed-runtime": [
-    "docs/zh/README.md",
-    "docs/zh/agent-kernel-roadmap.md",
-    "docs/zh/orchestrator/README.md",
-    "docs/zh/orchestrator/mapping-dag-to-taskgraph.md",
-    "docs/zh/orchestrator/failure-semantics.md",
-    "docs/zh/orchestrator/polling-and-idempotency.md",
-    "docs/zh/integration/http-api-getting-started.md",
-    "docs/zh/integration/client-go.md",
-    "docs/zh/integration/client-java.md",
-    "docs/zh/integration/client-python.md",
-    "docs/zh/integration/client-nodejs-ts.md",
-    "docs/zh/reference/runtime-semantics.md",
-    "docs/zh/reference/task-dsl.md",
-    "docs/zh/reference/api.md",
-    "docs/zh/reference/executors.md",
-    "docs/zh/deploy/compose.md",
-    "docs/zh/deploy/kubernetes.md",
-    "docs/zh/faqs.md",
+    "docs/en/README.md",
+    "docs/en/orchestrator/README.md",
+    "docs/en/orchestrator/mapping-dag-to-taskgraph.md",
+    "docs/en/orchestrator/failure-semantics.md",
+    "docs/en/orchestrator/polling-and-idempotency.md",
+    "docs/en/integration/client-go.md",
+    "docs/en/integration/client-java.md",
+    "docs/en/integration/client-python.md",
+    "docs/en/integration/client-nodejs-ts.md",
+    "docs/en/reference/task-dsl.md",
+    "docs/en/reference/api.md",
+    "docs/en/reference/executors.md",
+    "docs/en/deploy/compose.md",
+    "docs/en/deploy/kubernetes.md",
+    "docs/en/faqs.md",
   ],
 };
 
@@ -642,7 +631,7 @@ const listGitFiles = cache((ref: string): string[] => {
 const listBranchContentFiles = cache((branchId: BranchId): string[] => {
   return walkFiles(branchContentRoot(branchId))
     .map((absoluteFile) => normalizeRepoPath(path.relative(branchContentRoot(branchId), absoluteFile)))
-    .sort((left, right) => left.localeCompare(right, "zh-CN"));
+    .sort((left, right) => left.localeCompare(right, "en"));
 });
 
 const readGitFile = cache((ref: string, repoPath: string): string => {
@@ -717,19 +706,27 @@ function parseDiffSummary(baseRef: string, headRef: string): DiffSummary {
 
 function humanizeSegment(segment: string): string {
   if (!segment) {
-    return "总览";
+    return "Overview";
+  }
+
+  if (segment === "en") {
+    return "English";
   }
 
   if (segment === "zh") {
-    return "中文";
+    return "Chinese";
   }
 
   return segment.replace(/[-_]/g, " ");
 }
 
 function localeLabel(locale: string): string {
+  if (locale === "en") {
+    return "English";
+  }
+
   if (locale === "zh") {
-    return "中文";
+    return "Chinese";
   }
 
   return locale.toUpperCase();
@@ -781,36 +778,36 @@ function docSectionMeta(
   repoPath: string,
   locale: string,
 ): { section: string; sectionLabel: string } {
-  if (locale === "zh") {
-    if (repoPath === "docs/zh/README.md") {
-      return { section: "overview", sectionLabel: "开始这里" };
+  if (locale === "en") {
+    if (repoPath === "docs/en/README.md") {
+      return { section: "overview", sectionLabel: "Start here" };
     }
-    if (repoPath.startsWith("docs/zh/overview/")) {
-      return { section: "overview", sectionLabel: "总览与关系" };
+    if (repoPath.startsWith("docs/en/overview/")) {
+      return { section: "overview", sectionLabel: "Overview" };
     }
-    if (repoPath === "docs/zh/agent-kernel-roadmap.md") {
-      return { section: "roadmap", sectionLabel: "路线图" };
+    if (repoPath === "docs/en/agent-kernel-roadmap.md") {
+      return { section: "roadmap", sectionLabel: "Roadmap" };
     }
-    if (repoPath.startsWith("docs/zh/orchestrator/")) {
-      return { section: "orchestrator", sectionLabel: "编排接入" };
+    if (repoPath.startsWith("docs/en/orchestrator/")) {
+      return { section: "orchestrator", sectionLabel: "Orchestration" };
     }
-    if (repoPath.startsWith("docs/zh/integration/")) {
-      return { section: "integration", sectionLabel: "客户端接入" };
+    if (repoPath.startsWith("docs/en/integration/")) {
+      return { section: "integration", sectionLabel: "Integration" };
     }
-    if (repoPath === "docs/zh/reference/runtime-semantics.md") {
-      return { section: "runtime", sectionLabel: "运行时语义" };
+    if (repoPath === "docs/en/reference/runtime-semantics.md") {
+      return { section: "runtime", sectionLabel: "Runtime semantics" };
     }
-    if (repoPath.startsWith("docs/zh/reference/")) {
-      return { section: "reference", sectionLabel: "核心参考" };
+    if (repoPath.startsWith("docs/en/reference/")) {
+      return { section: "reference", sectionLabel: "Reference" };
     }
-    if (repoPath.startsWith("docs/zh/deploy/")) {
-      return { section: "deploy", sectionLabel: "部署" };
+    if (repoPath.startsWith("docs/en/deploy/")) {
+      return { section: "deploy", sectionLabel: "Deployment" };
     }
-    if (repoPath === "docs/zh/faqs.md") {
+    if (repoPath === "docs/en/faqs.md") {
       return { section: "faq", sectionLabel: "FAQ" };
     }
-    if (repoPath.startsWith("docs/zh/releases/")) {
-      return { section: "releases", sectionLabel: "发布说明" };
+    if (repoPath.startsWith("docs/en/releases/")) {
+      return { section: "releases", sectionLabel: "Release notes" };
     }
   }
 
@@ -824,13 +821,13 @@ function docSectionMeta(
 
   return {
     section,
-    sectionLabel: slug.length <= 1 ? "总览" : humanizeSegment(section),
+    sectionLabel: slug.length <= 1 ? "Overview" : humanizeSegment(section),
   };
 }
 
 function docOrderIndex(branchId: BranchId, entry: DocEntry): number {
-  if (entry.locale === "zh") {
-    const index = CURATED_ZH_DOCS[branchId].indexOf(entry.repoPath);
+  if (entry.locale === DEFAULT_DOC_LOCALE) {
+    const index = CURATED_EN_DOCS[branchId].indexOf(entry.repoPath);
     return index === -1 ? Number.MAX_SAFE_INTEGER : index;
   }
 
@@ -840,10 +837,10 @@ function docOrderIndex(branchId: BranchId, entry: DocEntry): number {
 function buildDocEntries(branchId: BranchId): DocEntry[] {
   return listBranchContentFiles(branchId)
     .filter((file) => file.startsWith("docs/") && file.endsWith(".md"))
-    .filter((file) => file.startsWith("docs/zh/"))
+    .filter((file) => file.startsWith("docs/en/"))
     .map((repoPath) => {
       const slug = docPathToSlug(repoPath);
-      const locale = slug[0] ?? "zh";
+      const locale = slug[0] ?? DEFAULT_DOC_LOCALE;
       const content = readStaticBranchFile(branchId, repoPath);
       const { section, sectionLabel } = docSectionMeta(repoPath, locale);
 
@@ -859,14 +856,14 @@ function buildDocEntries(branchId: BranchId): DocEntry[] {
         href: `/docs/execgo/${branchId}/${slug.join("/")}`,
       };
     })
-    .sort((left, right) => left.repoPath.localeCompare(right.repoPath, "zh-CN"));
+    .sort((left, right) => left.repoPath.localeCompare(right.repoPath, "en"));
 }
 
 function buildDocGroups(branchId: BranchId, entries: DocEntry[]): DocNavGroup[] {
   const locales = new Map<string, Map<string, DocEntry[]>>();
 
   const visibleEntries = entries.filter((entry) => {
-    return entry.locale === "zh" && CURATED_ZH_DOCS[branchId].includes(entry.repoPath);
+    return entry.locale === DEFAULT_DOC_LOCALE && CURATED_EN_DOCS[branchId].includes(entry.repoPath);
   });
 
   for (const entry of visibleEntries) {
@@ -879,7 +876,7 @@ function buildDocGroups(branchId: BranchId, entries: DocEntry[]): DocNavGroup[] 
 
   return Array.from(locales.entries())
     .sort(([left], [right]) => {
-      const order = (value: string) => (value === "zh" ? 0 : 1);
+      const order = (value: string) => (value === DEFAULT_DOC_LOCALE ? 0 : 1);
       return order(left) - order(right) || left.localeCompare(right);
     })
     .map(([locale, sections]) => ({
@@ -897,7 +894,7 @@ function buildDocGroups(branchId: BranchId, entries: DocEntry[]): DocNavGroup[] 
             const rightOrder = docOrderIndex(branchId, right);
             return (
               leftOrder - rightOrder ||
-              left.repoPath.localeCompare(right.repoPath, "zh-CN")
+              left.repoPath.localeCompare(right.repoPath, "en")
             );
           });
           // 同一分组下若已有子页面，则省略与分组同名的「目录索引」页，避免侧栏重复且误导。

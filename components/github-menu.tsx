@@ -11,13 +11,13 @@ const GITHUB_REPOS = [
   {
     label: "execgo",
     href: "https://github.com/iammm0/execgo",
-    description: "控制面与任务执行内核",
+    description: "Control plane and task execution kernel",
     Icon: Code2,
   },
   {
     label: "execgo-runtime",
     href: "https://github.com/iammm0/execgo-runtime",
-    description: "数据面运行时",
+    description: "Data-plane runtime",
     Icon: Server,
   },
 ] satisfies Array<{

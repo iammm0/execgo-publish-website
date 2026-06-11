@@ -9,15 +9,15 @@ const EXECGO_DOC_BRANCHES = [
   {
     id: "release-agent-adapter-runtime" as const,
     href: "/docs/execgo/release-agent-adapter-runtime",
-    title: "适配器与 Runtime 发布线（release/agent-adapter-runtime）",
-    description: "发布线已包含成熟 Agent 适配器、execgo-runtime 执行器与 execgocli。",
+    title: "Adapter & runtime release line (release/agent-adapter-runtime)",
+    description: "Stable line with mature agent adapters, execgo-runtime executor, and execgocli.",
     Icon: GitBranch,
   },
   {
     id: "preview-distributed-runtime" as const,
     href: "/docs/execgo/preview-distributed-runtime",
-    title: "分布式运行时预览（preview/distributed-runtime）",
-    description: "包含 lease recovery、cancel、dead-letter ops 与能力感知调度预览能力。",
+    title: "Distributed runtime preview (preview/distributed-runtime)",
+    description: "Preview line with lease recovery, cancel, dead-letter ops, and capability-aware dispatch.",
     Icon: Network,
   },
 ].filter((branch) => branchHasDocIndex(branch.id)) satisfies Array<{
@@ -57,7 +57,7 @@ export function ExecgoDocsMenu({
       triggerContent={
         <>
           <BookOpen className="h-4 w-4 shrink-0" aria-hidden="true" />
-          <span>execgo 文档</span>
+          <span>ExecGo docs</span>
         </>
       }
     >

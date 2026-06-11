@@ -13,14 +13,15 @@ export const metadata: Metadata = {
     template: "%s | execgo",
   },
   description:
-    "execgo 控制面与 execgo-runtime 数据面运行时的文档入口。",
+    "Documentation hub for the ExecGo control plane and execgo-runtime data-plane runtime.",
   icons: {
     icon: [{ url: "/favicon.ico" }],
     apple: [{ url: "/apple-touch-icon.png" }],
   },
   openGraph: {
     title: "execgo",
-    description: "execgo 控制面与 execgo-runtime 数据面运行时的文档入口。",
+    description:
+      "Documentation hub for the ExecGo control plane and execgo-runtime data-plane runtime.",
     images: [{ url: "/og.png", width: 1200, height: 630, alt: "execgo" }],
   },
 };
@@ -32,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="zh-CN"
+      lang="en"
       className="h-full scroll-smooth"
       data-scroll-behavior="smooth"
       suppressHydrationWarning

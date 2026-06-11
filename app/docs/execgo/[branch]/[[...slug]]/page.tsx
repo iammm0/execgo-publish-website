@@ -20,10 +20,10 @@ function docHref(branchId: string, slug: string[] = []): string {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { branch, slug } = await params;
   const branchId = getBranchIdOrNull(branch);
-  if (!branchId) return { title: "文档" };
+  if (!branchId) return { title: "Docs" };
 
   const doc = getDocPageData(branchId, slug ?? []);
-  if (!doc) return { title: "文档" };
+  if (!doc) return { title: "Docs" };
 
   return {
     title: doc.title,

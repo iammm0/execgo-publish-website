@@ -37,7 +37,7 @@ function samePath(pathname: string, href: string): boolean {
 
 export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
   const pathname = usePathname();
-  const filteredGroups = groups.filter((group) => group.locale === "zh");
+  const filteredGroups = groups.filter((group) => group.locale === "en");
 
   return (
     <>
@@ -45,7 +45,7 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
         <div className="border border-[var(--border)] bg-[var(--panel)] px-4 py-4">
           <p className="flex items-center gap-2 text-sm font-medium text-[var(--foreground)]">
             <GitBranch className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
-            分支
+            Branches
           </p>
           <div className="mt-3 flex flex-wrap gap-3 text-sm">
             {branchLinks.map((branch) => (
@@ -118,7 +118,7 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
           <div className="border-b border-[var(--border)] px-4 py-3">
             <p className="flex items-center gap-2 text-xs text-[var(--muted)]">
               <GitBranch className="h-3.5 w-3.5 text-[var(--accent-strong)]" aria-hidden="true" />
-              分支
+              Branches
             </p>
             <div className="mt-2 flex flex-col gap-1 text-sm">
               {branchLinks.map((branch) => (

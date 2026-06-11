@@ -22,33 +22,33 @@ const AGENT_EXPERIENCES: {
     name: "Codex",
     iconSrc: "/codex-color.svg",
     iconAlt: "Codex icon",
-    signal: "把一次性操作变成可审计任务",
-    body: "Codex 继续负责读代码、拆步骤和选择工具；ExecGo 接住真实动作，让每次运行都有 task id、依赖、状态与取消语义。",
-    bullets: ["manifest 驱动工具发现", "schema validation 先挡坏参数", "长任务可 cancel / wait"],
+    signal: "Turn one-off actions into auditable tasks",
+    body: "Codex keeps reading code, planning steps, and choosing tools; ExecGo catches real actions so every run gets a task id, dependencies, status, and cancellation semantics.",
+    bullets: ["manifest-driven tool discovery", "schema validation blocks bad params", "long tasks support cancel / wait"],
   },
   {
     name: "Claude Code",
     iconSrc: "/claude-color.svg",
     iconAlt: "Claude Code icon",
-    signal: "在团队代码库里接入安全动作层",
-    body: "Claude Code 保留代码理解和交互体验，危险或耗时动作交给 ExecGo 执行，避免 shell 历史和临时日志成为唯一证据。",
-    bullets: ["shell / file action 结构化", "cancel 与 delete 分离", "事件与 artifact 可回放"],
+    signal: "Add a safe action layer in team codebases",
+    body: "Claude Code keeps code understanding and interaction; dangerous or long-running actions go through ExecGo instead of shell history and ad-hoc logs as the only evidence.",
+    bullets: ["structured shell / file actions", "cancel and delete are separate", "events and artifacts are replayable"],
   },
   {
     name: "Hermes Agent",
     iconSrc: "/agent-icons/hermes-agent.png",
     iconAlt: "Hermes Agent icon",
-    signal: "为消息驱动 agent 提供动作内核",
-    body: "Hermes Agent 这类事件流 agent 可以只提交动作意图，ExecGo 负责把异步执行、失败收敛和结果产物稳定交还给上层循环。",
-    bullets: ["事件触发任务图", "runtime 分发和状态持久化", "结果回流后续推理"],
+    signal: "An action kernel for message-driven agents",
+    body: "Event-stream agents like Hermes Agent can submit action intent only; ExecGo handles async execution, failure convergence, and stable result handoff back to the loop.",
+    bullets: ["event-triggered task graphs", "runtime dispatch and persistence", "results feed back into reasoning"],
   },
   {
     name: "OpenClaw",
     iconSrc: "/agent-icons/openclaw.svg",
     iconAlt: "OpenClaw icon",
-    signal: "面向开放工具生态的能力发现",
-    body: "OpenClaw 可以把 ExecGo 当作可发现、可调用、可治理的工具入口，先读 schema，再生成稳定的 action 调用。",
-    bullets: ["/adapters/tools 暴露能力", "运行态状态链清晰", "适配开放工具市场"],
+    signal: "Capability discovery for open tool ecosystems",
+    body: "OpenClaw can treat ExecGo as a discoverable, callable, governable tool entry: read schemas first, then emit stable action calls.",
+    bullets: ["/adapters/tools exposes capabilities", "clear runtime state chain", "fits open tool marketplaces"],
   },
 ];
 
@@ -72,7 +72,7 @@ export default function Home() {
           </h1>
         </div>
         <p className="mt-4 max-w-2xl text-base text-[var(--muted)] sm:text-lg">
-          面向 AI Agent 的任务执行内核与运行时。
+          Task execution kernel and runtime for AI agents.
         </p>
         <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap sm:gap-4">
           <ExecgoDocsMenu
@@ -88,7 +88,7 @@ export default function Home() {
               className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)] sm:w-auto"
             >
               <Server className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
-              runtime 文档
+              Runtime docs
             </Link>
           ) : null}
           <GitHubMenu
@@ -101,11 +101,11 @@ export default function Home() {
         </div>
         <div className="mt-8 border-l-2 border-[var(--accent-strong)] bg-[var(--background-soft)] px-4 py-4 sm:px-5">
           <p className="text-sm font-semibold text-[var(--foreground)]">
-            最佳接入方式：通过 execgo-skills 接入
+            Recommended integration: execgo-skills
           </p>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--muted)]">
-            把 skill 链接给 Codex、Claude Code、Hermes Agent 或 OpenClaw，让 agent
-            从 execgo-agent-bridge 开始接入 ExecGo 与 execgo-runtime。
+            Link the skill to Codex, Claude Code, Hermes Agent, or OpenClaw so agents
+            start from execgo-agent-bridge when connecting to ExecGo and execgo-runtime.
           </p>
           <a
             href="https://github.com/iammm0/execgo-skills/tree/main/skills/execgo-agent-bridge"
@@ -121,7 +121,7 @@ export default function Home() {
 
       <section className="mt-12 border-t border-[var(--border)] pt-10 sm:mt-16 sm:pt-12">
         <h2 className="text-2xl font-bold text-[var(--foreground)]">
-          什么是 execgo？
+          What is execgo?
         </h2>
         <div className="mt-6 space-y-4 text-[var(--muted)]">
           <p>
@@ -133,7 +133,8 @@ export default function Home() {
             >
               execgo
             </a>
-            是控制面：负责任务编排、执行策略与对外 API，把上层决策映射为可执行步骤。
+            {" "}
+            is the control plane: task orchestration, execution policy, and external APIs that map upstream decisions to runnable steps.
           </p>
           <p>
             <a
@@ -144,20 +145,21 @@ export default function Home() {
             >
               execgo-runtime
             </a>
-            是数据面运行时：在单进程内提供 HTTP 与 CLI，负责任务的提交、调度、执行与持久化。
+            {" "}
+            is the data-plane runtime: HTTP and CLI in a single process for task submit, schedule, execute, and persist.
           </p>
         </div>
       </section>
 
       <section className="mt-12 border-t border-[var(--border)] pt-10 sm:mt-16 sm:pt-12">
-        <p className="section-eyebrow">可靠执行层解决方案</p>
+        <p className="section-eyebrow">Reliable execution layer</p>
         <h2 className="mt-2 text-2xl font-bold text-[var(--foreground)]">
-          为通用 Agent 接住真实世界的执行
+          Catch real-world execution for general-purpose agents
         </h2>
         <p className="mt-4 max-w-2xl text-[var(--muted)]">
-          Claude Code、Codex、Hermes Agent、OpenClaw 这类通用或成熟 Agent 已经擅长理解上下文、
-          拆解任务和选择工具。ExecGo 专注补上它们最需要的工程底座：把真实 shell、文件、运行时和工具调用，
-          变成可验证、可取消、可审计、可恢复的任务执行。
+          General-purpose agents such as Claude Code, Codex, Hermes Agent, and OpenClaw already excel at context,
+          planning, and tool choice. ExecGo fills the engineering substrate they need most: turn real shell, file,
+          runtime, and tool calls into verifiable, cancellable, auditable, recoverable task execution.
         </p>
         <ul className="mt-8 grid gap-4 sm:grid-cols-2">
           {AGENT_EXPERIENCES.map((item) => (

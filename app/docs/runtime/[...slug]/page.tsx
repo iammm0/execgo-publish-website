@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const doc = getRuntimeDocPageData(slug);
   if (!doc) {
-    return { title: "文档未找到" };
+    return { title: "Document not found" };
   }
   return { title: doc.title };
 }

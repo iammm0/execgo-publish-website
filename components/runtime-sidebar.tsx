@@ -28,7 +28,7 @@ export function RuntimeSidebar({ groups }: RuntimeSidebarProps) {
         <details className="border border-[var(--border)] bg-[var(--panel)]">
           <summary className="flex cursor-pointer list-none items-center gap-2 border-b border-[var(--border)] px-4 py-3 text-sm font-medium text-[var(--foreground)]">
             <Server className="h-4 w-4 shrink-0 text-[var(--accent-strong)]" aria-hidden="true" />
-            <span className="min-w-0 break-words">Runtime 文档目录</span>
+            <span className="min-w-0 break-words">Runtime docs</span>
           </summary>
           <div className="p-4">
             {groups.map((group) => (

@@ -23,10 +23,10 @@ export default async function ExecgoDocsLayout({ children, params }: LayoutProps
     <div className="mx-auto w-full max-w-[96rem] px-3 py-6 sm:px-6 sm:py-10">
       <nav className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[var(--muted)] sm:mb-8">
         <Link href="/" className="hover:text-[var(--accent-strong)]">
-          首页
+          Home
         </Link>
         <span>/</span>
-        <span className="text-[var(--foreground)]">文档</span>
+        <span className="text-[var(--foreground)]">Docs</span>
         <span>/</span>
         <Link
           href="/docs/execgo/release-agent-adapter-runtime"

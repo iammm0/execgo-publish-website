@@ -6,6 +6,7 @@ import type { DocEntry, DocNavGroup, DocNavSection, MarkdownHeading } from "./ex
 import { normalizeDocRouteSlug, slugifyHeading } from "./execgo-data";
 
 const RUNTIME_CONTENT_ROOT = path.join(process.cwd(), "content", "execgo-runtime", "docs");
+const RUNTIME_DOC_LOCALE = "en";
 const RUNTIME_GITHUB_REPO = "https://github.com/iammm0/execgo-runtime";
 
 export type RuntimeDocPageData = {
@@ -20,12 +21,12 @@ function humanizeFilename(filename: string): string {
   return filename
     .replace(/\.md$/i, "")
     .replace(/[-_]/g, " ")
-    .replace(/^readme$/i, "概览")
+    .replace(/^readme$/i, "Overview")
     .replace(/^api$/i, "HTTP API")
-    .replace(/^cli$/i, "CLI 命令行")
-    .replace(/^architecture$/i, "架构说明")
-    .replace(/^deployment$/i, "部署指南")
-    .replace(/^development$/i, "本地开发");
+    .replace(/^cli$/i, "CLI")
+    .replace(/^architecture$/i, "Architecture")
+    .replace(/^deployment$/i, "Deployment")
+    .replace(/^development$/i, "Development");
 }
 
 function extractHeadings(markdown: string): MarkdownHeading[] {
@@ -72,15 +73,15 @@ function extractExcerpt(content: string, maxParagraphs: number): string[] {
 }
 
 export const getRuntimeDocEntries = cache((): DocEntry[] => {
-  const zhDir = path.join(RUNTIME_CONTENT_ROOT, "zh");
-  if (!fs.existsSync(zhDir)) return [];
+  const localeDir = path.join(RUNTIME_CONTENT_ROOT, RUNTIME_DOC_LOCALE);
+  if (!fs.existsSync(localeDir)) return [];
 
-  const files = fs.readdirSync(zhDir).filter((f) => f.endsWith(".md")).sort();
+  const files = fs.readdirSync(localeDir).filter((f) => f.endsWith(".md")).sort();
 
   return files.map((filename) => {
     const slug = filename.toLowerCase() === "readme.md"
-      ? ["zh"]
-      : ["zh", filename.replace(/\.md$/i, "").toLowerCase()];
+      ? [RUNTIME_DOC_LOCALE]
+      : [RUNTIME_DOC_LOCALE, filename.replace(/\.md$/i, "").toLowerCase()];
     const title = humanizeFilename(filename);
 
     return {
@@ -88,8 +89,8 @@ export const getRuntimeDocEntries = cache((): DocEntry[] => {
       slug,
       slugKey: slug.join("/"),
       repoPath: `docs/${filename}`,
-      locale: "zh",
-      localeLabel: "中文",
+      locale: RUNTIME_DOC_LOCALE,
+      localeLabel: "English",
       section: "runtime",
       sectionLabel: "Runtime",
       href: `/docs/runtime/${slug.join("/")}`,
@@ -101,16 +102,16 @@ export const getRuntimeDocGroups = cache((): DocNavGroup[] => {
   const entries = getRuntimeDocEntries();
   if (entries.length === 0) return [];
 
-  const zhSection: DocNavSection = {
-    title: "Runtime 文档",
+  const runtimeSection: DocNavSection = {
+    title: "Runtime docs",
     items: entries,
   };
 
   return [
     {
-      locale: "zh",
-      title: "中文",
-      sections: [zhSection],
+      locale: RUNTIME_DOC_LOCALE,
+      title: "English",
+      sections: [runtimeSection],
     },
   ];
 });
@@ -122,7 +123,7 @@ export function getRuntimeDocPageData(slug: string[]): RuntimeDocPageData | null
 
   if (!entry) return null;
 
-  const filePath = path.join(RUNTIME_CONTENT_ROOT, "zh", path.basename(entry.repoPath));
+  const filePath = path.join(RUNTIME_CONTENT_ROOT, RUNTIME_DOC_LOCALE, path.basename(entry.repoPath));
   if (!fs.existsSync(filePath)) return null;
 
   const content = fs.readFileSync(filePath, "utf8");
@@ -137,7 +138,7 @@ export function getRuntimeDocPageData(slug: string[]): RuntimeDocPageData | null
 }
 
 export function getRuntimeDefaultDoc(): RuntimeDocPageData | null {
-  return getRuntimeDocPageData(["zh"]);
+  return getRuntimeDocPageData([RUNTIME_DOC_LOCALE]);
 }
 
 function safeDecodeRuntimeHref(value: string): string {
@@ -150,7 +151,7 @@ function safeDecodeRuntimeHref(value: string): string {
 
 function runtimeRouteForSourceDoc(sourcePath: string): string | null {
   if (sourcePath === "docs/README.md") {
-    return "/docs/runtime/zh";
+    return `/docs/runtime/${RUNTIME_DOC_LOCALE}`;
   }
 
   if (!sourcePath.startsWith("docs/") || !sourcePath.endsWith(".md")) {
@@ -158,14 +159,14 @@ function runtimeRouteForSourceDoc(sourcePath: string): string | null {
   }
 
   const filename = path.posix.basename(sourcePath);
-  const contentPath = path.join(RUNTIME_CONTENT_ROOT, "zh", filename);
+  const contentPath = path.join(RUNTIME_CONTENT_ROOT, RUNTIME_DOC_LOCALE, filename);
   if (!fs.existsSync(contentPath)) {
     return null;
   }
 
   const slug = filename.toLowerCase() === "readme.md"
-    ? "zh"
-    : `zh/${filename.replace(/\.md$/i, "").toLowerCase()}`;
+    ? RUNTIME_DOC_LOCALE
+    : `${RUNTIME_DOC_LOCALE}/${filename.replace(/\.md$/i, "").toLowerCase()}`;
   return `/docs/runtime/${slug}`;
 }
 
@@ -220,7 +221,7 @@ export function resolveRuntimeMarkdownHref(
   return hash ? `${resolved}#${hash}` : resolved;
 }
 
-/** 是否存在可打开的 runtime 文档首页（用于隐藏无内容时的文档入口）。 */
+/** Whether a runtime docs index page is available (used to hide nav when empty). */
 export function hasRuntimeDocIndex(): boolean {
   return getRuntimeDefaultDoc() !== null;
 }

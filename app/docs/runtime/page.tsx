@@ -6,8 +6,8 @@ import { RepoMarkdownSimple } from "@/components/repo-markdown-simple";
 import { getRuntimeDefaultDoc, resolveRuntimeMarkdownHref } from "@/lib/runtime-data";
 
 export const metadata: Metadata = {
-  title: "execgo-runtime 文档",
-  description: "ExecGo 数据面运行时文档",
+  title: "execgo-runtime docs",
+  description: "Documentation for the ExecGo data-plane runtime",
 };
 
 export default function RuntimeDocsHomePage() {
