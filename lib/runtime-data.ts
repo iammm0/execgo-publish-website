@@ -47,26 +47,6 @@ function extractTitle(content: string, fallback: string): string {
   return match ? match[1].trim() : fallback;
 }
 
-function stripLeadingTitle(markdown: string): string {
-  const lines = markdown.split(/\r?\n/);
-  let index = 0;
-
-  while (index < lines.length && !lines[index].trim()) {
-    index += 1;
-  }
-
-  if (!lines[index]?.trim().startsWith("# ")) {
-    return markdown;
-  }
-
-  index += 1;
-  while (index < lines.length && !lines[index].trim()) {
-    index += 1;
-  }
-
-  return lines.slice(index).join("\n");
-}
-
 function extractExcerpt(content: string, maxParagraphs: number): string[] {
   const lines = content.split(/\r?\n/);
   const paragraphs: string[] = [];
@@ -147,14 +127,13 @@ export function getRuntimeDocPageData(slug: string[]): RuntimeDocPageData | null
   if (!fs.existsSync(filePath)) return null;
 
   const content = fs.readFileSync(filePath, "utf8");
-  const contentWithoutTitle = stripLeadingTitle(content);
 
   return {
     entry,
     title: extractTitle(content, entry.title),
-    content: contentWithoutTitle,
-    headings: extractHeadings(contentWithoutTitle),
-    excerpt: extractExcerpt(contentWithoutTitle, 2),
+    content,
+    headings: extractHeadings(content),
+    excerpt: extractExcerpt(content, 2),
   };
 }
 
@@ -240,10 +219,6 @@ export function resolveRuntimeMarkdownHref(
   }
 
   return hash ? `${resolved}#${hash}` : resolved;
-}
-
-export function toRuntimeBlobUrl(repoPath: string): string {
-  return `${RUNTIME_GITHUB_REPO}/blob/main/${repoPath.replace(/^\/+/, "")}`;
 }
 
 /** Whether a runtime docs index page is available (used to hide nav when empty). */

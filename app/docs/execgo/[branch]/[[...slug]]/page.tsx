@@ -1,14 +1,9 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
-import { DocsArticleHeader } from "@/components/docs-article-header";
 import { DocsToc } from "@/components/docs-toc";
 import { RepoMarkdown } from "@/components/repo-markdown";
-import {
-  getBranchIdOrNull,
-  getDocPageData,
-  toBranchBlobUrl,
-} from "@/lib/execgo-data";
+import { getBranchIdOrNull, getDocPageData } from "@/lib/execgo-data";
 
 type PageProps = {
   params: Promise<{ branch: string; slug?: string[] }>;
@@ -56,18 +51,11 @@ export default async function ExecgoDocPage({ params }: PageProps) {
   }
 
   return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_14rem] xl:items-start xl:gap-6">
+    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_12.5rem] xl:items-start xl:gap-6">
       <DocsToc headings={doc.headings} />
 
-      <article className="docs-article min-w-0 xl:order-first">
-        <DocsArticleHeader
-          eyebrow="ExecGo docs"
-          title={doc.title}
-          description={doc.excerpt[0]}
-          badges={[doc.entry.sectionLabel, doc.entry.localeLabel, doc.branch.branchName]}
-          sourceHref={toBranchBlobUrl(doc.branch, doc.entry.repoPath)}
-        />
-        <div className="px-4 py-5 sm:px-7 sm:py-7">
+      <article className="min-w-0 border border-[var(--border)] bg-[var(--panel)] xl:order-first">
+        <div className="px-4 py-5 sm:px-6 sm:py-6">
           <RepoMarkdown
             branchId={branchId}
             content={doc.content}

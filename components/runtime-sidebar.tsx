@@ -25,8 +25,8 @@ export function RuntimeSidebar({ groups }: RuntimeSidebarProps) {
   return (
     <>
       <div className="xl:hidden">
-        <details className="docs-panel">
-          <summary className="flex cursor-pointer list-none items-center gap-2 border-b border-[var(--border)] px-4 py-3 text-sm font-semibold text-[var(--foreground)]">
+        <details className="border border-[var(--border)] bg-[var(--panel)]">
+          <summary className="flex cursor-pointer list-none items-center gap-2 border-b border-[var(--border)] px-4 py-3 text-sm font-medium text-[var(--foreground)]">
             <Server className="h-4 w-4 shrink-0 text-[var(--accent-strong)]" aria-hidden="true" />
             <span className="min-w-0 break-words">Runtime docs</span>
           </summary>
@@ -41,10 +41,10 @@ export function RuntimeSidebar({ groups }: RuntimeSidebarProps) {
                         <li key={item.href}>
                           <Link
                             href={item.href}
-                            className={`docs-nav-link ${
+                            className={`block py-1.5 pl-2 text-sm leading-snug ${
                               active
-                                ? "docs-nav-link-active"
-                                : ""
+                                ? "break-words border-l-2 border-[var(--accent-strong)] font-medium text-[var(--foreground)]"
+                                : "break-words border-l-2 border-transparent text-[var(--muted)] hover:text-[var(--foreground)]"
                             }`}
                           >
                             {item.title}
@@ -60,39 +60,37 @@ export function RuntimeSidebar({ groups }: RuntimeSidebarProps) {
         </details>
       </div>
 
-      <aside className="hidden w-[18rem] shrink-0 xl:block">
-        <div className="docs-panel sticky top-20 max-h-[calc(100vh-6rem)] overflow-hidden">
-          <p className="docs-eyebrow flex items-center gap-2 border-b border-[var(--border)] px-4 py-3">
+      <aside className="hidden w-[15rem] shrink-0 xl:block">
+        <div className="sticky top-16 border border-[var(--border)] bg-[var(--panel)] px-4 py-3">
+          <p className="mb-3 flex items-center gap-2 text-xs text-[var(--muted)]">
             <Server className="h-3.5 w-3.5 text-[var(--accent-strong)]" aria-hidden="true" />
             execgo-runtime
           </p>
-          <div className="docs-sidebar-scroll max-h-[calc(100vh-10rem)] overflow-y-auto px-3 py-3">
-            {groups.map((group) => (
-              <div key={group.locale}>
-                {group.sections.map((section) => (
-                  <ul key={section.title} className="space-y-0.5">
-                    {section.items.map((item) => {
-                      const active = samePath(pathname, item.href);
-                      return (
-                        <li key={item.href}>
-                          <Link
-                            href={item.href}
-                            className={`docs-nav-link ${
-                              active
-                                ? "docs-nav-link-active"
-                                : ""
-                            }`}
-                          >
-                            {item.title}
-                          </Link>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                ))}
-              </div>
-            ))}
-          </div>
+          {groups.map((group) => (
+            <div key={group.locale}>
+              {group.sections.map((section) => (
+                <ul key={section.title} className="space-y-0.5">
+                  {section.items.map((item) => {
+                    const active = samePath(pathname, item.href);
+                    return (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          className={`block py-1.5 pl-2 text-sm leading-snug ${
+                            active
+                              ? "border-l-2 border-[var(--accent-strong)] font-medium text-[var(--foreground)]"
+                              : "border-l-2 border-transparent text-[var(--muted)] hover:text-[var(--foreground)]"
+                          }`}
+                        >
+                          {item.title}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ))}
+            </div>
+          ))}
         </div>
       </aside>
     </>
