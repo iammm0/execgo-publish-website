@@ -37,7 +37,6 @@ function samePath(pathname: string, href: string): boolean {
 
 export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
   const pathname = usePathname();
-  const filteredGroups = groups.filter((group) => group.locale === "en");
 
   return (
     <>
@@ -65,7 +64,7 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
         </div>
 
         <div className="space-y-4">
-          {filteredGroups.map((group) => (
+          {groups.map((group) => (
             <details
               key={group.locale}
               className="border border-[var(--border)] bg-[var(--panel)]"
@@ -138,7 +137,7 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
           </div>
 
           <div className="max-h-[calc(100vh-12rem)] overflow-y-auto px-4 py-3">
-            {filteredGroups.map((group) => (
+            {groups.map((group) => (
               <section key={group.locale} className="mb-8 last:mb-0">
                 <h2 className="mb-3 flex items-center gap-2 text-xs text-[var(--muted)]">
                   <BookOpen className="h-3.5 w-3.5 text-[var(--accent-strong)]" aria-hidden="true" />

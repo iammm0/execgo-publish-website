@@ -6,8 +6,11 @@ import type { DocEntry, DocNavGroup, DocNavSection, MarkdownHeading } from "./ex
 import { normalizeDocRouteSlug, slugifyHeading } from "./execgo-data";
 
 const RUNTIME_CONTENT_ROOT = path.join(process.cwd(), "content", "execgo-runtime", "docs");
-const RUNTIME_DOC_LOCALE = "en";
+const RUNTIME_DOC_LOCALES = ["en", "zh"] as const;
+const DEFAULT_RUNTIME_DOC_LOCALE = "en";
 const RUNTIME_GITHUB_REPO = "https://github.com/iammm0/execgo-runtime";
+
+type RuntimeDocLocale = (typeof RUNTIME_DOC_LOCALES)[number];
 
 export type RuntimeDocPageData = {
   entry: DocEntry;
@@ -17,7 +20,30 @@ export type RuntimeDocPageData = {
   excerpt: string[];
 };
 
-function humanizeFilename(filename: string): string {
+function isRuntimeDocLocale(value: string): value is RuntimeDocLocale {
+  return RUNTIME_DOC_LOCALES.includes(value as RuntimeDocLocale);
+}
+
+function runtimeLocaleLabel(locale: RuntimeDocLocale): string {
+  return locale === "en" ? "English" : "Chinese";
+}
+
+function runtimeSectionTitle(locale: RuntimeDocLocale): string {
+  return locale === "en" ? "Runtime docs" : "运行时文档";
+}
+
+function humanizeFilename(filename: string, locale: RuntimeDocLocale): string {
+  if (locale === "zh") {
+    return filename
+      .replace(/\.md$/i, "")
+      .replace(/^readme$/i, "概览")
+      .replace(/^api$/i, "HTTP API")
+      .replace(/^cli$/i, "CLI")
+      .replace(/^architecture$/i, "架构")
+      .replace(/^deployment$/i, "部署")
+      .replace(/^development$/i, "开发");
+  }
+
   return filename
     .replace(/\.md$/i, "")
     .replace(/[-_]/g, " ")
@@ -73,47 +99,60 @@ function extractExcerpt(content: string, maxParagraphs: number): string[] {
 }
 
 export const getRuntimeDocEntries = cache((): DocEntry[] => {
-  const localeDir = path.join(RUNTIME_CONTENT_ROOT, RUNTIME_DOC_LOCALE);
-  if (!fs.existsSync(localeDir)) return [];
+  const entries: DocEntry[] = [];
 
-  const files = fs.readdirSync(localeDir).filter((f) => f.endsWith(".md")).sort();
+  for (const locale of RUNTIME_DOC_LOCALES) {
+    const localeDir = path.join(RUNTIME_CONTENT_ROOT, locale);
+    if (!fs.existsSync(localeDir)) continue;
 
-  return files.map((filename) => {
-    const slug = filename.toLowerCase() === "readme.md"
-      ? [RUNTIME_DOC_LOCALE]
-      : [RUNTIME_DOC_LOCALE, filename.replace(/\.md$/i, "").toLowerCase()];
-    const title = humanizeFilename(filename);
+    const files = fs.readdirSync(localeDir).filter((f) => f.endsWith(".md")).sort();
 
-    return {
-      title,
-      slug,
-      slugKey: slug.join("/"),
-      repoPath: `docs/${filename}`,
-      locale: RUNTIME_DOC_LOCALE,
-      localeLabel: "English",
-      section: "runtime",
-      sectionLabel: "Runtime",
-      href: `/docs/runtime/${slug.join("/")}`,
-    };
-  });
+    for (const filename of files) {
+      const slug = filename.toLowerCase() === "readme.md"
+        ? [locale]
+        : [locale, filename.replace(/\.md$/i, "").toLowerCase()];
+      const title = humanizeFilename(filename, locale);
+
+      entries.push({
+        title,
+        slug,
+        slugKey: slug.join("/"),
+        repoPath: locale === DEFAULT_RUNTIME_DOC_LOCALE
+          ? `docs/${filename}`
+          : `docs/${locale}/${filename}`,
+        locale,
+        localeLabel: runtimeLocaleLabel(locale),
+        section: "runtime",
+        sectionLabel: "Runtime",
+        href: `/docs/runtime/${slug.join("/")}`,
+      });
+    }
+  }
+
+  return entries;
 });
 
 export const getRuntimeDocGroups = cache((): DocNavGroup[] => {
   const entries = getRuntimeDocEntries();
   if (entries.length === 0) return [];
 
-  const runtimeSection: DocNavSection = {
-    title: "Runtime docs",
-    items: entries,
-  };
+  return RUNTIME_DOC_LOCALES.flatMap((locale) => {
+    const items = entries.filter((entry) => entry.locale === locale);
+    if (items.length === 0) return [];
 
-  return [
-    {
-      locale: RUNTIME_DOC_LOCALE,
-      title: "English",
-      sections: [runtimeSection],
-    },
-  ];
+    const runtimeSection: DocNavSection = {
+      title: runtimeSectionTitle(locale),
+      items,
+    };
+
+    return [
+      {
+        locale,
+        title: runtimeLocaleLabel(locale),
+        sections: [runtimeSection],
+      },
+    ];
+  });
 });
 
 export function getRuntimeDocPageData(slug: string[]): RuntimeDocPageData | null {
@@ -123,7 +162,9 @@ export function getRuntimeDocPageData(slug: string[]): RuntimeDocPageData | null
 
   if (!entry) return null;
 
-  const filePath = path.join(RUNTIME_CONTENT_ROOT, RUNTIME_DOC_LOCALE, path.basename(entry.repoPath));
+  if (!isRuntimeDocLocale(entry.locale)) return null;
+
+  const filePath = path.join(RUNTIME_CONTENT_ROOT, entry.locale, path.basename(entry.repoPath));
   if (!fs.existsSync(filePath)) return null;
 
   const content = fs.readFileSync(filePath, "utf8");
@@ -138,7 +179,7 @@ export function getRuntimeDocPageData(slug: string[]): RuntimeDocPageData | null
 }
 
 export function getRuntimeDefaultDoc(): RuntimeDocPageData | null {
-  return getRuntimeDocPageData([RUNTIME_DOC_LOCALE]);
+  return getRuntimeDocPageData([DEFAULT_RUNTIME_DOC_LOCALE]);
 }
 
 function safeDecodeRuntimeHref(value: string): string {
@@ -150,24 +191,15 @@ function safeDecodeRuntimeHref(value: string): string {
 }
 
 function runtimeRouteForSourceDoc(sourcePath: string): string | null {
-  if (sourcePath === "docs/README.md") {
-    return `/docs/runtime/${RUNTIME_DOC_LOCALE}`;
-  }
-
   if (!sourcePath.startsWith("docs/") || !sourcePath.endsWith(".md")) {
     return null;
   }
 
-  const filename = path.posix.basename(sourcePath);
-  const contentPath = path.join(RUNTIME_CONTENT_ROOT, RUNTIME_DOC_LOCALE, filename);
-  if (!fs.existsSync(contentPath)) {
-    return null;
-  }
+  const normalizedSourcePath = sourcePath.startsWith("docs/en/")
+    ? sourcePath.replace(/^docs\/en\//, "docs/")
+    : sourcePath;
 
-  const slug = filename.toLowerCase() === "readme.md"
-    ? RUNTIME_DOC_LOCALE
-    : `${RUNTIME_DOC_LOCALE}/${filename.replace(/\.md$/i, "").toLowerCase()}`;
-  return `/docs/runtime/${slug}`;
+  return getRuntimeDocEntries().find((entry) => entry.repoPath === normalizedSourcePath)?.href ?? null;
 }
 
 export function resolveRuntimeMarkdownHref(

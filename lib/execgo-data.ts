@@ -826,18 +826,29 @@ function docSectionMeta(
 }
 
 function docOrderIndex(branchId: BranchId, entry: DocEntry): number {
-  if (entry.locale === DEFAULT_DOC_LOCALE) {
-    const index = CURATED_EN_DOCS[branchId].indexOf(entry.repoPath);
-    return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+  const index = curatedDocPaths(branchId, entry.locale).indexOf(entry.repoPath);
+
+  return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+}
+
+function curatedDocPaths(branchId: BranchId, locale: string): string[] {
+  if (locale === DEFAULT_DOC_LOCALE) {
+    return CURATED_EN_DOCS[branchId];
   }
 
-  return Number.MAX_SAFE_INTEGER;
+  if (locale === "zh") {
+    return CURATED_EN_DOCS[branchId].map((repoPath) =>
+      repoPath.replace(/^docs\/en\//, "docs/zh/"),
+    );
+  }
+
+  return [];
 }
 
 function buildDocEntries(branchId: BranchId): DocEntry[] {
   return listBranchContentFiles(branchId)
     .filter((file) => file.startsWith("docs/") && file.endsWith(".md"))
-    .filter((file) => file.startsWith("docs/en/"))
+    .filter((file) => file.startsWith("docs/en/") || file.startsWith("docs/zh/"))
     .map((repoPath) => {
       const slug = docPathToSlug(repoPath);
       const locale = slug[0] ?? DEFAULT_DOC_LOCALE;
@@ -863,7 +874,7 @@ function buildDocGroups(branchId: BranchId, entries: DocEntry[]): DocNavGroup[] 
   const locales = new Map<string, Map<string, DocEntry[]>>();
 
   const visibleEntries = entries.filter((entry) => {
-    return entry.locale === DEFAULT_DOC_LOCALE && CURATED_EN_DOCS[branchId].includes(entry.repoPath);
+    return curatedDocPaths(branchId, entry.locale).includes(entry.repoPath);
   });
 
   for (const entry of visibleEntries) {
