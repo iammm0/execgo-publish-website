@@ -41,9 +41,9 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
 
   return (
     <>
-      <div className="space-y-6 xl:hidden">
-        <div className="border border-[var(--border)] bg-[var(--panel)] px-4 py-4">
-          <p className="flex items-center gap-2 text-sm font-medium text-[var(--foreground)]">
+      <div className="space-y-4 xl:hidden">
+        <div className="docs-panel px-4 py-4">
+          <p className="flex items-center gap-2 text-sm font-semibold text-[var(--foreground)]">
             <GitBranch className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
             Branches
           </p>
@@ -54,8 +54,8 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
                 href={`/docs/execgo/${branch.id}`}
                 className={
                   branchId === branch.id
-                    ? "break-words font-medium text-[var(--accent-strong)]"
-                    : "break-words text-[var(--muted)] hover:text-[var(--accent-strong)]"
+                    ? "docs-branch-link docs-branch-link-active"
+                    : "docs-branch-link"
                 }
               >
                 {branch.label}
@@ -68,9 +68,9 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
           {filteredGroups.map((group) => (
             <details
               key={group.locale}
-              className="border border-[var(--border)] bg-[var(--panel)]"
+              className="docs-panel"
             >
-              <summary className="flex cursor-pointer list-none items-center gap-2 border-b border-[var(--border)] px-4 py-3 text-sm font-medium text-[var(--foreground)]">
+              <summary className="flex cursor-pointer list-none items-center gap-2 border-b border-[var(--border)] px-4 py-3 text-sm font-semibold text-[var(--foreground)]">
                 <BookOpen className="h-4 w-4 shrink-0 text-[var(--accent-strong)]" aria-hidden="true" />
                 <span className="min-w-0 break-words">{group.title}</span>
               </summary>
@@ -91,10 +91,10 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
                               <li key={item.href}>
                                 <Link
                                   href={item.href}
-                                  className={`block py-1.5 pl-2 text-sm leading-snug ${
+                                  className={`docs-nav-link ${
                                     active
-                                      ? "break-words border-l-2 border-[var(--accent-strong)] font-medium text-[var(--foreground)]"
-                                      : "break-words border-l-2 border-transparent text-[var(--muted)] hover:text-[var(--foreground)]"
+                                      ? "docs-nav-link-active"
+                                      : ""
                                   }`}
                                 >
                                   {item.title}
@@ -113,10 +113,10 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
         </div>
       </div>
 
-      <aside className="hidden w-[17rem] shrink-0 xl:block">
-        <div className="sticky top-16 max-h-[calc(100vh-5rem)] overflow-hidden border border-[var(--border)] bg-[var(--panel)]">
+      <aside className="hidden w-[18rem] shrink-0 xl:block">
+        <div className="docs-panel sticky top-20 max-h-[calc(100vh-6rem)] overflow-hidden">
           <div className="border-b border-[var(--border)] px-4 py-3">
-            <p className="flex items-center gap-2 text-xs text-[var(--muted)]">
+            <p className="docs-eyebrow flex items-center gap-2">
               <GitBranch className="h-3.5 w-3.5 text-[var(--accent-strong)]" aria-hidden="true" />
               Branches
             </p>
@@ -127,8 +127,8 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
                   href={`/docs/execgo/${branch.id}`}
                   className={
                     branchId === branch.id
-                      ? "font-medium text-[var(--accent-strong)]"
-                      : "text-[var(--muted)] hover:text-[var(--foreground)]"
+                      ? "docs-branch-link docs-branch-link-active"
+                      : "docs-branch-link"
                   }
                 >
                   {branch.label}
@@ -137,10 +137,10 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
             </div>
           </div>
 
-          <div className="max-h-[calc(100vh-12rem)] overflow-y-auto px-4 py-3">
+          <div className="docs-sidebar-scroll max-h-[calc(100vh-13rem)] overflow-y-auto px-3 py-3">
             {filteredGroups.map((group) => (
               <section key={group.locale} className="mb-8 last:mb-0">
-                <h2 className="mb-3 flex items-center gap-2 text-xs text-[var(--muted)]">
+                <h2 className="docs-eyebrow mb-3 flex items-center gap-2 px-1">
                   <BookOpen className="h-3.5 w-3.5 text-[var(--accent-strong)]" aria-hidden="true" />
                   {group.title}
                 </h2>
@@ -160,10 +160,10 @@ export function DocsSidebar({ branchId, groups }: DocsSidebarProps) {
                               <li key={item.href}>
                                 <Link
                                   href={item.href}
-                                  className={`block py-1.5 pl-2 text-sm leading-snug ${
+                                  className={`docs-nav-link ${
                                     active
-                                      ? "border-l-2 border-[var(--accent-strong)] font-medium text-[var(--foreground)]"
-                                      : "border-l-2 border-transparent text-[var(--muted)] hover:text-[var(--foreground)]"
+                                      ? "docs-nav-link-active"
+                                      : ""
                                   }`}
                                 >
                                   {item.title}

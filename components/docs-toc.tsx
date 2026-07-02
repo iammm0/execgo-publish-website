@@ -13,8 +13,8 @@ export function DocsToc({ headings }: DocsTocProps) {
   return (
     <>
       <div className="xl:hidden">
-        <details className="border border-[var(--border)] bg-[var(--panel)]">
-          <summary className="flex cursor-pointer list-none items-center gap-2 border-b border-[var(--border)] px-4 py-3 text-sm font-medium text-[var(--foreground)]">
+        <details className="docs-panel">
+          <summary className="flex cursor-pointer list-none items-center gap-2 border-b border-[var(--border)] px-4 py-3 text-sm font-semibold text-[var(--foreground)]">
             <ListTree className="h-4 w-4 shrink-0 text-[var(--accent-strong)]" aria-hidden="true" />
             <span className="min-w-0 break-words">On this page</span>
           </summary>
@@ -24,11 +24,11 @@ export function DocsToc({ headings }: DocsTocProps) {
                 <li key={heading.id}>
                   <a
                     href={`#${heading.id}`}
-                    className={`block break-words py-1.5 pl-2 text-sm ${
+                    className={`docs-toc-link ${
                       heading.depth === 3
-                        ? "pl-6 text-[var(--muted)]"
-                        : "text-[var(--muted)]"
-                    } hover:text-[var(--foreground)]`}
+                        ? "docs-toc-link-nested"
+                        : ""
+                    }`}
                   >
                     {heading.title}
                   </a>
@@ -40,8 +40,8 @@ export function DocsToc({ headings }: DocsTocProps) {
       </div>
 
       <aside className="hidden xl:block">
-        <div className="sticky top-16 border border-[var(--border)] bg-[var(--panel)] px-4 py-3">
-          <p className="mb-3 flex items-center gap-2 text-xs text-[var(--muted)]">
+        <div className="docs-panel sticky top-20 px-3 py-3">
+          <p className="docs-eyebrow mb-3 flex items-center gap-2 px-1">
             <ListTree className="h-3.5 w-3.5 text-[var(--accent-strong)]" aria-hidden="true" />
             On this page
           </p>
@@ -50,11 +50,11 @@ export function DocsToc({ headings }: DocsTocProps) {
               <li key={heading.id}>
                 <a
                   href={`#${heading.id}`}
-                  className={`block py-1.5 pl-2 text-sm ${
+                  className={`docs-toc-link ${
                     heading.depth === 3
-                      ? "pl-6 text-[var(--muted)]"
-                      : "text-[var(--muted)]"
-                  } hover:text-[var(--foreground)]`}
+                      ? "docs-toc-link-nested"
+                      : ""
+                  }`}
                 >
                   {heading.title}
                 </a>

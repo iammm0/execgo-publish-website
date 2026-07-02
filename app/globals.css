@@ -257,7 +257,289 @@ a {
   border-radius: 6px;
 }
 
+.docs-shell {
+  --background: #f8fafc;
+  --background-soft: #f1f5f9;
+  --foreground: #101828;
+  --muted: #667085;
+  --border: #d9e0ea;
+  --panel: #ffffff;
+  --accent: #2563eb;
+  --accent-strong: #155eef;
+  --accent-soft: rgba(37, 99, 235, 0.08);
+  --code-bg: #0b1220;
+  --prose: #344054;
+  --docs-ring: rgba(37, 99, 235, 0.28);
+  min-height: calc(100vh - 3.5rem);
+  background:
+    radial-gradient(circle at 1px 1px, rgba(21, 94, 239, 0.09) 1px, transparent 0) 0 0 / 24px 24px,
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 42%, #f6f8fb 100%);
+}
+
+.dark .docs-shell {
+  --background: #0b101b;
+  --background-soft: #111827;
+  --foreground: #f8fafc;
+  --muted: #9aa4b2;
+  --border: rgba(148, 163, 184, 0.22);
+  --panel: #0f172a;
+  --accent: #60a5fa;
+  --accent-strong: #93c5fd;
+  --accent-soft: rgba(96, 165, 250, 0.12);
+  --code-bg: #050816;
+  --prose: #d0d7e2;
+  --docs-ring: rgba(96, 165, 250, 0.38);
+  background:
+    radial-gradient(circle at 1px 1px, rgba(147, 197, 253, 0.12) 1px, transparent 0) 0 0 / 24px 24px,
+    linear-gradient(180deg, #080d18 0%, #0b101b 48%, #070b12 100%);
+}
+
+.docs-shell a:focus-visible,
+.docs-shell button:focus-visible,
+.docs-shell summary:focus-visible {
+  outline: 2px solid var(--docs-ring);
+  outline-offset: 3px;
+}
+
+.docs-routebar,
+.docs-panel,
+.docs-article {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06);
+}
+
+.dark .docs-routebar,
+.dark .docs-panel,
+.dark .docs-article {
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
+}
+
+.docs-routebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  backdrop-filter: blur(12px);
+}
+
+.docs-article {
+  overflow: hidden;
+}
+
+.docs-article-header {
+  border-bottom: 1px solid var(--border);
+  background:
+    linear-gradient(135deg, var(--accent-soft), transparent 42%),
+    var(--panel);
+  padding: 1.25rem 1rem;
+}
+
+.docs-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.docs-badge,
+.docs-source-link,
+.docs-branch-link {
+  display: inline-flex;
+  min-height: 1.75rem;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--background-soft);
+  padding: 0.25rem 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--muted);
+}
+
+.docs-source-link {
+  width: fit-content;
+  color: var(--accent-strong);
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.docs-source-link:hover {
+  border-color: var(--accent-strong);
+  background: var(--accent-soft);
+  color: var(--foreground);
+}
+
+.docs-branch-link {
+  max-width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.docs-branch-link:hover,
+.docs-branch-link-active {
+  border-color: color-mix(in srgb, var(--accent-strong) 45%, var(--border));
+  background: var(--accent-soft);
+  color: var(--foreground);
+}
+
+.docs-nav-link,
+.docs-toc-link {
+  display: block;
+  min-width: 0;
+  border-left: 2px solid transparent;
+  border-radius: 6px;
+  padding: 0.45rem 0.55rem 0.45rem 0.75rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.docs-nav-link:hover,
+.docs-toc-link:hover {
+  background: var(--background-soft);
+  color: var(--foreground);
+}
+
+.docs-nav-link-active {
+  border-left-color: var(--accent-strong);
+  background: var(--accent-soft);
+  color: var(--foreground);
+  font-weight: 650;
+}
+
+.docs-toc-link {
+  font-size: 0.82rem;
+}
+
+.docs-toc-link-nested {
+  padding-left: 1.35rem;
+}
+
+.docs-sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.docs-sidebar-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.docs-sidebar-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--border);
+}
+
+.docs-shell .repo-markdown h1 {
+  margin-top: 0;
+}
+
+.docs-shell .repo-markdown h2 {
+  margin-top: 2.25rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1.4rem;
+  font-size: clamp(1.3rem, 2vw, 1.65rem);
+  letter-spacing: 0;
+}
+
+.docs-shell .repo-markdown h3 {
+  margin-top: 1.65rem;
+  font-size: 1.08rem;
+}
+
+.docs-shell .repo-markdown p,
+.docs-shell .repo-markdown li,
+.docs-shell .repo-markdown blockquote {
+  color: var(--prose);
+}
+
+.docs-shell .repo-markdown a {
+  font-weight: 600;
+}
+
+.docs-shell .repo-markdown blockquote {
+  border-left: 3px solid var(--accent-strong);
+  border-radius: 8px;
+  background: var(--accent-soft);
+}
+
+.docs-shell .repo-markdown pre {
+  position: relative;
+  border-radius: 8px;
+  border-color: color-mix(in srgb, var(--accent-strong) 28%, var(--border));
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent),
+    var(--code-bg);
+  color: #dbeafe;
+}
+
+.docs-shell .repo-markdown pre::before {
+  content: "execgo";
+  display: block;
+  margin: -0.15rem 0 0.65rem;
+  border-bottom: 1px solid rgba(219, 234, 254, 0.12);
+  padding-bottom: 0.45rem;
+  color: #93c5fd;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.docs-shell .repo-markdown :not(pre) > code {
+  border-color: color-mix(in srgb, var(--accent-strong) 30%, var(--border));
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-weight: 650;
+}
+
+.docs-shell .repo-markdown table {
+  border-radius: 8px;
+}
+
+.docs-shell .repo-markdown th {
+  color: var(--foreground);
+  font-size: 0.83rem;
+}
+
+@media (max-width: 960px) {
+  .docs-routebar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
 @media (max-width: 640px) {
+  .docs-shell {
+    background:
+      linear-gradient(180deg, var(--background) 0%, var(--panel) 48%, var(--background) 100%);
+  }
+
+  .docs-routebar {
+    padding: 0.75rem;
+  }
+
+  .docs-article-header {
+    padding: 1rem;
+  }
+
   .repo-markdown p,
   .repo-markdown li,
   .repo-markdown blockquote {
