@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import { notFound } from "next/navigation";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import {
@@ -50,17 +51,22 @@ export default async function DocsRoutePage({ params }: DocsRouteProps) {
   const MDXContent = page.data.body;
 
   return (
-    <div className="mx-auto w-full max-w-[96rem] px-3 py-6 sm:px-6 sm:py-10">
+    <div className="w-full">
       <DocsLayout
         tree={docsSource.getPageTree()}
         nav={{ enabled: false }}
         sidebar={{ enabled: true }}
         searchToggle={{ enabled: false }}
         themeSwitch={{ enabled: false }}
+        containerProps={{
+          style: { "--fd-layout-width": "100%" } as CSSProperties,
+        }}
       >
         <DocsPage
+          className="max-w-none"
           toc={page.data.toc}
-          full={page.data.full}
+          full
+          tableOfContent={{ enabled: true }}
           footer={{ enabled: false }}
         >
           <DocsTitle>{page.data.title}</DocsTitle>

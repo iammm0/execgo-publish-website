@@ -3,7 +3,7 @@ import { Code2, Server } from "lucide-react";
 export function SiteFooter() {
   return (
     <footer className="border-t border-[var(--border)] bg-[var(--panel)] py-8">
-      <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-2 gap-y-1 px-4 text-center text-sm text-[var(--muted)] sm:px-6">
+      <div className="flex w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 px-4 text-center text-sm text-[var(--muted)] sm:px-6">
         <span>© 2026 execgo</span>
         <span className="text-[var(--border)]">·</span>
         <a

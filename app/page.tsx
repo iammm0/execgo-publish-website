@@ -53,7 +53,7 @@ const AGENT_EXPERIENCES: {
 
 export default function Home() {
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-16">
+    <div className="w-full px-4 py-8 sm:px-6 sm:py-16">
       <section>
         <div className="flex flex-wrap items-center gap-3 sm:gap-4">
           <Image
