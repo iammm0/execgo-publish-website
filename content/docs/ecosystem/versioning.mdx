@@ -1,27 +1,27 @@
 ---
-title: Versioning and compatibility
-description: How to reason about independent ExecGo and execgo-runtime releases.
+title: 版本与兼容性
+description: 如何理解 ExecGo 与 execgo-runtime 的独立发布关系。
 ---
 
-ExecGo and execgo-runtime should remain independently released. A single website can document them together without forcing a single version number.
+ExecGo 与 execgo-runtime 应继续独立发布。一个统一的网站可以把它们放在一起展示，但不应该强行要求两者共享同一个版本号。
 
-## Compatibility rule
+## 兼容边界
 
-The compatibility boundary is the runtime HTTP API:
+兼容边界是 runtime HTTP API：
 
-- ExecGo's `runtime` executor submits to `/api/v1/tasks`.
-- It polls `/api/v1/tasks/{id}`.
-- It cancels with `/api/v1/tasks/{id}/kill`.
-- It may read runtime metadata from `/api/v1/runtime/info`, `/api/v1/runtime/capabilities`, `/api/v1/runtime/resources`, and `/api/v1/runtime/config`.
+- ExecGo 的 `runtime` executor 向 `/api/v1/tasks` 提交任务。
+- 它通过 `/api/v1/tasks/{id}` 轮询状态。
+- 它通过 `/api/v1/tasks/{id}/kill` 请求取消。
+- 它可以从 `/api/v1/runtime/info`、`/api/v1/runtime/capabilities`、`/api/v1/runtime/resources` 和 `/api/v1/runtime/config` 读取 runtime 元数据。
 
-If those contracts remain compatible, the two projects do not need synchronized tags.
+只要这些契约保持兼容，两个项目就不需要同步打同一个 tag。
 
-## Recommended matrix
+## 推荐矩阵
 
-| ExecGo line | Runtime line | Recommendation |
+| ExecGo 线 | Runtime 线 | 建议 |
 | --- | --- | --- |
-| `release/agent-adapter-runtime` | `execgo-runtime` `1.1.x` | Default integration path |
-| `preview/distributed-runtime` | runtime `main` or preview builds | Use for distributed runtime validation |
-| local development | local source checkout | Pin both commits in test notes |
+| `release/agent-adapter-runtime` | `execgo-runtime` `1.1.x` | 默认集成路径 |
+| `preview/distributed-runtime` | runtime `main` 或 preview build | 用于分布式 runtime 验证 |
+| 本地开发 | 本地源码 checkout | 在测试记录中固定两个 commit |
 
-For production releases, document both versions in deployment manifests. Treat runtime upgrades like a data-plane rollout: probe readiness first, then route control-plane tasks to the upgraded runtime.
+生产发布时，应在部署清单中同时记录两个版本。runtime 升级应按数据面 rollout 处理：先探测 readiness，再把控制面任务路由到升级后的 runtime。

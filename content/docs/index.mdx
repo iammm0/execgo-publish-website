@@ -1,40 +1,40 @@
 ---
-title: ExecGo documentation
-description: The MDX documentation hub for the ExecGo control plane, execgo-runtime data plane, and the boundary between them.
+title: ExecGo 文档
+description: ExecGo 控制面、execgo-runtime 数据面以及两者边界的 MDX 文档中心。
 ---
 
-ExecGo is an execution layer for mature agents. It keeps planning and context outside the core runtime, while making real actions validated, cancellable, observable, and recoverable.
+ExecGo 是面向成熟 Agent 的可靠执行层。它不接管规划与上下文系统，而是把真实动作变成可校验、可取消、可观测、可恢复的任务。
 
-This documentation is organized around product boundaries instead of Git branches.
+本文档不再围绕 Git 分支组织，而是按产品边界分为三段：生态、ExecGo、runtime。
 
 <DocsGrid>
   <DocsCard
     href="/docs/ecosystem"
-    eyebrow="Boundary"
-    title="Ecosystem"
-    description="How agents, ExecGo, execgo-runtime, releases, and compatibility rules fit together."
+    eyebrow="边界"
+    title="生态"
+    description="说明 Agent、ExecGo、execgo-runtime、发布节奏与兼容规则如何组合。"
   />
   <DocsCard
     href="/docs/execgo"
-    eyebrow="Control plane"
+    eyebrow="控制面"
     title="ExecGo"
-    description="Task DSL, adapter API, scheduler semantics, deployment, and client integration examples."
+    description="任务 DSL、适配器 API、调度语义、部署方式和客户端接入示例。"
   />
   <DocsCard
     href="/docs/runtime"
-    eyebrow="Data plane"
+    eyebrow="数据面"
     title="execgo-runtime"
-    description="Process execution, task artifacts, resource policy, runtime API, CLI, and operations."
+    description="进程执行、任务产物、资源策略、runtime API、CLI 与运维资料。"
   />
 </DocsGrid>
 
 ```mermaid
 flowchart LR
-  A[Agent or IDE] --> B[ExecGo control plane]
-  B --> C{executor}
-  C --> D[os / mcp / cli-skills]
-  C --> E[execgo-runtime data plane]
-  E --> F[process execution and artifacts]
+  A["Agent 或 IDE"] --> B["ExecGo 控制面"]
+  B --> C{"executor"}
+  C --> D["os / mcp / cli-skills"]
+  C --> E["execgo-runtime 数据面"]
+  E --> F["进程执行与 artifact"]
 ```
 
-Use this MDX section when you need the stable mental model, integration path, and release boundary. Source content is synchronized from the independently versioned `execgo` and `execgo-runtime` repositories.
+需要稳定心智模型、接入路径和发布边界时，从本节开始。具体内容会从独立版本管理的 `execgo` 与 `execgo-runtime` 仓库同步进来。

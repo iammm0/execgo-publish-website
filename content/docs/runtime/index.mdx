@@ -1,47 +1,47 @@
 ---
-title: execgo-runtime data plane
-description: The Rust runtime for process execution, task artifacts, events, and resource-aware operations.
+title: execgo-runtime 数据面
+description: 面向进程执行、任务产物、事件与资源感知运维的 Rust 运行时。
 ---
 
-execgo-runtime is the data-plane runtime for ExecGo. It runs as a separate service, accepts explicit HTTP task requests, persists task metadata and artifacts, and reports status back to the control plane.
+execgo-runtime 是 ExecGo 的数据面运行时。它作为独立服务运行，接收明确的 HTTP 任务请求，持久化任务元数据与 artifact，并把状态回传给控制面。
 
 <DocsGrid>
   <DocsCard
     href="/docs/runtime/quickstart"
-    eyebrow="Start"
-    title="Quick start"
-    description="Build the Rust runtime, start the HTTP service, submit a task, and inspect artifacts."
+    eyebrow="开始"
+    title="快速开始"
+    description="构建 Rust runtime，启动 HTTP 服务，提交任务并检查 artifact。"
   />
   <DocsCard
     href="/docs/runtime/documentation-map"
-    eyebrow="Map"
-    title="Documentation map"
-    description="Read the source repository's role-based runtime documentation index."
+    eyebrow="地图"
+    title="文档地图"
+    description="阅读源仓库中按角色组织的 runtime 文档索引。"
   />
   <DocsCard
     href="/docs/runtime/architecture"
-    eyebrow="Design"
-    title="Architecture"
-    description="Understand the HTTP service, dispatcher, internal shim, persistence, recovery, and resource ledger."
+    eyebrow="设计"
+    title="架构"
+    description="理解 HTTP 服务、调度器、internal shim、持久化、恢复与资源账本。"
   />
   <DocsCard
     href="/docs/runtime/api"
-    eyebrow="Contract"
+    eyebrow="契约"
     title="HTTP API"
-    description="Submit tasks, query status, cancel work, inspect events, and read runtime capabilities."
+    description="提交任务、查询状态、取消工作、检查事件并读取 runtime 能力。"
   />
   <DocsCard
     href="/docs/runtime/cli"
     eyebrow="CLI"
-    title="Command line"
-    description="Use serve, submit, status, wait, kill, run, and the runtime configuration flags."
+    title="命令行"
+    description="使用 serve、submit、status、wait、kill、run 和 runtime 配置参数。"
   />
   <DocsCard
     href="/docs/runtime/deployment"
-    eyebrow="Ops"
-    title="Deployment"
-    description="Deploy with binaries, Docker, systemd, health checks, metrics, capacity planning, and tags."
+    eyebrow="运维"
+    title="部署"
+    description="用二进制、Docker、systemd、健康检查、指标、容量规划与标签完成部署。"
   />
 </DocsGrid>
 
-The runtime owns explicit task submission, requested/effective execution plans, internal shim child processes, `request.json`, `result.json`, stdout and stderr logs, health, readiness, metrics, events, and capability APIs.
+runtime 负责显式任务提交、requested/effective execution plan、internal shim 子进程、`request.json`、`result.json`、stdout/stderr 日志、健康检查、就绪检查、指标、事件与能力 API。

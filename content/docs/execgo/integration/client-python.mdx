@@ -1,25 +1,25 @@
 ---
-title: "Python (HTTP) Integration Example"
-description: "This script uses Python to integrate with ExecGo over HTTP:"
+title: "Python（HTTP）接入示例"
+description: "本示例使用 Python 通过 HTTP 接入 ExecGo："
 ---
 
-This script uses Python to integrate with ExecGo over HTTP:
+本示例使用 Python 通过 HTTP 接入 ExecGo：
 
-- `POST /tasks` submit a `TaskGraph`
-- `GET /tasks/\{id\}` poll task status
-- read `result` / `error`
+- `POST /tasks` 提交 `TaskGraph`
+- `GET /tasks/\{id\}` 轮询任务状态
+- 读取 `result` / `error`
 
-The example uses the built-in `noop` executor (no external I/O) for easy local testing.
+示例使用内置 `noop` 执行器（无外部 IO），便于你在本地验证。
 
-## Prerequisite
+## 前置
 
-Install `requests`:
+建议安装 `requests`：
 
 ```bash
 pip install requests
 ```
 
-## Minimal runnable script
+## 代码：最小可运行脚本
 
 ```python
 import os
@@ -85,7 +85,7 @@ for tid in task_ids:
     poll_task(tid)
 ```
 
-## Run
+## 运行
 
 ```bash
 python client-python.py

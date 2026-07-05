@@ -1,5 +1,5 @@
 {
-  "title": "Orchestrator",
+  "title": "编排",
   "pages": [
     "index",
     "mapping-dag-to-taskgraph",

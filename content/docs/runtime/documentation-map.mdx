@@ -13,7 +13,7 @@ description: "本目录包含 execgo-runtime 的设计说明、API、CLI 与运�
 
 | 角色 | 推荐顺序 | 你会得到什么 |
 |------|----------|--------------|
-| 第一次接入 runtime | 根 [README.md](/docs/runtime/quickstart) -> [cli.md](/docs/runtime/cli) -> [api.md](/docs/runtime/api) | 本地启动、提交任务、等待结果、查看 artifact |
+| 第一次接入 runtime | 根 [README.md](https://github.com/iammm0/execgo-runtime/blob/main/README.md) -> [cli.md](/docs/runtime/cli) -> [api.md](/docs/runtime/api) | 本地启动、提交任务、等待结果、查看 artifact |
 | ExecGo/Agent adapter 作者 | [api.md](/docs/runtime/api) -> [architecture.md](/docs/runtime/architecture) | `SubmitTaskRequest`、任务状态机、事件流、owner/tenant/control context |
 | 运维与部署 | [deployment.md](/docs/runtime/deployment) -> [cli.md](/docs/runtime/cli) -> [api.md](/docs/runtime/api) | systemd/Docker 参数、健康检查、能力清单、资源账本与租户配额 |
 | runtime 开发者 | [development.md](/docs/runtime/development) -> [architecture.md](/docs/runtime/architecture) -> [api.md](/docs/runtime/api) | 模块边界、测试入口、兼容性要求、扩展时要同步的文档 |
@@ -64,7 +64,7 @@ cargo run -- run --json '{
 
 ## 对外索引
 
-- 仓库根目录 [README.md](/docs/runtime/quickstart) 提供项目概览与快速开始。
+- 仓库根目录 [README.md](https://github.com/iammm0/execgo-runtime/blob/main/README.md) 提供项目概览与快速开始。
 - 健康检查：`GET /healthz` 返回 `version` 字段，与 Cargo 包版本一致。
 - runtime 自描述：`GET /api/v1/runtime/info`、`/api/v1/runtime/capabilities`、`/api/v1/runtime/config`、`/api/v1/runtime/resources`。
 - ExecGo 控制面接入：设置 `EXECGO_RUNTIME_URL=http://&lt;host&gt;:&lt;port&gt;`，让控制面通过 HTTP 调用 runtime。

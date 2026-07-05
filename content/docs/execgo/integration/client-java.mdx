@@ -1,19 +1,19 @@
 ---
-title: "Java (HTTP) Integration Example"
-description: "This example uses Java HttpClient to integrate with ExecGo over HTTP:"
+title: "Java（HTTP）接入示例"
+description: "本示例使用 Java HttpClient 通过 HTTP 接入 ExecGo："
 ---
 
-This example uses Java `HttpClient` to integrate with ExecGo over HTTP:
+本示例使用 Java `HttpClient` 通过 HTTP 接入 ExecGo：
 
-- `POST /tasks` submit a `TaskGraph`
-- read `task_ids`
-- poll `GET /tasks/\{id\}` and read `status/result/error`
+- `POST /tasks` 提交 `TaskGraph`
+- 读取 `task_ids`
+- 轮询 `GET /tasks/\{id\}` 获取 `status/result/error`
 
-The example uses the built-in `noop` executor (no external I/O) so you can run it locally end-to-end.
+示例同样使用内置 `noop` 执行器（无外部 IO），便于你在本地直接验证整条链路。
 
-## Prerequisite：Jackson for JSON parsing (recommended)
+## 前置：使用 Jackson 解析 JSON（推荐）
 
-Add Jackson to your `pom.xml` (choose a version that matches your project):
+你可以在 `pom.xml` 引入 Jackson（版本按你的项目选择即可）：
 
 ```xml
 <dependency>
@@ -23,7 +23,7 @@ Add Jackson to your `pom.xml` (choose a version that matches your project):
 </dependency>
 ```
 
-## Minimal runnable client
+## 代码：最小可运行客户端
 
 ```java
 import com.fasterxml.jackson.databind.JsonNode;
@@ -144,6 +144,6 @@ public class Main {
 }
 ```
 
-## Run
+## 运行
 
-Make sure ExecGo is running at `localhost:8080` (or set `EXECGO_URL`).
+确保 ExecGo 已在 `localhost:8080`（或设置 `EXECGO_URL`）。

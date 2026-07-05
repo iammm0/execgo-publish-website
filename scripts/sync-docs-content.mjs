@@ -18,109 +18,110 @@ const repos = {
 const copies = [
   {
     repo: "execgo",
-    source: "README.md",
+    source: "README.zh-CN.md",
     target: "execgo/quickstart.mdx",
-    title: "ExecGo quick start",
+    title: "ExecGo 快速开始",
+    description: "构建并运行 ExecGo 控制面，提交任务，并通过 execgocli 接入成熟 Agent。",
   },
   {
     repo: "execgo",
-    source: "docs/en/README.md",
+    source: "docs/zh/README.md",
     target: "execgo/documentation-map.mdx",
-    title: "ExecGo documentation map",
+    title: "ExecGo 文档地图",
   },
   {
     repo: "execgo",
-    source: "docs/en/integration/agent-adapter.md",
+    source: "docs/zh/integration/agent-adapter.md",
     target: "execgo/integration/agent-adapter.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/integration/mode-a-cli.md",
+    source: "docs/zh/integration/mode-a-cli.md",
     target: "execgo/integration/mode-a-cli.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/integration/mode-b-upgrade.md",
+    source: "docs/zh/integration/mode-b-upgrade.md",
     target: "execgo/integration/mode-b-upgrade.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/integration/client-go.md",
+    source: "docs/zh/integration/client-go.md",
     target: "execgo/integration/client-go.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/integration/client-java.md",
+    source: "docs/zh/integration/client-java.md",
     target: "execgo/integration/client-java.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/integration/client-python.md",
+    source: "docs/zh/integration/client-python.md",
     target: "execgo/integration/client-python.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/integration/client-nodejs-ts.md",
+    source: "docs/zh/integration/client-nodejs-ts.md",
     target: "execgo/integration/client-nodejs-ts.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/orchestrator/README.md",
+    source: "docs/zh/orchestrator/README.md",
     target: "execgo/orchestrator/index.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/orchestrator/mapping-dag-to-taskgraph.md",
+    source: "docs/zh/orchestrator/mapping-dag-to-taskgraph.md",
     target: "execgo/orchestrator/mapping-dag-to-taskgraph.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/orchestrator/polling-and-idempotency.md",
+    source: "docs/zh/orchestrator/polling-and-idempotency.md",
     target: "execgo/orchestrator/polling-and-idempotency.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/orchestrator/failure-semantics.md",
+    source: "docs/zh/orchestrator/failure-semantics.md",
     target: "execgo/orchestrator/failure-semantics.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/deploy/compose.md",
+    source: "docs/zh/deploy/compose.md",
     target: "execgo/deploy/compose.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/deploy/kubernetes.md",
+    source: "docs/zh/deploy/kubernetes.md",
     target: "execgo/deploy/kubernetes.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/reference/execgo-cli-contract.md",
+    source: "docs/zh/reference/execgo-cli-contract.md",
     target: "execgo/reference/execgo-cli-contract.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/reference/promotion-security.md",
+    source: "docs/zh/reference/promotion-security.md",
     target: "execgo/reference/promotion-security.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/reference/api.md",
+    source: "docs/zh/reference/api.md",
     target: "execgo/reference/api.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/reference/task-dsl.md",
+    source: "docs/zh/reference/task-dsl.md",
     target: "execgo/reference/task-dsl.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/reference/executors.md",
+    source: "docs/zh/reference/executors.md",
     target: "execgo/reference/executors.mdx",
   },
   {
     repo: "execgo",
-    source: "docs/en/faqs.md",
+    source: "docs/zh/faqs.md",
     target: "execgo/faqs.mdx",
   },
   {
@@ -130,14 +131,8 @@ const copies = [
   },
   {
     repo: "execgo",
-    source: "docs/en/overview/execgo-and-runtime.md",
+    source: "docs/zh/overview/execgo-and-runtime.md",
     target: "ecosystem/execgo-and-runtime.mdx",
-  },
-  {
-    repo: "runtime",
-    source: "README.md",
-    target: "runtime/quickstart.mdx",
-    title: "execgo-runtime quick start",
   },
   {
     repo: "runtime",
@@ -183,7 +178,6 @@ const managedTargets = [
   "execgo/deploy",
   "execgo/reference",
   "execgo/examples",
-  "runtime/quickstart.mdx",
   "runtime/documentation-map.mdx",
   "runtime/architecture.mdx",
   "runtime/api.mdx",
@@ -196,7 +190,7 @@ const managedTargets = [
 
 const metaFiles = {
   "meta.json": {
-    title: "ExecGo Docs",
+    title: "ExecGo 文档",
     pages: ["index", "ecosystem", "execgo", "runtime"],
   },
   "execgo/meta.json": {
@@ -214,7 +208,7 @@ const metaFiles = {
     ],
   },
   "execgo/integration/meta.json": {
-    title: "Integration",
+    title: "接入",
     pages: [
       "agent-adapter",
       "mode-a-cli",
@@ -226,7 +220,7 @@ const metaFiles = {
     ],
   },
   "execgo/orchestrator/meta.json": {
-    title: "Orchestrator",
+    title: "编排",
     pages: [
       "index",
       "mapping-dag-to-taskgraph",
@@ -235,11 +229,11 @@ const metaFiles = {
     ],
   },
   "execgo/deploy/meta.json": {
-    title: "Deploy",
+    title: "部署",
     pages: ["compose", "kubernetes"],
   },
   "execgo/reference/meta.json": {
-    title: "Reference",
+    title: "参考",
     pages: [
       "execgo-cli-contract",
       "promotion-security",
@@ -249,7 +243,7 @@ const metaFiles = {
     ],
   },
   "execgo/examples/meta.json": {
-    title: "Examples",
+    title: "示例",
     pages: ["execgocli-agent-wrappers"],
   },
   "runtime/meta.json": {
@@ -266,7 +260,7 @@ const metaFiles = {
     ],
   },
   "ecosystem/meta.json": {
-    title: "Ecosystem",
+    title: "生态",
     pages: ["index", "execgo-and-runtime", "versioning"],
   },
 };
@@ -330,7 +324,7 @@ async function writeMetaFiles() {
 function toMdx(source, copy, sourcePath) {
   const withoutFrontmatter = stripFrontmatter(source).trim();
   const { title, body } = extractTitle(withoutFrontmatter, copy.title);
-  const description = inferDescription(body);
+  const description = copy.description ?? inferDescription(body);
   const rewritten = rewriteMarkdownLinks(
     normalizeAutolinks(escapeMdxExpressions(escapeTextPlaceholders(body))),
     copy.repo,
@@ -391,19 +385,27 @@ function inferDescription(body) {
     if (
       inFence ||
       trimmed === "" ||
+      trimmed === "---" ||
       trimmed.startsWith("#") ||
       trimmed.startsWith("|") ||
       trimmed.startsWith("- ") ||
       trimmed.startsWith(">") ||
+      trimmed.startsWith("[![") ||
       /^\d+\.\s/.test(trimmed)
     ) {
       continue;
     }
 
-    return stripMarkdown(trimmed).slice(0, 160);
+    const description = stripMarkdown(trimmed);
+
+    if (!description) {
+      continue;
+    }
+
+    return description.slice(0, 160);
   }
 
-  return "Synced documentation from the source repository.";
+  return "从源仓库同步的文档。";
 }
 
 function stripMarkdown(value) {
@@ -544,14 +546,14 @@ function resolveExternalTarget(repoName, sourceTarget) {
   const repo = repos[repoName];
   const relative = slash(path.relative(repo.root, sourceTarget));
 
-  if (!relative.startsWith("docs/en/")) {
-    return sourceTarget;
-  }
+  const fallbackTarget = relative.startsWith("docs/zh/")
+    ? path.resolve(repo.root, relative.replace(/^docs\/zh\//, "docs/en/"))
+    : relative.startsWith("docs/en/")
+      ? path.resolve(repo.root, relative.replace(/^docs\/en\//, "docs/zh/"))
+      : null;
 
-  const zhTarget = path.resolve(repo.root, relative.replace(/^docs\/en\//, "docs/zh/"));
-
-  if (existsSync(zhTarget)) {
-    return zhTarget;
+  if (fallbackTarget && existsSync(fallbackTarget)) {
+    return fallbackTarget;
   }
 
   return sourceTarget;

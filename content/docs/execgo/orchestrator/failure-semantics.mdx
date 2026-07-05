@@ -1,50 +1,51 @@
 ---
-title: "Failure semantics：failed vs skipped"
-description: "ExecGo scheduler retries and failure propagation follow deterministic rules."
+title: "失败语义：failed vs skipped"
+description: "ExecGo 的调度器对失败/重试/跳过的语义是确定的。上层编排层需要理解并正确处理："
 ---
 
-ExecGo scheduler retries and failure propagation follow deterministic rules.
-Your orchestration layer should interpret:
+ExecGo 的调度器对失败/重试/跳过的语义是确定的。上层编排层需要理解并正确处理：
 
-- After a task ends in `failed`, all its downstream tasks are marked `skipped`
-- `skipped` cascades to all deeper downstream tasks (dependency-failure cascade)
-- `retry` applies only to the task itself (it doesn't change the dependency graph)
+- 某个任务最终 `failed` 后，下游依赖它的任务会被标记为 `skipped`
+- `skipped` 会级联跳过所有下游孙节点（dependency 失败导致级联）
+- `retry` 只影响“该任务自己的执行重试次数”，不影响依赖图结构
 
-## 1) Retries & timeouts (per attempt)
+## 1. 重试与超时（每次尝试）
 
-- `task.retry` means retry count after failures
-- actual attempts = `task.retry + 1` (the first run counts)
-- every attempt creates its own execution context; if `task.timeout > 0`, it is enforced per attempt
+- `task.retry` 表示失败后尝试的次数
+- 实际尝试次数 = `task.retry + 1`（首次尝试也算一次执行）
+- 每次尝试都会创建独立的上下文；当 `task.timeout > 0` 时，每次尝试受超时限制
 
-## 2) Why downstream becomes skipped
+> 上层编排层应把 `retry/timeout` 当作“任务级策略”，而不是“工作流级策略”。
 
-When a task fails after all retries:
+## 2. 下游为何会变成 skipped
 
-- scheduler sets the task state to `failed`
-- it then marks all direct children as `skipped`
-- `skipped` further cascades through the graph
+当某个任务在所有重试后仍失败：
 
-So you should distinguish:
+- 调度器把它标记为 `failed`
+- 然后把所有直接下游任务标记为 `skipped`
+- `skipped` 会继续级联到更深层下游
 
-- `failed`: the node's execution ultimately failed
-- `skipped`: downstream tasks were not executed because upstream failed
+因此你在编排层做决策时，至少需要区分：
 
-## 3) Recommended polling interpretation
+- `failed`：该节点自身执行问题（最终失败）
+- `skipped`：上游依赖失败导致的不执行（通常不需要重复“解释失败原因”）
 
-When you poll a task state:
+## 3. 轮询时的状态判定建议
 
-- `success`: proceed (but remember you still need orchestrator-level artifact/params handling)
-- `failed`: usually stop / switch branch per your business policy
-- `skipped`: the root cause is upstream; debug upstream failures rather than the skipped node itself
+当你轮询到某个任务状态：
 
-## 4) Handling `Task.result` / `Task.error`
+- `success`：可以继续推进（但注意“参数产物”仍需你在编排层处理）
+- `failed`：通常需要终止或切换工作流分支（按你的业务策略）
+- `skipped`：说明失败来自上游依赖；你的逻辑应从上游失败定位，而非从被跳过节点本身
 
-ExecGo writes:
+## 4. 结合 Task.result / Task.error 的处理方式
 
-- `Task.result` on success (raw JSON)
-- `Task.error` on failure (string)
+ExecGo 会把：
 
-Your orchestration layer typically:
+- 成功结果写入 `Task.result`（JSON raw 字段）
+- 失败原因写入 `Task.error`（字符串）
 
-- parses `result` for success tasks
-- records `error` for observability and alerting
+上层编排层通常会：
+
+- 对成功任务：解析 `result` 并用于后续 params 注入
+- 对失败任务：记录 `error` 以便可观测与告警

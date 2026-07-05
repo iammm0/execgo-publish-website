@@ -1,34 +1,34 @@
 ---
-title: "Promotion-period security defaults"
-description: "During adoption of Mode A (/adapters/actions via execgocli or HTTP), apply the following defaults before opening agents to production data."
+title: "推广期安全默认"
+description: "在采用 模式 A（经 execgocli 或 HTTP 调 POST /adapters/actions）面向更大数据/生产之前，建议落实以下基线。"
 ---
 
-During adoption of **Mode A** (`/adapters/actions` via `execgocli` or HTTP), apply the following defaults before opening agents to production data.
+在采用 **模式 A**（经 `execgocli` 或 HTTP 调 `POST /adapters/actions`）面向更大数据/生产之前，建议落实以下基线。
 
-## Shell and OS tools
+## Shell 与 OS 类能力
 
-- **`os.shell`** should run with ExecGo’s **allowlist** enabled (default posture). Only use `EXECGO_SHELL_POLICY=open` (or equivalent) on trusted dev machines and **never** ship it as a silent default in shared environments.
-- Prefer narrow commands and explicit working directories; treat agent-provided command strings as untrusted input.
-- For path-sensitive OS file work, keep agents scoped to a designated workspace; add additional path sandbox rules in your org policy as needed.
+- **`os.shell` 应启用白名单/允许列表** 作为默认基线。仅在可信任的开发机显式使用 `EXECGO_SHELL_POLICY=open`（或等效项），**不要**在共享/生产环境静默默认成开放模式。
+- 将 agent 填写的 shell 内容视为**不可信输入**；避免拼接含秘密的长命令。
+- 需要路径边界时，为工作区做组织级策略，并在后续需要时加路径沙箱/目录约束。
 
-## Audit and attribution
+## 审计与归因
 
-- Every `POST /adapters/*` request should populate `agent_id`, `session_id`, `action_id`, and `metadata` when available.
-- The adapter populates `annotations` and `translation_trace` so you can correlate agent actions with scheduler outcomes and store records.
+- 在可行时填写 `agent_id` / `session_id` / `action_id` / `metadata`。
+- 适配器会写入 `annotations` 与 `translation_trace`，便于与调度与落库结果对照。
 
-## Stronger isolation: runtime executor
+## 更强隔离：runtime 执行器
 
-- When you need **process isolation, cgroup-style limits, or stricter data-plane semantics**, use **`runtime.command` / `runtime.script`**, which route through the built-in `runtime` executor to **execgo-runtime**.
-- Set `EXECGO_RUNTIME_URL` on the ExecGo process to point at a reachable `execgo-runtime` instance. Use `GET /readyz` on the runtime to verify readiness.
-- `execgocli ensure-running --with-runtime` is optional; production clusters should use your normal orchestration (systemd, Kubernetes, Compose) and monitoring instead of ad-hoc `docker run`.
+- 当需要**进程级隔离、资源限制或数据面沙箱**时，优先使用 **`runtime.command` / `runtime.script`**，经内置 `runtime` 执行器对接 **execgo-runtime**。
+- 在 ExecGo 进程中配置 `EXECGO_RUNTIME_URL` 指向可达的 `execgo-runtime`；以 `GET /readyz` 做就绪探活（与 `runtime` 执行器 HealthCheck 行为一致）。
+- 推广期可试用 `execgocli ensure-running --with-runtime`；**生产环境**应使用你既有的进程编排/容器编排与可观测，而非临时 `docker run`。
 
-## What `execgocli` does *not* do
+## `execgocli` 不替代的事项
 
-- It does not bypass ExecGo’s validation or your shell policy.
-- It does not grant network access by itself; network behavior follows task types and your environment.
+- 不绕过 ExecGo 校验与 shell 策略。
+- 不自动授予外网/特权；外网访问行为由任务类型与环境决定。
 
-## Related
+## 参见
 
-- [Shell executor / OS](/docs/execgo/reference/executors)
-- [ExecGo and execgo-runtime](/docs/ecosystem/execgo-and-runtime)
-- [execgocli contract](/docs/execgo/reference/execgo-cli-contract)
+- [执行器与内置能力](/docs/execgo/reference/executors)
+- [ExecGo 与 execgo-runtime 关系](/docs/ecosystem/execgo-and-runtime)
+- [execgocli 契约](/docs/execgo/reference/execgo-cli-contract)

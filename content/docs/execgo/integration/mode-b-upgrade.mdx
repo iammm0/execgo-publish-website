@@ -1,42 +1,42 @@
 ---
-title: "Mode B upgrade path (translate + TaskGraph)"
-description: "Mode B is for teams that want raw TaskGraph or translation without execution before adopting full Mode A in all environments."
+title: "模式 B 升级路径（translate + TaskGraph）"
+description: "模式 B 面向需要 直接操作 TaskGraph 或先 只翻译、不执行 再上线的团队，与模式 A 可并存。"
 ---
 
-Mode B is for teams that want **raw TaskGraph** or **translation without execution** before adopting full Mode A in all environments.
+模式 B 面向需要 **直接操作 TaskGraph** 或先 **只翻译、不执行** 再上线的团队，与模式 A 可并存。
 
-## Path 1: `translate` only
+## 路径 1：仅 `translate`
 
-Use `POST /adapters/translate` (or `execgocli translate`) to obtain `task_graph` + `translation_trace` without submitting.
+`POST /adapters/translate`（或 `execgocli translate`）得到 `task_graph` 与 `translation_trace`，不进入调度器。
 
 ```bash
 ./execgocli translate -file request.json
 ```
 
-## Path 2: `POST /tasks` (direct graph)
+## 路径 2：`POST /tasks` 直提
 
-After review, submit a graph with `POST /tasks` (or `execgocli submit`).
+校审后使用 `POST /tasks` 或 `execgocli submit` 直接提交 `TaskGraph`。
 
 ```bash
 ./execgocli submit -file taskgraph.json
 ```
 
-The JSON must be a valid `TaskGraph` (see [Task DSL](/docs/execgo/reference/task-dsl)).
+须符合 [Task DSL](/docs/execgo/reference/task-dsl) 校验。
 
-## Path 3: `task_graph.submit` from Mode A
+## 路径 3：在模式 A 中 `task_graph.submit`
 
-The adapter can also submit a prebuilt graph through action kind `task_graph.submit` (still Mode A envelope, but graph content is under your control).
+仍用 adapter 统一信封，但 action kind 为 `task_graph.submit`，由你提供完整子图（控制与审计策略仍经 adapter 层）。
 
-## Compatibility
+## 兼容性
 
-- `POST /tasks` remains the low-level, stable direct submission path.
-- `adapter.v1` is unchanged; see [execgocli contract](/docs/execgo/reference/execgo-cli-contract).
+- `POST /tasks` 为长期保留的低层入口。
+- `adapter.v1` 见 [execgocli 契约](/docs/execgo/reference/execgo-cli-contract)。
 
-## Future (optional)
+## 未来（可选）
 
-- Batched `POST /adapters/actions:batch` may reduce round-trips; not required for current adoption.
+- 可能增加批量 `POST /adapters/actions:batch` 降低往返，非当前采纳前置条件。
 
-## Related
+## 参见
 
-- [Mode A (CLI quick start)](/docs/execgo/integration/mode-a-cli)
-- [Mature agent adapter](/docs/execgo/integration/agent-adapter)
+- [模式 A 快速开始](/docs/execgo/integration/mode-a-cli)
+- [成熟 Agent 接入](/docs/execgo/integration/agent-adapter)

@@ -1,55 +1,20 @@
 ---
-title: "API Reference (Index)"
-description: "ExecGo exposes a small HTTP API for task submission and task lifecycle management:"
+title: "API 参考（索引）"
+description: "以下页面是 ExecGo 的 HTTP API 参考索引。你可以把它当作“目录页”，对应的完整内容在更细分页面中。"
 ---
 
-ExecGo exposes a small HTTP API for task submission and task lifecycle management:
+以下页面是 ExecGo 的 HTTP API 参考索引。你可以把它当作“目录页”，对应的完整内容在更细分页面中。
 
-- `POST /tasks`: submit a `TaskGraph` for async execution
-- `GET /adapters/capabilities`: discover the mature-agent adapter contract
-- `GET /adapters/tools`: discover adapter action tools for mature agents
-- `POST /adapters/translate`: translate a structured action without submitting it
-- `POST /adapters/actions`: translate and submit a structured action
-- `GET /tasks/\{id\}`: fetch a single task state (`pending/running/success/failed/skipped`) plus `result` / `error`
-- `GET /tasks`: list all tasks
-- `DELETE /tasks/\{id\}`: delete a task from the state store
-- `GET /health`: service health
-- `GET /metrics`: basic execution metrics
+## 入口
 
-## Full details
+- 推荐先读：[`HTTP API 入门使用文档`](https://github.com/iammm0/execgo/blob/release/agent-adapter-runtime/docs/zh/integration/http-api-getting-started.md)
+- 成熟 agent 接入：[`成熟 Agent Adapter 接入`](/docs/execgo/integration/agent-adapter)
+- `POST /tasks`、`GET /adapters/capabilities`、`GET /adapters/tools`、`POST /adapters/translate`、`POST /adapters/actions`、`GET /tasks/\{id\}`、`GET /tasks`、`DELETE /tasks/\{id\}`、`GET /health`、`GET /metrics`
+  - 详细总览：[`API 参考`](https://github.com/iammm0/execgo/blob/release/agent-adapter-runtime/docs/zh/reference/API%20%E5%8F%82%E8%80%83/API%20%E5%8F%82%E8%80%83.md)
 
-- [`API 参考`](https://github.com/iammm0/execgo/blob/release/agent-adapter-runtime/docs/zh/reference/API%20%E5%8F%82%E8%80%83/API%20%E5%8F%82%E8%80%83.md) (Chinese full text)
-- [Mature agent adapter integration](/docs/execgo/integration/agent-adapter)
+## 你最可能关心的几类问题
 
-If you prefer English-only reading, use this index together with the example sections in the orchestration and integration guides.
-
-## Common requests
-
-### Submit a task graph (DAG)
-
-```bash
-curl -X POST http://localhost:8080/tasks \
-  -H "Content-Type: application/json" \
-  -d '{
-    "tasks": [
-      {
-        "id": "fetch-data",
-        "type": "http",
-        "params": { "url": "https://httpbin.org/json", "method": "GET" },
-        "timeout": 10000
-      },
-      {
-        "id": "save-result",
-        "type": "file",
-        "params": { "action": "write", "path": "output.txt", "content": "fetched!" },
-        "depends_on": ["fetch-data"]
-      }
-    ]
-  }'
-```
-
-### Poll task status
-
-```bash
-curl http://localhost:8080/tasks/fetch-data
-```
+- 提交任务图：[`任务管理端点`](https://github.com/iammm0/execgo/blob/release/agent-adapter-runtime/docs/zh/reference/API%20%E5%8F%82%E8%80%83/%E4%BB%BB%E5%8A%A1%E7%AE%A1%E7%90%86%E7%AB%AF%E7%82%B9.md)
+- 健康检查：[`系统健康端点`](https://github.com/iammm0/execgo/blob/release/agent-adapter-runtime/docs/zh/reference/API%20%E5%8F%82%E8%80%83/%E7%B3%BB%E7%BB%9F%E5%81%A5%E5%BA%B7%E7%AB%AF%E7%82%B9.md)
+- 错误处理与状态码：[`错误处理和状态码`](https://github.com/iammm0/execgo/blob/release/agent-adapter-runtime/docs/zh/reference/API%20%E5%8F%82%E8%80%83/%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E5%92%8C%E7%8A%B6%E6%80%81%E7%A0%81.md)
+- 执行运行时语义：[`执行运行时语义`](https://github.com/iammm0/execgo/blob/release/agent-adapter-runtime/docs/zh/reference/runtime-semantics.md)

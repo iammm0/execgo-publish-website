@@ -1,40 +1,40 @@
 ---
-title: Ecosystem overview
-description: The stable product model for ExecGo, execgo-runtime, and agent integrations.
+title: 生态总览
+description: ExecGo、execgo-runtime 与 Agent 接入的稳定产品模型。
 ---
 
-The ExecGo ecosystem has two deliberately separate runtime layers:
+ExecGo 生态有两个刻意拆分的运行层：
 
-- **ExecGo** is the control plane. It validates tasks, schedules dependency graphs, normalizes status, coordinates cancellation, and exposes agent-facing HTTP interfaces.
-- **execgo-runtime** is the data plane. It executes process-heavy work, persists task artifacts, reports events, and owns host-level resource and sandbox policy.
+- **ExecGo** 是控制面。它校验任务、调度依赖图、标准化状态、协调取消，并暴露面向 Agent 的 HTTP 接口。
+- **execgo-runtime** 是数据面。它执行进程密集型工作、持久化任务 artifact、上报事件，并负责宿主级资源与沙箱策略。
 
-Keeping these layers separate lets the Go control plane stay small and embeddable, while the Rust runtime can evolve as an operational execution service with its own release cadence.
+保持两层分离，可以让 Go 控制面保持轻量、易嵌入，也让 Rust runtime 作为运维型执行服务独立演进、独立发布。
 
 <DocsGrid>
   <DocsCard
     href="/docs/ecosystem/execgo-and-runtime"
-    eyebrow="Boundary"
-    title="ExecGo and execgo-runtime"
-    description="Clarify the control-plane/data-plane split, optional runtime dependency, call path, and responsibilities."
+    eyebrow="边界"
+    title="ExecGo 与 execgo-runtime"
+    description="说明控制面/数据面拆分、可选 runtime 依赖、调用路径与职责边界。"
   />
   <DocsCard
     href="/docs/ecosystem/versioning"
-    eyebrow="Release"
-    title="Versioning and compatibility"
-    description="Keep the two repositories independently released while documenting the supported integration surface."
+    eyebrow="发布"
+    title="版本与兼容性"
+    description="保持两个仓库独立发布，同时文档化受支持的集成面。"
   />
   <DocsCard
     href="/docs/execgo"
-    eyebrow="Control plane"
-    title="ExecGo docs"
-    description="Read scheduler, adapter, deployment, API, Task DSL, and client integration documentation."
+    eyebrow="控制面"
+    title="ExecGo 文档"
+    description="阅读调度器、适配器、部署、API、Task DSL 与客户端接入文档。"
   />
   <DocsCard
     href="/docs/runtime"
-    eyebrow="Data plane"
-    title="Runtime docs"
-    description="Read architecture, API, CLI, deployment, development, and runtime operations documentation."
+    eyebrow="数据面"
+    title="Runtime 文档"
+    description="阅读架构、API、CLI、部署、开发与 runtime 运维文档。"
   />
 </DocsGrid>
 
-Start with [ExecGo and execgo-runtime](/docs/ecosystem/execgo-and-runtime), then choose a product section for the implementation details you need.
+建议先阅读 [ExecGo 与 execgo-runtime](/docs/ecosystem/execgo-and-runtime)，再进入具体产品章节查看实现细节。

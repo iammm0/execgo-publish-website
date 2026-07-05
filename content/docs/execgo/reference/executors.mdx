@@ -1,35 +1,33 @@
 ---
-title: "Executors & Parameters (Index)"
-description: "ExecGo V2 chooses an executor category based on task.type, then a tool by task.toolname."
+title: "执行器与参数参考（索引）"
+description: "ExecGo V2 通过 task.type 选择执行器大类，再通过 task.toolname 选择具体工具。工具入参由 task.params 或 task.input 提供。"
 ---
 
-ExecGo V2 chooses an executor category based on `task.type`, then a tool by `task.tool_name`.
+ExecGo V2 通过 `task.type` 选择执行器大类，再通过 `task.tool_name` 选择具体工具。工具入参由 `task.params` 或 `task.input` 提供。
 
-Built-in executor categories registered by `executor.RegisterBuiltins()`:
+## 入口
 
-- `os` (tools: `shell`, `file`, `dns`, `tcp`, `sleep`, `noop`, `http`)
-- `mcp`
-- `cli-skills`
+- 执行器系统总览：[`执行器系统`](https://github.com/iammm0/execgo/blob/release/agent-adapter-runtime/docs/zh/reference/%E6%89%A7%E8%A1%8C%E5%99%A8%E7%B3%BB%E7%BB%9F/%E6%89%A7%E8%A1%8C%E5%99%A8%E7%B3%BB%E7%BB%9F.md)
 
-## Full details (Chinese)
+## 内置执行器与常用参数
 
-- Executor system overview: [`执行器系统`](https://github.com/iammm0/execgo/blob/release/agent-adapter-runtime/docs/zh/reference/%E6%89%A7%E8%A1%8C%E5%99%A8%E7%B3%BB%E7%BB%9F/%E6%89%A7%E8%A1%8C%E5%99%A8%E7%B3%BB%E7%BB%9F.md)
-- Parameters specification: [`执行参数规范`](https://github.com/iammm0/execgo/blob/release/agent-adapter-runtime/docs/zh/reference/%E4%BB%BB%E5%8A%A1%20DSL%20%E8%A7%84%E8%8C%83/%E6%89%A7%E8%A1%8C%E5%8F%82%E6%95%B0%E8%A7%84%E8%8C%83/%E6%89%A7%E8%A1%8C%E5%8F%82%E6%95%B0%E8%A7%84%E8%8C%83.md)
+- `os`：内置 `shell/file/dns/tcp/sleep/noop/http` 工具
+- `mcp`：标准 MCP 工具调用（发现/调用/轮询）
+- `cli-skills`：本地 CLI + Skills 执行
 
-## Quick mapping (how to think)
+兼容说明：旧写法 `type=shell/file/...` 仍可提交，服务端会自动映射到 `type=os + tool_name=*`。
 
-- Create a `Task` with:
-  - `type`: one of `os | mcp | cli-skills`
-  - `tool_name`: tool name inside that category
-  - `params`/`input`: tool-specific JSON object
-- Dependency edges in your DAG become `depends_on: [...]`
-- Retry/timeout are handled by the scheduler per task (not by executors)
+## 自定义执行器（开发扩展）
 
-## Custom executors (optional)
+- [`自定义执行器开发`](https://github.com/iammm0/execgo/blob/release/agent-adapter-runtime/docs/zh/reference/%E6%89%A7%E8%A1%8C%E5%99%A8%E7%B3%BB%E7%BB%9F/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%89%A7%E8%A1%8C%E5%99%A8%E5%BC%80%E5%8F%91.md)
 
-ExecGo supports extending executors via the V2 registry + `ExecutorExtension` hooks (`ExecuteMethod`, `BeforeExecute`, `AfterExecute`, `OnError`).
+V2 推荐实现 `ExecutorExtension` 扩展接口：
+- `ExecuteMethod`
+- `BeforeExecute`
+- `AfterExecute`
+- `OnError`
 
-MCP HTTP endpoints:
+MCP 对外端点：
 - `GET /mcp/tools`
 - `POST /mcp/call`
 - `GET /mcp/tasks/\{id\}`

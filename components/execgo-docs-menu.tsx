@@ -7,26 +7,26 @@ import { DismissibleMenu } from "@/components/dismissible-menu";
 const DOC_LINKS = [
   {
     href: "/docs",
-    title: "Documentation overview",
-    description: "Start from the MDX documentation hub and choose the product boundary you need.",
+    title: "文档总览",
+    description: "从 MDX 文档中心进入，按产品边界选择需要的内容。",
     Icon: BookOpen,
   },
   {
     href: "/docs/ecosystem",
-    title: "Ecosystem model",
-    description: "Understand how agents, ExecGo, and execgo-runtime fit together.",
+    title: "生态模型",
+    description: "理解 Agent、ExecGo 与 execgo-runtime 如何组合。",
     Icon: Boxes,
   },
   {
     href: "/docs/execgo",
-    title: "ExecGo control plane",
-    description: "Task DSL, mature-agent adapters, executor routing, and runtime integration.",
+    title: "ExecGo 控制面",
+    description: "任务 DSL、成熟 Agent 适配器、执行器路由与 runtime 接入。",
     Icon: GitBranch,
   },
   {
     href: "/docs/runtime",
-    title: "execgo-runtime data plane",
-    description: "Process execution, task artifacts, runtime API, and operations.",
+    title: "execgo-runtime 数据面",
+    description: "进程执行、任务产物、runtime API 与运维资料。",
     Icon: Network,
   },
 ];
@@ -63,7 +63,7 @@ export function ExecgoDocsMenu({
       triggerContent={
         <>
           <BookOpen className="h-4 w-4 shrink-0" aria-hidden="true" />
-          <span>Docs</span>
+          <span>文档</span>
         </>
       }
     >

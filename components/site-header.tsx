@@ -12,7 +12,7 @@ const DESKTOP_NAV_ITEM_CLASS =
 
 export function SiteHeader() {
   const navItems: Array<{ label: string; href: string; Icon: LucideIcon }> = [
-    { label: "Runtime docs", href: "/docs/runtime", Icon: Server },
+    { label: "Runtime 文档", href: "/docs/runtime", Icon: Server },
   ];
 
   return (
@@ -60,7 +60,7 @@ export function SiteHeader() {
           triggerContent={
             <>
               <Menu className="h-4 w-4 shrink-0" aria-hidden="true" />
-              <span className="leading-none">Menu</span>
+              <span className="leading-none">菜单</span>
             </>
           }
         >

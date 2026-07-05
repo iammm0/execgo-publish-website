@@ -1,17 +1,17 @@
 ---
-title: "Go (HTTP) Integration Example"
-description: "This example uses Go to integrate with ExecGo's HTTP API:"
+title: "Go（HTTP）接入示例"
+description: "本示例用 Go 直接调用 ExecGo 的 HTTP API："
 ---
 
-This example uses Go to integrate with ExecGo's HTTP API:
+本示例用 Go 直接调用 ExecGo 的 HTTP API：
 
-1. `POST /tasks` to submit a `TaskGraph`
-2. read returned `task_ids`
-3. poll `GET /tasks/\{id\}` until each task reaches `success/failed/skipped`
+1. `POST /tasks` 提交一个 `TaskGraph`
+2. 读取返回的 `task_ids`
+3. 轮询 `GET /tasks/\{id\}` 直到任务进入 `success/failed/skipped`
 
-To keep it truly runnable without external dependencies, the example uses the built-in `noop` executor (no external I/O).
+为避免依赖外部网络/命令，示例使用内置 `noop` 执行器（无外部 IO）。
 
-## Minimal runnable client
+## 代码：最小可运行客户端
 
 ```go
 package main
@@ -45,10 +45,10 @@ type SubmitResponse struct {
 }
 
 type TaskState struct {
-	ID     string           `json:"id"`
-	Status string           `json:"status"`
+	ID     string          `json:"id"`
+	Status string          `json:"status"`
 	Result json.RawMessage `json:"result,omitempty"`
-	Error  string           `json:"error,omitempty"`
+	Error  string          `json:"error,omitempty"`
 }
 
 func main() {
@@ -60,10 +60,10 @@ func main() {
 	graph := TaskGraph{
 		Tasks: []Task{
 			{
-				ID:      "t1",
-				Type:    "noop",
-				Params:  map[string]any{"message": "hello"},
-				Retry:   0,
+				ID:     "t1",
+				Type:   "noop",
+				Params: map[string]any{"message": "hello"},
+				Retry:  0,
 				Timeout: 0,
 			},
 			{
@@ -148,3 +148,18 @@ func pollTask(baseURL, id string) {
 	}
 }
 ```
+
+> 你可以设置环境变量 `EXECGO_URL`，或者直接修改代码里的 `baseURL`。
+
+## 运行
+
+```bash
+go run main.go
+```
+
+你也可以先运行容器/服务，再用：
+
+- `curl http://localhost:8080/health`
+- `GET http://localhost:8080/tasks/\{id\}`
+
+来观察服务行为。

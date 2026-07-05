@@ -1,26 +1,24 @@
 ---
-title: "Kubernetes Deployment Example"
-description: "This page provides a minimal, runnable Kubernetes setup using Deployment + Service."
+title: "Kubernetes 部署示范"
+description: "本页给出一个可运行的最小 Kubernetes 部署方案：Deployment + Service，并通过 PVC 把容器内的 /data 挂载出来，保证任务状态在 Pod 重启后仍可恢复。"
 ---
 
-This page provides a minimal, runnable Kubernetes setup using `Deployment + Service`.
-It mounts `/data` from a PVC so task state can survive Pod restarts.
+本页给出一个可运行的最小 Kubernetes 部署方案：`Deployment + Service`，并通过 PVC 把容器内的 `/data` 挂载出来，保证任务状态在 Pod 重启后仍可恢复。
 
-> Important: By default, ExecGo uses JSON-file storage (`pkg/store/jsonfile`). It does not provide distributed consistency.
-If multiple Pods share the same volume, you may get state overwrites/races.
+> 重要提示：默认 ExecGo 使用 JSON 文件存储（`pkg/store/jsonfile`），不提供分布式一致性。若你把同一个数据卷挂到多个副本，可能出现状态覆盖/竞态。
 
-## 1) Build and push the image
+## 1. 镜像准备
 
-Make sure you have pushed an image, for example:
+确保你已经构建并推送了镜像，例如：
 
 ```bash
 docker build -t your-registry/execgo:0.1 .
 docker push your-registry/execgo:0.1
 ```
 
-Replace `image:` in the YAML with your own registry reference.
+后续 YAML 中的 `image:` 请替换为你的镜像。
 
-## 2) Persistent Volume Claim (PVC)
+## 2. 持久化卷（PVC）
 
 ```yaml
 apiVersion: v1
@@ -35,9 +33,9 @@ spec:
       storage: 1Gi
 ```
 
-`ReadWriteOnce` is recommended to avoid multiple Pods writing the same `state.json`.
+`ReadWriteOnce` 是推荐值（避免多个 Pod 同时写同一份 `state.json`）。
 
-## 3) Deployment + Service
+## 3. Deployment + Service
 
 ```yaml
 apiVersion: apps/v1
@@ -109,26 +107,26 @@ spec:
       targetPort: grpc
 ```
 
-## 4) Apply and verify
+## 4. 部署与验证
 
 ```bash
 kubectl apply -f .
 
 kubectl get pods -l app=execgo
 
-# Port-forward to test locally
+# 方式一：kubectl port-forward
 kubectl port-forward svc/execgo 8080:8080
 curl http://localhost:8080/health
 ```
 
-## 5) Replica safety (must read)
+## 5. 多副本注意事项（必须看）
 
-- JSON file storage does not provide distributed locks
-- `replicas > 1` with a shared PVC volume may cause `state.json` overwrites
+- 默认 JSON 文件存储不提供分布式锁
+- `replicas > 1` + 共享同一个 PVC 的写入，可能导致 `state.json` 被覆盖
 
-Recommended approaches:
+推荐做法：
 
-- keep `replicas: 1` for the default image
-- if you must scale:
-  - allocate independent per-Pod storage (often via StatefulSet + PVC per Pod), or
-  - enable a storage module better suited for concurrent writes
+- 将 `replicas` 维持为 `1`（最稳妥）
+- 若你必须横向扩展：
+  - 为每个副本配置独立的数据卷（通常需要 StatefulSet + 每 Pod 一份 PVC），或
+  - 采用更适合并发写的存储实现（例如 SQLite 模块需要在镜像/运行时侧启用）

@@ -1,77 +1,70 @@
 ---
-title: "execgocli JSON contract"
-description: "execgocli (built from go build -o execgocli ./cmd/execgocli) is the shared adapter CLI for Claude Code, Codex, and other agents. It only uses the Go standard li"
+title: "execgocli JSON 契约"
+description: "execgocli（go build -o execgocli ./cmd/execgocli 构建）是面向 Claude Code、Codex 等 agent 的通用 Adapter CLI，仅使用标准库，通过 HTTP 调用 ExecGo。"
 ---
 
-`execgocli` (built from `go build -o execgocli ./cmd/execgocli`) is the **shared adapter CLI** for Claude Code, Codex, and other agents. It only uses the Go standard library and talks to ExecGo’s HTTP API.
+`execgocli`（`go build -o execgocli ./cmd/execgocli` 构建）是面向 Claude Code、Codex 等 agent 的**通用 Adapter CLI**，仅使用标准库，通过 HTTP 调用 ExecGo。
 
-## Environment variables
+## 环境变量
 
-| Name | Default | Purpose |
+| 名称 | 默认 | 作用 |
 | --- | --- | --- |
-| `EXECGO_URL` | `http://127.0.0.1:8080` | ExecGo control plane base URL |
-| `EXECGO_RUNTIME_URL` | `http://127.0.0.1:18080` | `execgo-runtime` base URL for probes / docs (must match the `EXECGO` process if you use `runtime.*` actions locally) |
-| `EXECGO_COMPOSE_DIR` | (empty) | Directory containing `docker-compose.yml` for optional `docker compose up -d` in `ensure-running` |
-| `EXECGO_RUNTIME_IMAGE` | (empty) | If set, `ensure-running` may try `docker run` to start runtime |
-| `EXECGO_RUNTIME_SOURCE` | (empty) | `execgo-runtime` source root (printed in manual hints) |
+| `EXECGO_URL` | `http://127.0.0.1:8080` | ExecGo 控制面基址 |
+| `EXECGO_RUNTIME_URL` | `http://127.0.0.1:18080` | `execgo-runtime` 基址；本机同时跑时与 ExecGo 进程内 `EXECGO_RUNTIME_URL` 一致 |
+| `EXECGO_COMPOSE_DIR` | 空 | 含 `docker-compose.yml` 的目录，供 `ensure-running` 尝试 `docker compose up -d` |
+| `EXECGO_RUNTIME_IMAGE` | 空 | 非空时 `ensure-running` 可尝试 `docker run` 拉起 runtime |
+| `EXECGO_RUNTIME_SOURCE` | 空 | 仅用于在失败提示中输出 `cargo run` 类指引 |
 
-## Stable envelope (stdout)
+## 稳定外壳（stdout）
 
-Every subcommand writes **one JSON object** to stdout.
+每个子命令在 stdout 输出**一个 JSON 对象**。
 
-### Success
+### 成功
 
 ```json
-{
-  "ok": true,
-  "data": { }
-}
+{ "ok": true, "data": { } }
 ```
 
-`data` is the payload for the command (object or list). For `capabilities` / `tools` / `act` / `translate` / `submit` / `health`, `data` mirrors the JSON body from the corresponding HTTP response.
+`data` 为该命令的负载；`capabilities` / `tools` / `act` / `translate` / `submit` / `health` 的 `data` 与对应 HTTP 响应体一致。
 
-### Failure
+### 失败
 
 ```json
 {
   "ok": false,
-  "error": {
-    "message": "…",
-    "status_code": 400,
-    "body": "…"
-  }
+  "error": { "message": "…", "status_code": 400, "body": "…" }
 }
 ```
 
-## Subcommands and HTTP mapping
+## 子命令与 HTTP 对应关系
 
-| Subcommand | Method | Path | Notes |
+| 子命令 | 方法 | 路径 | 说明 |
 | --- | --- | --- | --- |
-| `capabilities` | GET | `/adapters/capabilities` | `adapter.v1` contract |
-| `tools` | GET | `/adapters/tools` | Tool manifest for agent tools/skills |
-| `act` | POST | `/adapters/actions` | JSON from `-file` or stdin; returns `agent.v1` translation + `task_ids` |
-| `translate` | POST | `/adapters/translate` | Translate only, no execution |
-| `submit` | POST | `/tasks` | Mode B: direct `TaskGraph` |
-| `wait` | GET | `/tasks/\{id\}` (poll) | See below |
-| `cancel` | POST | `/tasks/\{id\}/cancel` | Requests cancellation; `--wait` polls until terminal |
-| `health` | GET | `/health` | Liveness |
-| `ensure-running` | (local) | n/a | Probes; optional `docker compose` for ExecGo, optional `docker run` for runtime |
+| `capabilities` | GET | `/adapters/capabilities` | `adapter.v1` 契约 |
+| `tools` | GET | `/adapters/tools` | 工具/技能 manifest |
+| `act` | POST | `/adapters/actions` | 模式 A 执行；JSON 来自 `-file` 或 stdin |
+| `translate` | POST | `/adapters/translate` | 仅翻译 |
+| `submit` | POST | `/tasks` | 模式 B：直传 TaskGraph |
+| `wait` | GET | `/tasks/\{id\}` 轮询 | 见下 |
+| `cancel` | POST | `/tasks/\{id\}/cancel` | 请求取消任务；可用 `--wait` 等终态 |
+| `health` | GET | `/health` | 探活 |
+| `ensure-running` | （本地） | 无 | 探活/可选 docker |
 
-## `wait` `data` shape
+## `wait` 的 `data` 形状
 
 ```json
 {
-  "tasks": [ { "id": "…", "status": "success", "…": "…" } ],
+  "tasks": [ { "id": "…", "status": "success" } ],
   "all_terminal": true,
   "deadline_rfc3339": "2026-04-27T12:00:00Z"
 }
 ```
 
-`all_terminal` is true when every task status is one of: `success`, `failed`, `cancelled`, `skipped`.
+`all_terminal`：全部任务为 `success` / `failed` / `cancelled` / `skipped` 之一时为 `true`。
 
-## `cancel` `data` shape
+## `cancel` 的 `data` 形状
 
-Without `--wait`, `cancel` returns the immediate `POST /tasks/\{id\}/cancel` responses. A running task enters `cancelling` first, then reaches terminal `cancelled` after the executor or runtime handle finishes shutting down.
+不加 `--wait` 时，`cancel` 返回 `POST /tasks/\{id\}/cancel` 的即时响应。运行中的任务会先进入 `cancelling`，等本地 executor 或 runtime handle 完成中止后，再进入终态 `cancelled`。
 
 ```json
 {
@@ -86,42 +79,24 @@ Without `--wait`, `cancel` returns the immediate `POST /tasks/\{id\}/cancel` res
 }
 ```
 
-With `--wait`, `data.wait` contains the same shape as the `wait` command and `data.all_terminal` mirrors `data.wait.all_terminal`.
+加 `--wait` 时，`data.wait` 与 `wait` 子命令结构一致，`data.all_terminal` 与 `data.wait.all_terminal` 对齐。
 
-Use `cancel` for execution control. `DELETE /tasks/\{id\}` is state cleanup and does not guarantee process/runtime termination. Runtime-backed tasks map ExecGo cancel to the executor handle cancel path, which calls `execgo-runtime` `POST /api/v1/tasks/\{ref\}/kill`.
+执行控制请使用 `cancel`。`DELETE /tasks/\{id\}` 只表示状态清理，不保证终止进程或 runtime 任务。runtime 类型任务会把 ExecGo cancel 映射到 executor 的 handle cancel 路径，并调用 `execgo-runtime` 的 `POST /api/v1/tasks/\{ref\}/kill`。
 
-**Exit codes:** `0` success; `1` I/O or HTTP error; `2` usage; `3` `wait` timeout without all terminal; `4` `ensure-running` ExecGo unreachable; `5` `ensure-running` with `--with-runtime` but runtime unreachable.
+**退出码**：`0` 成功；`1` 错误；`2` 用法；`3` `wait` 未在时限内终态；`4` `ensure-running` 无法连上 ExecGo；`5` 带 `--with-runtime` 时 runtime 仍不可用。
 
-## `ensure-running` `data` shape (summary)
+## `ensure-running` 的 `data`（摘要）
 
-```json
-{
-  "execgo": {
-    "url": "http://127.0.0.1:8080",
-    "reachable": true,
-    "started_by": "already-up",
-    "health_status_code": 200
-  },
-  "runtime": {
-    "url": "http://127.0.0.1:18080",
-    "reachable": true,
-    "started_by": "already-up",
-    "ready_status_code": 200
-  },
-  "manual_hints": []
-}
-```
+`runtime` 段对 `\{EXECGO_RUNTIME_URL\}/readyz` 做就绪检查（与内置 `runtime` 执行器 HealthCheck 对齐）。
 
-Runtime probe uses `GET \{EXECGO_RUNTIME_URL\}/readyz` (same readiness as the ExecGo `runtime` executor).
+## 服务端契约（未变）
 
-## Server-side contracts (unchanged)
+- Adapter：`adapter.v1`（见 `pkg/adapter/adapter.go`）
+- 请求体：`AgentActionRequest`；响应含 `translation_trace` 供审计
 
-- Adapter schema: `adapter.v1` (see `pkg/adapter/adapter.go`).
-- `POST /adapters/actions` request: `AgentActionRequest`; response: `AgentActionResponse` with `translation_trace` for audit.
+## 参见
 
-## Related
-
-- [Mature agent adapter](/docs/execgo/integration/agent-adapter)
-- [Mode A quick start (CLI)](/docs/execgo/integration/mode-a-cli)
-- [Mode B upgrade path](/docs/execgo/integration/mode-b-upgrade)
-- [Promotion security defaults](/docs/execgo/reference/promotion-security)
+- [成熟 Agent 接入](/docs/execgo/integration/agent-adapter)
+- [模式 A 快速开始（CLI）](/docs/execgo/integration/mode-a-cli)
+- [模式 B 升级路径](/docs/execgo/integration/mode-b-upgrade)
+- [推广期安全默认](/docs/execgo/reference/promotion-security)

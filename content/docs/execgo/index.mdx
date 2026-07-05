@@ -1,47 +1,47 @@
 ---
-title: ExecGo control plane
-description: The Go control plane for task graphs, mature-agent adapters, executor routing, and normalized action state.
+title: ExecGo 控制面
+description: 面向任务图、成熟 Agent 适配器、执行器路由与标准化动作状态的 Go 控制面。
 ---
 
-ExecGo is the control plane for agent actions. It does not replace an agent's planner or context system. Instead, it turns chosen actions into validated, scheduled, cancellable, observable tasks.
+ExecGo 是 Agent 动作的控制面。它不替代 Agent 的规划器或上下文系统，而是把已经选定的动作变成可校验、可调度、可取消、可观测的任务。
 
 <DocsGrid>
   <DocsCard
     href="/docs/execgo/quickstart"
-    eyebrow="Start"
-    title="Quick start"
-    description="Build the control plane, run it locally, submit tasks, and use the shared adapter CLI."
+    eyebrow="开始"
+    title="快速开始"
+    description="构建控制面、本地运行、提交任务，并使用共享适配器 CLI。"
   />
   <DocsCard
     href="/docs/execgo/documentation-map"
-    eyebrow="Map"
-    title="Documentation map"
-    description="Read the source repository's role-based navigation and topic index."
+    eyebrow="地图"
+    title="文档地图"
+    description="阅读源仓库中按角色组织的导航与主题索引。"
   />
   <DocsCard
     href="/docs/execgo/integration/agent-adapter"
-    eyebrow="Agents"
-    title="Mature agent adapter"
-    description="Use action translation, tool discovery, execgocli, and adapter endpoints for mature agents."
+    eyebrow="Agent"
+    title="成熟 Agent 适配器"
+    description="面向成熟 Agent 使用 action 翻译、工具发现、execgocli 与适配器端点。"
   />
   <DocsCard
     href="/docs/execgo/orchestrator"
-    eyebrow="Scheduler"
-    title="Orchestrator semantics"
-    description="Map DAGs to TaskGraph, poll safely, and understand failure and cancellation rules."
+    eyebrow="调度"
+    title="编排语义"
+    description="把 DAG 映射到 TaskGraph，安全轮询，并理解失败与取消规则。"
   />
   <DocsCard
     href="/docs/execgo/deploy/compose"
-    eyebrow="Deploy"
-    title="Deployment"
-    description="Run ExecGo with Docker Compose or Kubernetes and wire persistence and health checks."
+    eyebrow="部署"
+    title="部署"
+    description="用 Docker Compose 或 Kubernetes 运行 ExecGo，并接好持久化与健康检查。"
   />
   <DocsCard
     href="/docs/execgo/reference/api"
-    eyebrow="Reference"
-    title="API and Task DSL"
-    description="Use the HTTP API, task model, executor parameters, CLI contract, and promotion defaults."
+    eyebrow="参考"
+    title="API 与 Task DSL"
+    description="查阅 HTTP API、任务模型、执行器参数、CLI 契约和推广期默认策略。"
   />
 </DocsGrid>
 
-ExecGo owns task graph validation, dependency scheduling, retry, timeout, cancellation, adapter actions, executor routing, state, and metrics. It does not own natural language planning or the process-level runtime boundary; use [execgo-runtime](/docs/runtime) when execution needs a dedicated data plane.
+ExecGo 负责任务图校验、依赖调度、重试、超时、取消、适配器 action、执行器路由、状态与指标。它不负责自然语言规划，也不直接承担进程级运行时边界；当执行需要独立数据面时，请使用 [execgo-runtime](/docs/runtime)。

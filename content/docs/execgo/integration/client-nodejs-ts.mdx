@@ -1,22 +1,22 @@
 ---
-title: "Node.js + TypeScript (HTTP) Integration Example"
-description: "This example shows how to integrate with ExecGo from a Node.js + TypeScript app:"
+title: "Node.js + TypeScript（HTTP）接入示例"
+description: "本示例演示在 Node.js + TypeScript 项目中通过 HTTP 接入 ExecGo："
 ---
 
-This example shows how to integrate with ExecGo from a Node.js + TypeScript app:
+本示例演示在 Node.js + TypeScript 项目中通过 HTTP 接入 ExecGo：
 
-1. `POST /tasks` to submit a `TaskGraph`
-2. read `task_ids`
-3. poll `GET /tasks/\{id\}` until `success/failed/skipped`
+1. `POST /tasks` 提交 `TaskGraph`
+2. 读取 `task_ids`
+3. 轮询 `GET /tasks/\{id\}` 直到 `success/failed/skipped`
 
-It uses the built-in `noop` executor (no external I/O), so it's easy to run locally.
+示例使用内置 `noop` 执行器（无外部 IO），适合本地快速联调。
 
-## Prerequisites
+## 前置条件
 
-- Node.js 18+ (built-in `fetch`)
-- A TypeScript project (or run with `tsx`/`ts-node`)
+- Node.js 18+（内置 `fetch`）
+- TypeScript 项目（或可用 `tsx`/`ts-node` 直接运行）
 
-## Example code (`client-nodejs-ts.ts`)
+## 代码示例（`client-nodejs-ts.ts`）
 
 ```ts
 type Task = {
@@ -122,9 +122,9 @@ main().catch((err) => {
 });
 ```
 
-## Run
+## 运行方式
 
-For example with `tsx`:
+例如使用 `tsx`：
 
 ```bash
 npm i -D tsx typescript @types/node
@@ -133,9 +133,9 @@ npx tsx client-nodejs-ts.ts
 
 ---
 
-## Supplement：Axios-based client
+## 补充：Axios 版本客户端
 
-If your project prefers `axios`, you can implement submit & poll similarly (still using the built-in `noop` executor for easy verification).
+如果你的项目习惯使用 `axios`，可以按下面方式实现提交与轮询（仍然使用 `noop` 方便验证）。
 
 ```ts
 import axios from "axios";
@@ -216,7 +216,7 @@ main().catch((err) => {
 });
 ```
 
-Install dependency:
+安装依赖：
 
 ```bash
 npm i axios
@@ -224,9 +224,9 @@ npm i axios
 
 ---
 
-## Supplement：NestJS service wrapper (HTTP)
+## 补充：NestJS Service 封装（HTTP）
 
-If you are building a NestJS project, wrap ExecGo HTTP calls into a Service.
+如果你是 NestJS 项目，可以把 ExecGo HTTP 调用封装成一个 Service，供控制器或其它 Provider 使用。
 
 ```ts
 import { Injectable } from "@nestjs/common";
@@ -276,19 +276,19 @@ export class ExecGoClientService {
 }
 ```
 
-Install dependencies (choose versions to match your Nest setup):
+依赖安装（按你的 Nest 版本选择）：
 
 ```bash
 npm i @nestjs/axios axios rxjs
 ```
 
-And register `HttpModule` in your `AppModule` (most Nest projects already have it).
+并在 `AppModule` 里引入 `HttpModule`（你项目里一般已经有）。
 
 ---
 
-## Supplement：Full project skeleton (copy & paste)
+## 补充：完整项目骨架（可照抄）
 
-Here is a minimal project skeleton:
+下面给出一个非常小的项目结构，包含 `package.json`、`tsconfig.json` 和 `src/index.ts`：
 
 ```text
 execgo-ts-client/
@@ -298,7 +298,7 @@ execgo-ts-client/
     index.ts
 ```
 
-`package.json` example:
+`package.json` 示例：
 
 ```json
 {
@@ -317,7 +317,7 @@ execgo-ts-client/
 }
 ```
 
-`tsconfig.json` example:
+`tsconfig.json` 示例（最小可用）：
 
 ```json
 {
@@ -331,14 +331,14 @@ execgo-ts-client/
 }
 ```
 
-Put the `fetch` version submit & poll code into `src/index.ts`, then:
+`src/index.ts` 里直接放你上面 `fetch` 版本的提交与轮询代码即可，然后：
 
 ```bash
 npm i
 npm run start
 ```
 
-At runtime:
+运行时请确保：
 
-- set `EXECGO_URL=http://localhost:8080` (or change baseURL in code)
-- make sure ExecGo is running and `/health` returns `ok`
+- 设置 `EXECGO_URL=http://localhost:8080`（或修改代码的 baseURL）
+- ExecGo 服务已经在对端启动（`/health` 返回 ok）
