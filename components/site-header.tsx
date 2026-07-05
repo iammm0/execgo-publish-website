@@ -6,16 +6,13 @@ import { DismissibleMenu } from "@/components/dismissible-menu";
 import { ExecgoDocsMenu } from "@/components/execgo-docs-menu";
 import { GitHubMenu } from "@/components/github-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { hasRuntimeDocIndex } from "@/lib/runtime-data";
 
 const DESKTOP_NAV_ITEM_CLASS =
   "inline-flex h-8 cursor-pointer list-none items-center gap-1.5 text-sm leading-none text-[var(--muted)] hover:text-[var(--accent-strong)]";
 
 export function SiteHeader() {
   const navItems: Array<{ label: string; href: string; Icon: LucideIcon }> = [
-    ...(hasRuntimeDocIndex()
-      ? [{ label: "Runtime docs", href: "/docs/runtime", Icon: Server }]
-      : []),
+    { label: "Runtime docs", href: "/docs/runtime", Icon: Server },
   ];
 
   return (

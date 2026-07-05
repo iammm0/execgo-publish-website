@@ -1,27 +1,37 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
-import { BookOpen, GitBranch, Network } from "lucide-react";
+import { BookOpen, Boxes, GitBranch, Network } from "lucide-react";
 
 import { DismissibleMenu } from "@/components/dismissible-menu";
-import { branchHasDocIndex } from "@/lib/execgo-data";
 
-const EXECGO_DOC_BRANCHES = [
+const DOC_LINKS = [
   {
-    id: "release-agent-adapter-runtime" as const,
-    href: "/docs/execgo/release-agent-adapter-runtime",
-    title: "Adapter & runtime release line (release/agent-adapter-runtime)",
-    description: "Stable line with mature agent adapters, execgo-runtime executor, and execgocli.",
+    href: "/docs",
+    title: "Documentation overview",
+    description: "Start from the MDX documentation hub and choose the product boundary you need.",
+    Icon: BookOpen,
+  },
+  {
+    href: "/docs/ecosystem",
+    title: "Ecosystem model",
+    description: "Understand how agents, ExecGo, and execgo-runtime fit together.",
+    Icon: Boxes,
+  },
+  {
+    href: "/docs/execgo",
+    title: "ExecGo control plane",
+    description: "Task DSL, mature-agent adapters, executor routing, and runtime integration.",
     Icon: GitBranch,
   },
   {
-    id: "preview-distributed-runtime" as const,
-    href: "/docs/execgo/preview-distributed-runtime",
-    title: "Distributed runtime preview (preview/distributed-runtime)",
-    description: "Preview line with lease recovery, cancel, dead-letter ops, and capability-aware dispatch.",
+    href: "/docs/runtime",
+    title: "execgo-runtime data plane",
+    description: "Process execution, task artifacts, runtime API, and operations.",
     Icon: Network,
   },
-].filter((branch) => branchHasDocIndex(branch.id)) satisfies Array<{
-  id: "release-agent-adapter-runtime" | "preview-distributed-runtime";
+];
+
+const EXECGO_DOC_LINKS = DOC_LINKS satisfies Array<{
   href: string;
   title: string;
   description: string;
@@ -45,10 +55,6 @@ export function ExecgoDocsMenu({
   titleClassName,
   descriptionClassName,
 }: ExecgoDocsMenuProps) {
-  if (EXECGO_DOC_BRANCHES.length === 0) {
-    return null;
-  }
-
   return (
     <DismissibleMenu
       wrapperClassName={wrapperClassName}
@@ -57,19 +63,19 @@ export function ExecgoDocsMenu({
       triggerContent={
         <>
           <BookOpen className="h-4 w-4 shrink-0" aria-hidden="true" />
-          <span>ExecGo docs</span>
+          <span>Docs</span>
         </>
       }
     >
-      {EXECGO_DOC_BRANCHES.map((branch) => (
-        <Link key={branch.href} href={branch.href} className={itemClassName}>
+      {EXECGO_DOC_LINKS.map((item) => (
+        <Link key={item.href} href={item.href} className={itemClassName}>
           <span className="flex items-start gap-3">
             <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center border border-[var(--border)] bg-[var(--panel)] text-[var(--accent-strong)]">
-              <branch.Icon className="h-4 w-4" aria-hidden="true" />
+              <item.Icon className="h-4 w-4" aria-hidden="true" />
             </span>
             <span className="min-w-0">
-              <span className={titleClassName}>{branch.title}</span>
-              <span className={descriptionClassName}>{branch.description}</span>
+              <span className={titleClassName}>{item.title}</span>
+              <span className={descriptionClassName}>{item.description}</span>
             </span>
           </span>
         </Link>

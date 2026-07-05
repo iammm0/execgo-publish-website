@@ -8,7 +8,6 @@ import {
 
 import { ExecgoDocsMenu } from "@/components/execgo-docs-menu";
 import { GitHubMenu } from "@/components/github-menu";
-import { hasRuntimeDocIndex } from "@/lib/runtime-data";
 
 const AGENT_EXPERIENCES: {
   name: string;
@@ -53,8 +52,6 @@ const AGENT_EXPERIENCES: {
 ];
 
 export default function Home() {
-  const showRuntimeDocs = hasRuntimeDocIndex();
-
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-16">
       <section>
@@ -82,15 +79,13 @@ export default function Home() {
             titleClassName="block text-sm font-medium text-[var(--foreground)]"
             descriptionClassName="mt-1 block text-xs leading-relaxed text-[var(--muted)]"
           />
-          {showRuntimeDocs ? (
-            <Link
-              href="/docs/runtime"
-              className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)] sm:w-auto"
-            >
-              <Server className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
-              Runtime docs
-            </Link>
-          ) : null}
+          <Link
+            href="/docs/runtime"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)] sm:w-auto"
+          >
+            <Server className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
+            Runtime docs
+          </Link>
           <GitHubMenu
             triggerClassName="inline-flex min-h-11 w-full cursor-pointer list-none items-center justify-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)] sm:w-auto"
             panelClassName="mt-2 grid gap-2 border border-[var(--border)] bg-[var(--panel)] p-3 shadow-sm sm:absolute sm:left-0 sm:top-full sm:z-20 sm:w-72"
