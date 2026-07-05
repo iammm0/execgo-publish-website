@@ -1,0 +1,27 @@
+---
+title: Versioning and compatibility
+description: How to reason about independent ExecGo and execgo-runtime releases.
+---
+
+ExecGo and execgo-runtime should remain independently released. A single website can document them together without forcing a single version number.
+
+## Compatibility rule
+
+The compatibility boundary is the runtime HTTP API:
+
+- ExecGo's `runtime` executor submits to `/api/v1/tasks`.
+- It polls `/api/v1/tasks/{id}`.
+- It cancels with `/api/v1/tasks/{id}/kill`.
+- It may read runtime metadata from `/api/v1/runtime/info`, `/api/v1/runtime/capabilities`, `/api/v1/runtime/resources`, and `/api/v1/runtime/config`.
+
+If those contracts remain compatible, the two projects do not need synchronized tags.
+
+## Recommended matrix
+
+| ExecGo line | Runtime line | Recommendation |
+| --- | --- | --- |
+| `release/agent-adapter-runtime` | `execgo-runtime` `1.1.x` | Default integration path |
+| `preview/distributed-runtime` | runtime `main` or preview builds | Use for distributed runtime validation |
+| local development | local source checkout | Pin both commits in test notes |
+
+For production releases, document both versions in deployment manifests. Treat runtime upgrades like a data-plane rollout: probe readiness first, then route control-plane tasks to the upgraded runtime.

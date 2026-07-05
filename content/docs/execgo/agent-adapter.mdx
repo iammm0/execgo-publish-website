@@ -1,0 +1,25 @@
+---
+title: Mature agent adapter
+description: How ExecGo exposes a stable action interface for coding agents and other mature agent systems.
+---
+
+The adapter API lets an agent submit structured actions without knowing the exact internal task graph shape.
+
+Common action kinds include:
+
+- `os.shell`
+- `os.file`
+- `runtime.command`
+- `runtime.script`
+- `mcp.call`
+- `task_graph.submit`
+
+## Typical flow
+
+1. The client reads tool metadata from `/adapters/tools`.
+2. The agent emits a structured action with an `action_id`.
+3. ExecGo translates it into a task or task graph.
+4. The caller polls or waits for terminal state.
+5. Cancellation maps back to the underlying executor, including runtime-backed handles.
+
+This keeps product-specific agents focused on planning and UX while ExecGo owns execution semantics.

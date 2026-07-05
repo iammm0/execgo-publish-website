@@ -15,6 +15,7 @@
 
 # next.js
 /.next/
+/.source/
 /out/
 
 # production
@@ -30,6 +31,8 @@
 execgo/
 !app/docs/execgo/
 !app/docs/execgo/**
+!content/docs/execgo/
+!content/docs/execgo/**
 .idea/
 .codex/
 

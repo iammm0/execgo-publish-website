@@ -1,0 +1,19 @@
+---
+title: Ecosystem overview
+description: The stable product model for ExecGo, execgo-runtime, and agent integrations.
+---
+
+The ExecGo ecosystem has two deliberately separate runtime layers:
+
+- **ExecGo** is the control plane. It validates tasks, schedules dependency graphs, normalizes status, coordinates cancellation, and exposes agent-facing HTTP interfaces.
+- **execgo-runtime** is the data plane. It executes process-heavy work, persists task artifacts, reports events, and owns host-level resource and sandbox policy.
+
+Keeping these layers separate lets the Go control plane stay small and embeddable, while the Rust runtime can evolve as an operational execution service with its own release cadence.
+
+## Recommended reading path
+
+Start with [ExecGo and execgo-runtime](/docs/ecosystem/execgo-and-runtime), then choose a product section:
+
+- [ExecGo quick start](/docs/execgo/quickstart) for control-plane adoption.
+- [Runtime quick start](/docs/runtime/quickstart) for local process execution.
+- [Versioning and compatibility](/docs/ecosystem/versioning) before production upgrades.

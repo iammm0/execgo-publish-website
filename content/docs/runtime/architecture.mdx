@@ -1,0 +1,23 @@
+---
+title: Runtime architecture
+description: The runtime service boundary, scheduler, shim process, persistence model, and capability APIs.
+---
+
+execgo-runtime is a single service with a clear boundary:
+
+- The HTTP server receives requests, validates payloads, exposes status, and handles cancellation.
+- The scheduler reserves local resources and dispatches accepted work.
+- The internal shim runs the requested command or script.
+- SQLite and per-task directories persist metadata, events, and artifacts.
+
+```mermaid
+flowchart LR
+  A[HTTP API] --> B[Scheduler]
+  B --> C[Resource ledger]
+  B --> D[Internal shim]
+  D --> E[Child process]
+  D --> F[stdout / stderr / result]
+  A --> G[SQLite + task directories]
+```
+
+This makes runtime behavior inspectable even when the upstream agent or control plane restarts.

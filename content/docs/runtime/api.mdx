@@ -1,0 +1,21 @@
+---
+title: Runtime HTTP API
+description: The API surface used by operators, the runtime CLI, and ExecGo's runtime executor.
+---
+
+The runtime API is intentionally small:
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `POST` | `/api/v1/tasks` | Submit a runtime task |
+| `GET` | `/api/v1/tasks/:id` | Read task state and output snippets |
+| `POST` | `/api/v1/tasks/:id/kill` | Request cancellation |
+| `GET` | `/api/v1/tasks/:id/events` | Read task lifecycle events |
+| `GET` | `/api/v1/runtime/info` | Runtime identity and version |
+| `GET` | `/api/v1/runtime/capabilities` | Host capability probe |
+| `GET` | `/api/v1/runtime/resources` | Local resource ledger snapshot |
+| `GET` | `/readyz` | Readiness probe |
+| `GET` | `/healthz` | Liveness probe |
+| `GET` | `/metrics` | Prometheus metrics |
+
+ExecGo's runtime executor depends on the task, kill, events, readiness, and runtime metadata endpoints.

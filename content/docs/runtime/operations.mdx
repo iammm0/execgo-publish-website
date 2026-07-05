@@ -1,0 +1,33 @@
+---
+title: Runtime operations
+description: Deployment, health checks, storage, security boundary, and upgrade guidance for execgo-runtime.
+---
+
+Run execgo-runtime behind a trusted control plane or private network. The runtime API currently assumes that authentication and user-level policy are enforced before requests reach the service.
+
+## Health and readiness
+
+- `/healthz` reports process liveness.
+- `/readyz` validates that storage is usable.
+- `/metrics` exposes Prometheus text metrics.
+- `/api/v1/runtime/resources` reports capacity and active reservations.
+
+## Data directory
+
+Persist the runtime data directory:
+
+```text
+data/
+  runtime.db
+  runtime.db-wal
+  runtime.db-shm
+  tasks/
+    <task_id>/
+      request.json
+      result.json
+      stdout.log
+      stderr.log
+      workspace/
+```
+
+For production, place this directory on a persistent volume and define a retention policy for task artifacts.

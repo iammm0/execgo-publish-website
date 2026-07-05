@@ -1,0 +1,23 @@
+---
+title: ExecGo documentation
+description: The MDX documentation hub for the ExecGo control plane, execgo-runtime data plane, and the boundary between them.
+---
+
+ExecGo is an execution layer for mature agents. It keeps planning and context outside the core runtime, while making real actions validated, cancellable, observable, and recoverable.
+
+This documentation is organized around product boundaries instead of Git branches:
+
+- [Ecosystem](/docs/ecosystem): how ExecGo, execgo-runtime, agents, and deployment units fit together.
+- [ExecGo](/docs/execgo): the Go control plane, task DSL, adapter API, runtime executor, and integration contracts.
+- [execgo-runtime](/docs/runtime): the Rust data plane for process execution, task artifacts, resource policy, and operational deployment.
+
+```mermaid
+flowchart LR
+  A[Agent or IDE] --> B[ExecGo control plane]
+  B --> C{executor}
+  C --> D[os / mcp / cli-skills]
+  C --> E[execgo-runtime data plane]
+  E --> F[process execution and artifacts]
+```
+
+Use the repository snapshots and branch pages when you need implementation-level details. Use this MDX section when you need the stable mental model, integration path, and release boundary.

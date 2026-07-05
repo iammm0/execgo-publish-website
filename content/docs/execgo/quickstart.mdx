@@ -1,0 +1,37 @@
+---
+title: ExecGo quick start
+description: Build the control plane, submit a task graph, and inspect the result.
+---
+
+Build and run the control-plane binary:
+
+```bash
+go build -o execgo ./cmd/execgo
+./execgo -addr :8080 -max-concurrency 10
+```
+
+Submit a minimal task:
+
+```bash
+curl -X POST http://localhost:8080/tasks \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tasks": [
+      {
+        "id": "check-host",
+        "type": "os",
+        "tool_name": "shell",
+        "params": { "command": "hostname" },
+        "timeout": 5000
+      }
+    ]
+  }'
+```
+
+Poll the task:
+
+```bash
+curl http://localhost:8080/tasks/check-host
+```
+
+For agent integrations, prefer the adapter endpoints or `execgocli` so clients share the same tool discovery, action translation, wait, and cancellation behavior.

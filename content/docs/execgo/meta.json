@@ -1,0 +1,4 @@
+{
+  "title": "ExecGo",
+  "pages": ["index", "quickstart", "task-dsl", "agent-adapter", "runtime-integration"]
+}

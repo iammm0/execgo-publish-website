@@ -1,0 +1,30 @@
+---
+title: Runtime quick start
+description: Build execgo-runtime, start the service, and submit a sample task.
+---
+
+Build from source:
+
+```bash
+cargo build --release
+```
+
+Start the server:
+
+```bash
+cargo run -- serve --listen-addr 127.0.0.1:8080 --data-dir ./data
+```
+
+Submit a command:
+
+```bash
+cargo run -- submit --json '{
+  "execution": {
+    "kind": "command",
+    "program": "/bin/sh",
+    "args": ["-c", "echo hello from runtime"]
+  }
+}'
+```
+
+The runtime stores SQLite metadata under `runtime.db` and task artifacts under `tasks/<task_id>/`.

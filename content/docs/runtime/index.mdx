@@ -1,0 +1,16 @@
+---
+title: execgo-runtime data plane
+description: The Rust runtime for process execution, task artifacts, events, and resource-aware operations.
+---
+
+execgo-runtime is the data-plane runtime for ExecGo. It runs as a separate service, accepts explicit HTTP task requests, persists task metadata and artifacts, and reports status back to the control plane.
+
+## Core responsibilities
+
+- Accept runtime task submissions over HTTP.
+- Resolve requested and effective execution plans.
+- Spawn internal shim child processes.
+- Persist `request.json`, `result.json`, `stdout.log`, and `stderr.log`.
+- Expose health, readiness, metrics, events, and runtime capability APIs.
+
+Read [Quick start](/docs/runtime/quickstart) to run it locally.
