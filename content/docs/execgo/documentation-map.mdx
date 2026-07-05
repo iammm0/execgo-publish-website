@@ -1,0 +1,49 @@
+---
+title: "ExecGo documentation map"
+description: "This documentation is for teams that want to give general-purpose agents a reliable execution layer. ExecGo does not replace the planning loop or UX of mature a"
+---
+
+This documentation is for teams that want to give general-purpose agents a reliable execution layer. ExecGo does not replace the planning loop or UX of mature agents such as Claude Code, Codex, Hermes Agent, and OpenClaw. It turns their real-world actions into validated, cancellable, auditable, and recoverable tasks.
+
+This documentation is intended for three audiences:
+
+- Orchestrator / Agent developers: integrate through adapter actions or `TaskGraph`, and handle failure, retry, and cancellation semantics correctly
+- Platform / Ops engineers: deploy ExecGo into your own Docker Compose or Kubernetes cluster (including persistence and health checks)
+- Client developers: integrate with ExecGo via HTTP using Go/Java/Python (submit graphs, poll status, read results)
+
+If you already read the root `README.md` quick start, continue from the sections below.
+
+## Navigation
+
+### 0) Positioning
+- [ExecGo and execgo-runtime](/docs/ecosystem/execgo-and-runtime)
+
+### 1) How a general-purpose agent adopts ExecGo
+- [Integration：Mature agent adapter](/docs/execgo/integration/agent-adapter)
+- [Integration：Mode A — `execgocli` quick start](/docs/execgo/integration/mode-a-cli)
+- [Integration：Mode B — translate + TaskGraph upgrade](/docs/execgo/integration/mode-b-upgrade)
+- [Orchestrator：DAG -> TaskGraph mapping guide](/docs/execgo/orchestrator)
+
+### 2) Deploy to Docker Compose / Kubernetes
+- [Deploy：Docker Compose](/docs/execgo/deploy/compose)
+- [Deploy：Kubernetes](/docs/execgo/deploy/kubernetes)
+
+### 3) Multi-language HTTP integration examples (Go/Java/Python)
+- [Integration：Go example](/docs/execgo/integration/client-go)
+- [Integration：Java example](/docs/execgo/integration/client-java)
+- [Integration：Python example](/docs/execgo/integration/client-python)
+- [Integration：Node.js + TypeScript example](/docs/execgo/integration/client-nodejs-ts)
+
+### 4) Reference (API / Task DSL / executor parameters)
+- [Reference：execgocli JSON contract](/docs/execgo/reference/execgo-cli-contract)
+- [Reference：Promotion security defaults](/docs/execgo/reference/promotion-security)
+- [Reference：API endpoints & errors](/docs/execgo/reference/api)
+- [Reference：Task DSL (task model & validation)](/docs/execgo/reference/task-dsl)
+- [Reference：executor parameters & built-ins](/docs/execgo/reference/executors)
+
+### 5) FAQ
+- [FAQ：User questions index](/docs/execgo/faqs)
+
+## Versioning
+
+Docs reflect the current repository behavior. When upgrading ExecGo, double-check `TaskGraph` submission/validation and executor parameter compatibility.

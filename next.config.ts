@@ -41,6 +41,26 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
+        source: "/docs/execgo/agent-adapter",
+        destination: "/docs/execgo/integration/agent-adapter",
+        permanent: false,
+      },
+      {
+        source: "/docs/execgo/runtime-integration",
+        destination: "/docs/ecosystem/execgo-and-runtime",
+        permanent: false,
+      },
+      {
+        source: "/docs/execgo/task-dsl",
+        destination: "/docs/execgo/reference/task-dsl",
+        permanent: false,
+      },
+      {
+        source: "/docs/runtime/operations",
+        destination: "/docs/runtime/deployment",
+        permanent: false,
+      },
+      {
         source: "/docs/runtime/en/:path*",
         destination: "/docs/runtime/:path*",
         permanent: false,

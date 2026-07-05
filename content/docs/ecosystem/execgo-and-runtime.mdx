@@ -1,47 +1,64 @@
 ---
-title: ExecGo and execgo-runtime
-description: The control-plane and data-plane boundary in the ExecGo ecosystem.
+title: "ExecGo and execgo-runtime"
+description: "This page clarifies a common question: what is the relationship between ExecGo and execgo-runtime? Do you need to deploy both?"
 ---
 
-ExecGo and execgo-runtime are related but not the same deployment unit.
+This page clarifies a common question: **what is the relationship between ExecGo and `execgo-runtime`? Do you need to deploy both?**
 
-ExecGo accepts structured actions or task graphs from an agent. It is responsible for validation, orchestration, retry, timeout, cancellation, state, and observability. It can run local executor categories directly, or forward process-heavy tasks to a runtime executor.
+## TL;DR
 
-execgo-runtime accepts explicit runtime task requests. It is responsible for child-process execution, stdout and stderr capture, task directories, SQLite metadata, runtime events, readiness, and host capability reporting.
+- **ExecGo (this repository)** is the **reliable execution layer / control plane** for general-purpose agent actions: it accepts structured actions or `TaskGraph`, schedules DAG execution, manages state, cancellation, and observability.
+- **execgo-runtime (separate repository)** is the **data plane / execution runtime**: it runs tasks as child processes with resource/sandbox policy (stronger on Linux), and persists execution artifacts and results.
 
-## When ExecGo is enough
+They integrate via ExecGo’s **`runtime` executor** over HTTP: ExecGo submits `type=runtime` tasks to `execgo-runtime`, then polls/cancels them through the runtime API.
 
-Use only ExecGo when tasks are lightweight, the execution host is already trusted, and built-in executor categories are sufficient:
+The target adoption path is mature agents such as Claude Code, Codex, Hermes Agent, and OpenClaw: the agent keeps deciding what to do, while ExecGo and runtime make the real execution validated, cancellable, auditable, and recoverable.
 
-- OS tools for simple shell, file, DNS, TCP, sleep, noop, and HTTP probes.
-- MCP or CLI-skills tools that already expose the required execution boundary.
-- Agent adapter workflows where the action can complete inside the control-plane process.
+## Responsibilities
 
-## When to add execgo-runtime
+### ExecGo (control plane)
 
-Add execgo-runtime when process execution needs a stronger operational boundary:
+- **Contract**: `TaskGraph` / `Task` (Task DSL)
+- **What it does**:
+  - DAG scheduling (dependencies, concurrency, failure semantics)
+  - Unified `retry/timeout` semantics and task state lifecycle
+  - Unified state store (in-memory + jsonfile; optional `contrib/sqlite`, `contrib/rediscache`)
+  - Unified observability (slog/traceID/metrics)
+  - Multiple executors: `os` / `mcp` / `cli-skills` / `runtime` (extensible)
 
-- Long-running commands or scripts.
-- Task artifact directories for replay and audit.
-- Runtime-level readiness and capability probing.
-- Resource reservation, tenant metadata, owner-gated cancellation, or Linux sandbox/cgroup capabilities.
+### execgo-runtime (data plane)
 
-## Call path
+- **Contract**: runtime task submit/query/wait/kill (see runtime docs for exact API)
+- **What it does**:
+  - Executes real processes (internal shim / child processes)
+  - Applies resource & sandbox policy (Linux-only sandbox/cgroup capabilities)
+  - Persists artifacts (task directories, stdout/stderr, request/result)
 
-```mermaid
-sequenceDiagram
-  participant Agent
-  participant ExecGo
-  participant Runtime as execgo-runtime
-  participant Process
+## When you need execgo-runtime
 
-  Agent->>ExecGo: POST /adapters/actions or POST /tasks
-  ExecGo->>ExecGo: validate, schedule, normalize task state
-  ExecGo->>Runtime: POST /api/v1/tasks
-  Runtime->>Process: fork internal shim
-  Process-->>Runtime: stdout, stderr, result
-  ExecGo->>Runtime: GET /api/v1/tasks/{id}
-  ExecGo-->>Agent: normalized task runtime result
-```
+Typical reasons to deploy `execgo-runtime`:
 
-The contract between the two projects is HTTP. That is why both repositories can stay independently versioned while the website documents their supported integration surface together.
+- You want a clear separation between orchestration and execution.
+- You need stronger runtime-side resource isolation / sandbox policy.
+- You want durable, replayable execution artifacts (stdout/stderr, task directories).
+
+Typical reasons you **don’t** need it:
+
+- You only use ExecGo `os/*`, `mcp/*`, or `cli-skills/*` on the same host.
+- You’re in a local dev/demo setup and want minimal moving parts.
+
+## Call path (Agent → ExecGo → runtime)
+
+1. The agent submits a `TaskGraph` (or a structured action via `/adapters/actions`)
+2. ExecGo schedules tasks
+3. For `type=runtime` tasks:
+   - ExecGo’s `runtime` executor uses `EXECGO_RUNTIME_URL`
+   - Submits to `execgo-runtime` (commonly `/api/v1/tasks`)
+   - Poll/kill also go through the runtime HTTP API
+4. ExecGo normalizes runtime results into `Task.result` / `Task.runtime` and emits metrics
+
+## Important boundaries
+
+- **Optional dependency**: ExecGo runs standalone; `execgo-runtime` is only required when you submit `type=runtime` tasks (or use `runtime.command/runtime.script` via the adapter).
+- **API compatibility**: the runtime executor depends on the runtime HTTP contract; verify `/api/v1/tasks` compatibility when upgrading either side.
+- **Platform differences**: stronger sandbox/cgroup capabilities are Linux-only.

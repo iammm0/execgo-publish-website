@@ -1,4 +1,14 @@
 {
   "title": "ExecGo",
-  "pages": ["index", "quickstart", "task-dsl", "agent-adapter", "runtime-integration"]
+  "pages": [
+    "index",
+    "quickstart",
+    "documentation-map",
+    "integration",
+    "orchestrator",
+    "deploy",
+    "reference",
+    "examples",
+    "faqs"
+  ]
 }

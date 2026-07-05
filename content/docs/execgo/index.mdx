@@ -5,19 +5,43 @@ description: The Go control plane for task graphs, mature-agent adapters, execut
 
 ExecGo is the control plane for agent actions. It does not replace an agent's planner or context system. Instead, it turns chosen actions into validated, scheduled, cancellable, observable tasks.
 
-## What ExecGo owns
+<DocsGrid>
+  <DocsCard
+    href="/docs/execgo/quickstart"
+    eyebrow="Start"
+    title="Quick start"
+    description="Build the control plane, run it locally, submit tasks, and use the shared adapter CLI."
+  />
+  <DocsCard
+    href="/docs/execgo/documentation-map"
+    eyebrow="Map"
+    title="Documentation map"
+    description="Read the source repository's role-based navigation and topic index."
+  />
+  <DocsCard
+    href="/docs/execgo/integration/agent-adapter"
+    eyebrow="Agents"
+    title="Mature agent adapter"
+    description="Use action translation, tool discovery, execgocli, and adapter endpoints for mature agents."
+  />
+  <DocsCard
+    href="/docs/execgo/orchestrator"
+    eyebrow="Scheduler"
+    title="Orchestrator semantics"
+    description="Map DAGs to TaskGraph, poll safely, and understand failure and cancellation rules."
+  />
+  <DocsCard
+    href="/docs/execgo/deploy/compose"
+    eyebrow="Deploy"
+    title="Deployment"
+    description="Run ExecGo with Docker Compose or Kubernetes and wire persistence and health checks."
+  />
+  <DocsCard
+    href="/docs/execgo/reference/api"
+    eyebrow="Reference"
+    title="API and Task DSL"
+    description="Use the HTTP API, task model, executor parameters, CLI contract, and promotion defaults."
+  />
+</DocsGrid>
 
-- Task graph validation and dependency scheduling.
-- Retry, timeout, cancellation, and terminal-state semantics.
-- Built-in executor categories: `os`, `mcp`, `cli-skills`, and `runtime`.
-- Adapter APIs for mature agents such as Codex, Claude Code, Hermes Agent, and OpenClaw.
-- State and metrics that let higher layers poll, inspect, and audit actions.
-
-## What ExecGo does not own
-
-- Natural language planning.
-- Long-term memory or context-window management.
-- The process-level runtime implementation when using `type=runtime`.
-- Strong host sandboxing. Use execgo-runtime or your own runtime boundary for that.
-
-Continue with [Quick start](/docs/execgo/quickstart) if you want to run the control plane locally.
+ExecGo owns task graph validation, dependency scheduling, retry, timeout, cancellation, adapter actions, executor routing, state, and metrics. It does not own natural language planning or the process-level runtime boundary; use [execgo-runtime](/docs/runtime) when execution needs a dedicated data plane.

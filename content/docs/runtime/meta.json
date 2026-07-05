@@ -1,4 +1,13 @@
 {
   "title": "execgo-runtime",
-  "pages": ["index", "quickstart", "architecture", "api", "operations"]
+  "pages": [
+    "index",
+    "quickstart",
+    "documentation-map",
+    "architecture",
+    "api",
+    "cli",
+    "deployment",
+    "development"
+  ]
 }

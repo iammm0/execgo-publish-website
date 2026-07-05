@@ -1,0 +1,12 @@
+{
+  "title": "Integration",
+  "pages": [
+    "agent-adapter",
+    "mode-a-cli",
+    "mode-b-upgrade",
+    "client-go",
+    "client-java",
+    "client-python",
+    "client-nodejs-ts"
+  ]
+}

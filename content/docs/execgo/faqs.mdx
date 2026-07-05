@@ -1,0 +1,65 @@
+---
+title: "FAQ：User Questions Index (English)"
+description: "This page lists the most common questions and points you to the exact documentation page to read next."
+---
+
+This page lists the most common questions and points you to the exact documentation page to read next.
+
+## Common questions
+
+1. I am an orchestration/Agent developer. How do I map my workflow into ExecGo `TaskGraph`?
+   - See: [Mapping：DAG -> TaskGraph](/docs/execgo/orchestrator/mapping-dag-to-taskgraph)
+
+2. What does `depends_on` mean, and why doesn't downstream automatically get upstream outputs?
+   - See: [Mapping：DAG -> TaskGraph](/docs/execgo/orchestrator/mapping-dag-to-taskgraph)
+
+3. Why do downstream tasks become `skipped` after a failure?
+   - See: [Failure semantics：failed vs skipped](/docs/execgo/orchestrator/failure-semantics)
+
+4. How do I get the final result after submitting? Is it synchronous or asynchronous?
+   - See: [Polling & idempotency：stable submit & read results](/docs/execgo/orchestrator/polling-and-idempotency)
+   - Also: [`GET /tasks/\{id\}`](/docs/execgo/reference/api)
+
+5. Why do I get `400 Bad Request`? What does `TaskGraph.Validate()` mean?
+   - See: [Task DSL Reference (Index)](/docs/execgo/reference/task-dsl)
+
+6. How should I set `retry` and `timeout`?
+   - See: [Task DSL Reference (Index)](/docs/execgo/reference/task-dsl)
+   - Failure/retry semantics: [failed vs skipped](/docs/execgo/orchestrator/failure-semantics)
+
+7. What does `result` / `error` look like? How should I parse it?
+   - See: [API Reference (Index)](/docs/execgo/reference/api)
+   - Multi-language clients: [integration examples](/docs/execgo/integration/client-go)
+
+8. How do I deploy ExecGo with Docker Compose?
+   - See: [Docker Compose deploy example](/docs/execgo/deploy/compose)
+
+9. How do I deploy ExecGo to Kubernetes (Deployment/Service/PVC)?
+   - See: [Kubernetes deploy example](/docs/execgo/deploy/kubernetes)
+
+10. Is it safe to set `replicas > 1` on Kubernetes?
+   - See: [Replica safety notes](/docs/execgo/deploy/kubernetes)
+
+11. How do I call ExecGo from Go?
+   - See: [Go (HTTP) integration example](/docs/execgo/integration/client-go)
+
+12. How do I call ExecGo from Java?
+   - See: [Java (HTTP) integration example](/docs/execgo/integration/client-java)
+
+13. How do I call ExecGo from Python?
+   - See: [Python (HTTP) integration example](/docs/execgo/integration/client-python)
+14. How do I call ExecGo from Node.js + TypeScript?
+   - See: [Node.js + TypeScript (HTTP) integration example](/docs/execgo/integration/client-nodejs-ts)
+
+15. Is the `shell` executor safe? How do I avoid arbitrary command execution risks?
+   - See: [Executors & Parameters (Index)](/docs/execgo/reference/executors)
+   - More detail: [`Shell 执行器参数`](https://github.com/iammm0/execgo/blob/release/agent-adapter-runtime/docs/zh/reference/%E4%BB%BB%E5%8A%A1%20DSL%20%E8%A7%84%E8%8C%83/%E6%89%A7%E8%A1%8C%E5%8F%82%E6%95%B0%E8%A7%84%E8%8C%83/Shell%20%E6%89%A7%E8%A1%8C%E5%99%A8%E5%8F%82%E6%95%B0.md)
+
+16. Where is task state stored? How is persistence/recovery handled?
+   - See: [Data persistence strategy](https://github.com/iammm0/execgo/blob/release/agent-adapter-runtime/docs/zh/reference/%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96%E7%AD%96%E7%95%A5.md)
+
+17. How do I extend executors or implement a custom executor?
+   - See: [Executors & Parameters (Index)](/docs/execgo/reference/executors)
+
+18. I have idempotency / duplicate submission problems. What should I do?
+   - See: [Polling & idempotency](/docs/execgo/orchestrator/polling-and-idempotency)

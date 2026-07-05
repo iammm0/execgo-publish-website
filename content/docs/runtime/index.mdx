@@ -5,12 +5,43 @@ description: The Rust runtime for process execution, task artifacts, events, and
 
 execgo-runtime is the data-plane runtime for ExecGo. It runs as a separate service, accepts explicit HTTP task requests, persists task metadata and artifacts, and reports status back to the control plane.
 
-## Core responsibilities
+<DocsGrid>
+  <DocsCard
+    href="/docs/runtime/quickstart"
+    eyebrow="Start"
+    title="Quick start"
+    description="Build the Rust runtime, start the HTTP service, submit a task, and inspect artifacts."
+  />
+  <DocsCard
+    href="/docs/runtime/documentation-map"
+    eyebrow="Map"
+    title="Documentation map"
+    description="Read the source repository's role-based runtime documentation index."
+  />
+  <DocsCard
+    href="/docs/runtime/architecture"
+    eyebrow="Design"
+    title="Architecture"
+    description="Understand the HTTP service, dispatcher, internal shim, persistence, recovery, and resource ledger."
+  />
+  <DocsCard
+    href="/docs/runtime/api"
+    eyebrow="Contract"
+    title="HTTP API"
+    description="Submit tasks, query status, cancel work, inspect events, and read runtime capabilities."
+  />
+  <DocsCard
+    href="/docs/runtime/cli"
+    eyebrow="CLI"
+    title="Command line"
+    description="Use serve, submit, status, wait, kill, run, and the runtime configuration flags."
+  />
+  <DocsCard
+    href="/docs/runtime/deployment"
+    eyebrow="Ops"
+    title="Deployment"
+    description="Deploy with binaries, Docker, systemd, health checks, metrics, capacity planning, and tags."
+  />
+</DocsGrid>
 
-- Accept runtime task submissions over HTTP.
-- Resolve requested and effective execution plans.
-- Spawn internal shim child processes.
-- Persist `request.json`, `result.json`, `stdout.log`, and `stderr.log`.
-- Expose health, readiness, metrics, events, and runtime capability APIs.
-
-Read [Quick start](/docs/runtime/quickstart) to run it locally.
+The runtime owns explicit task submission, requested/effective execution plans, internal shim child processes, `request.json`, `result.json`, stdout and stderr logs, health, readiness, metrics, events, and capability APIs.

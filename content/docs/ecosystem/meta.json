@@ -1,4 +1,8 @@
 {
   "title": "Ecosystem",
-  "pages": ["index", "execgo-and-runtime", "versioning"]
+  "pages": [
+    "index",
+    "execgo-and-runtime",
+    "versioning"
+  ]
 }

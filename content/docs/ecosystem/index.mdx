@@ -10,10 +10,31 @@ The ExecGo ecosystem has two deliberately separate runtime layers:
 
 Keeping these layers separate lets the Go control plane stay small and embeddable, while the Rust runtime can evolve as an operational execution service with its own release cadence.
 
-## Recommended reading path
+<DocsGrid>
+  <DocsCard
+    href="/docs/ecosystem/execgo-and-runtime"
+    eyebrow="Boundary"
+    title="ExecGo and execgo-runtime"
+    description="Clarify the control-plane/data-plane split, optional runtime dependency, call path, and responsibilities."
+  />
+  <DocsCard
+    href="/docs/ecosystem/versioning"
+    eyebrow="Release"
+    title="Versioning and compatibility"
+    description="Keep the two repositories independently released while documenting the supported integration surface."
+  />
+  <DocsCard
+    href="/docs/execgo"
+    eyebrow="Control plane"
+    title="ExecGo docs"
+    description="Read scheduler, adapter, deployment, API, Task DSL, and client integration documentation."
+  />
+  <DocsCard
+    href="/docs/runtime"
+    eyebrow="Data plane"
+    title="Runtime docs"
+    description="Read architecture, API, CLI, deployment, development, and runtime operations documentation."
+  />
+</DocsGrid>
 
-Start with [ExecGo and execgo-runtime](/docs/ecosystem/execgo-and-runtime), then choose a product section:
-
-- [ExecGo quick start](/docs/execgo/quickstart) for control-plane adoption.
-- [Runtime quick start](/docs/runtime/quickstart) for local process execution.
-- [Versioning and compatibility](/docs/ecosystem/versioning) before production upgrades.
+Start with [ExecGo and execgo-runtime](/docs/ecosystem/execgo-and-runtime), then choose a product section for the implementation details you need.
