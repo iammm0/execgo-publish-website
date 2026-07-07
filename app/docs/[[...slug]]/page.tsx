@@ -59,7 +59,10 @@ export default async function DocsRoutePage({ params }: DocsRouteProps) {
         searchToggle={{ enabled: false }}
         themeSwitch={{ enabled: false }}
         containerProps={{
-          style: { "--fd-layout-width": "100%" } as CSSProperties,
+          style: {
+            "--fd-layout-width": "100%",
+            "--fd-docs-row-1": "3.5rem",
+          } as CSSProperties,
         }}
       >
         <DocsPage
