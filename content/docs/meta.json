@@ -2,8 +2,9 @@
   "title": "ExecGo 文档",
   "pages": [
     "index",
-    "ecosystem",
     "execgo",
-    "runtime"
+    "runtime",
+    "agent",
+    "ecosystem"
   ]
 }

@@ -191,10 +191,10 @@ const managedTargets = [
 const metaFiles = {
   "meta.json": {
     title: "ExecGo 文档",
-    pages: ["index", "ecosystem", "execgo", "runtime"],
+    pages: ["index", "execgo", "runtime", "agent", "ecosystem"],
   },
   "execgo/meta.json": {
-    title: "ExecGo",
+    title: "控制面 execgo",
     pages: [
       "index",
       "quickstart",
@@ -247,7 +247,7 @@ const metaFiles = {
     pages: ["execgocli-agent-wrappers"],
   },
   "runtime/meta.json": {
-    title: "execgo-runtime",
+    title: "数据面 execgo-runtime",
     pages: [
       "index",
       "quickstart",
@@ -259,8 +259,12 @@ const metaFiles = {
       "development",
     ],
   },
+  "agent/meta.json": {
+    title: "通用 Agent 结合",
+    pages: ["index"],
+  },
   "ecosystem/meta.json": {
-    title: "生态",
+    title: "execgo 生态",
     pages: ["index", "execgo-and-runtime", "versioning"],
   },
 };

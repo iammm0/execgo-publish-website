@@ -1,9 +1,11 @@
 ---
-title: ExecGo 控制面
-description: 面向任务图、成熟 Agent 适配器、执行器路由与标准化动作状态的 Go 控制面。
+title: 控制面 execgo
+description: 介绍 execgo 如何作为 Go 控制面接收动作、校验任务图、编排 executor 并统一任务状态。
 ---
 
-ExecGo 是 Agent 动作的控制面。它不替代 Agent 的规划器或上下文系统，而是把已经选定的动作变成可校验、可调度、可取消、可观测的任务。
+execgo 是 Agent 动作进入可靠执行体系的控制面。它不替代 Agent 的推理、规划或上下文管理，而是把已经选定的动作变成结构化任务，并负责校验、调度、状态、取消、重试、超时和观测。
+
+控制面的核心价值是把“Agent 想做什么”翻译成稳定的任务契约：上游可以是 Claude Code、Codex、Hermes Agent、OpenClaw 或自研 Agent；下游可以是本地 executor、MCP 工具、CLI skills，也可以是独立部署的 [execgo-runtime](/docs/runtime) 数据面。
 
 <DocsGrid>
   <DocsCard
@@ -16,13 +18,13 @@ ExecGo 是 Agent 动作的控制面。它不替代 Agent 的规划器或上下�
     href="/docs/execgo/documentation-map"
     eyebrow="地图"
     title="文档地图"
-    description="阅读源仓库中按角色组织的导航与主题索引。"
+    description="从源仓库同步过来的文档索引，适合查找控制面已有主题。"
   />
   <DocsCard
     href="/docs/execgo/integration/agent-adapter"
     eyebrow="Agent"
-    title="成熟 Agent 适配器"
-    description="面向成熟 Agent 使用 action 翻译、工具发现、execgocli 与适配器端点。"
+    title="通用 Agent 适配器"
+    description="把 Agent action 翻译成 execgo 任务，理解工具发现、execgocli 与适配器端点。"
   />
   <DocsCard
     href="/docs/execgo/orchestrator"
@@ -40,8 +42,18 @@ ExecGo 是 Agent 动作的控制面。它不替代 Agent 的规划器或上下�
     href="/docs/execgo/reference/api"
     eyebrow="参考"
     title="API 与 Task DSL"
-    description="查阅 HTTP API、任务模型、执行器参数、CLI 契约和推广期默认策略。"
+    description="查阅 HTTP API、任务模型、执行器参数、CLI 契约和安全策略。"
   />
 </DocsGrid>
 
-ExecGo 负责任务图校验、依赖调度、重试、超时、取消、适配器 action、执行器路由、状态与指标。它不负责自然语言规划，也不直接承担进程级运行时边界；当执行需要独立数据面时，请使用 [execgo-runtime](/docs/runtime)。
+```mermaid
+flowchart LR
+  A["Agent action"] --> B["Task DSL"]
+  B --> C["TaskGraph 校验"]
+  C --> D["executor 路由"]
+  D --> E["本地 executor"]
+  D --> F["execgo-runtime"]
+  C --> G["状态 / 取消 / 重试 / 超时"]
+```
+
+在控制面文档中，重点关注这些问题：任务 DSL 如何描述动作，TaskGraph 如何表达依赖，executor 如何被选择，失败和取消如何向上游反馈，以及 Agent adapter API 如何把通用 Agent 的输出接入 execgo。

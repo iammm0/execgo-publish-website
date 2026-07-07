@@ -1,9 +1,11 @@
 ---
-title: execgo-runtime 数据面
-description: 面向进程执行、任务产物、事件与资源感知运维的 Rust 运行时。
+title: 数据面 execgo-runtime
+description: 介绍 execgo-runtime 如何作为 Rust 数据面执行真实进程、留存 artifact 并提供运维能力。
 ---
 
-execgo-runtime 是 ExecGo 的数据面运行时。它作为独立服务运行，接收明确的 HTTP 任务请求，持久化任务元数据与 artifact，并把状态回传给控制面。
+execgo-runtime 是独立发布、独立部署的数据面运行时。它接收来自 execgo 控制面或其他调用方的明确 HTTP 任务请求，执行真实进程，持久化任务元数据、日志和 artifact，并把状态、事件与能力信息回传给上游。
+
+数据面的职责不是理解自然语言，也不是替 Agent 做决策；它的重点是把“已经确定要执行的动作”放到可运维、可审计、可恢复的运行边界中。
 
 <DocsGrid>
   <DocsCard
@@ -22,7 +24,7 @@ execgo-runtime 是 ExecGo 的数据面运行时。它作为独立服务运行，
     href="/docs/runtime/architecture"
     eyebrow="设计"
     title="架构"
-    description="理解 HTTP 服务、调度器、internal shim、持久化、恢复与资源账本。"
+    description="理解 HTTP 服务、调度器、internal shim、持久化、恢复、事件与资源账本。"
   />
   <DocsCard
     href="/docs/runtime/api"
@@ -40,8 +42,18 @@ execgo-runtime 是 ExecGo 的数据面运行时。它作为独立服务运行，
     href="/docs/runtime/deployment"
     eyebrow="运维"
     title="部署"
-    description="用二进制、Docker、systemd、健康检查、指标、容量规划与标签完成部署。"
+    description="用二进制、Docker、systemd、健康检查、指标、容量规划与标签完成 runtime 部署。"
   />
 </DocsGrid>
 
-runtime 负责显式任务提交、requested/effective execution plan、internal shim 子进程、`request.json`、`result.json`、stdout/stderr 日志、健康检查、就绪检查、指标、事件与能力 API。
+```mermaid
+flowchart LR
+  A["HTTP task request"] --> B["runtime scheduler"]
+  B --> C["internal shim"]
+  C --> D["child process"]
+  D --> E["stdout / stderr"]
+  C --> F["request.json / result.json / artifact"]
+  B --> G["events / metrics / health"]
+```
+
+在数据面文档中，重点关注这些问题：任务请求和结果契约是什么，runtime 如何启动与回收子进程，artifact 存放在哪里，资源账本和 capability 如何暴露，以及生产环境如何部署、监控和升级。

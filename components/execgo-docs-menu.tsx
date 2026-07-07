@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
-import { BookOpen, Boxes, GitBranch, Network } from "lucide-react";
+import { BookOpen, Bot, Boxes, GitBranch, Network } from "lucide-react";
 
 import { DismissibleMenu } from "@/components/dismissible-menu";
 
@@ -8,26 +8,32 @@ const DOC_LINKS = [
   {
     href: "/docs",
     title: "文档总览",
-    description: "从 MDX 文档中心进入，按产品边界选择需要的内容。",
+    description: "按四个板块进入控制面、数据面、Agent 结合与生态文档。",
     Icon: BookOpen,
   },
   {
-    href: "/docs/ecosystem",
-    title: "生态模型",
-    description: "理解 Agent、ExecGo 与 execgo-runtime 如何组合。",
-    Icon: Boxes,
-  },
-  {
     href: "/docs/execgo",
-    title: "ExecGo 控制面",
+    title: "控制面 execgo",
     description: "任务 DSL、成熟 Agent 适配器、执行器路由与 runtime 接入。",
     Icon: GitBranch,
   },
   {
     href: "/docs/runtime",
-    title: "execgo-runtime 数据面",
+    title: "数据面 execgo-runtime",
     description: "进程执行、任务产物、runtime API 与运维资料。",
     Icon: Network,
+  },
+  {
+    href: "/docs/agent",
+    title: "通用 Agent 结合",
+    description: "把 Claude Code、Codex 等 Agent 的 action 接入可靠执行层。",
+    Icon: Bot,
+  },
+  {
+    href: "/docs/ecosystem",
+    title: "execgo 生态",
+    description: "理解独立仓库、独立发布、兼容契约与扩展边界。",
+    Icon: Boxes,
   },
 ];
 

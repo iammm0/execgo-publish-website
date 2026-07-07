@@ -1,40 +1,46 @@
 ---
 title: ExecGo 文档
-description: ExecGo 控制面、execgo-runtime 数据面以及两者边界的 MDX 文档中心。
+description: 按控制面、数据面、通用 Agent 结合与 execgo 生态组织的中文 MDX 文档中心。
 ---
 
-ExecGo 是面向成熟 Agent 的可靠执行层。它不接管规划与上下文系统，而是把真实动作变成可校验、可取消、可观测、可恢复的任务。
-
-本文档不再围绕 Git 分支组织，而是按产品边界分为三段：生态、ExecGo、runtime。
+ExecGo 文档站按系统角色组织，而不是按仓库目录、历史分支或旧页面排版组织。你可以先理解四个板块，再进入具体 API、部署和集成细节。
 
 <DocsGrid>
   <DocsCard
-    href="/docs/ecosystem"
-    eyebrow="边界"
-    title="生态"
-    description="说明 Agent、ExecGo、execgo-runtime、发布节奏与兼容规则如何组合。"
-  />
-  <DocsCard
     href="/docs/execgo"
     eyebrow="控制面"
-    title="ExecGo"
-    description="任务 DSL、适配器 API、调度语义、部署方式和客户端接入示例。"
+    title="execgo"
+    description="介绍 Go 控制面如何接收结构化动作、校验任务图、调度 executor，并统一状态、取消、重试与观测。"
   />
   <DocsCard
     href="/docs/runtime"
     eyebrow="数据面"
     title="execgo-runtime"
-    description="进程执行、任务产物、资源策略、runtime API、CLI 与运维资料。"
+    description="介绍 Rust 数据面如何执行真实进程、沉淀 artifact、维护资源账本，并提供 sandbox、capability 与运维接口。"
+  />
+  <DocsCard
+    href="/docs/agent"
+    eyebrow="Agent"
+    title="与通用 Agent 的结合"
+    description="说明 Claude Code、Codex、Hermes Agent、OpenClaw 等通用 Agent 如何把推理结果交给 ExecGo 可靠执行。"
+  />
+  <DocsCard
+    href="/docs/ecosystem"
+    eyebrow="生态"
+    title="execgo 生态"
+    description="说明独立仓库、独立发布、兼容契约、部署拓扑、扩展边界和未来组件如何共同演进。"
   />
 </DocsGrid>
 
 ```mermaid
 flowchart LR
-  A["Agent 或 IDE"] --> B["ExecGo 控制面"]
-  B --> C{"executor"}
-  C --> D["os / mcp / cli-skills"]
+  A["通用 Agent / IDE"] --> B["execgo 控制面"]
+  B --> C{"executor 路由"}
+  C --> D["本地 OS / MCP / CLI skills"]
   C --> E["execgo-runtime 数据面"]
-  E --> F["进程执行与 artifact"]
+  E --> F["进程执行 / artifact / 事件"]
+  G["独立仓库与发布契约"] -.-> B
+  G -.-> E
 ```
 
-需要稳定心智模型、接入路径和发布边界时，从本节开始。具体内容会从独立版本管理的 `execgo` 与 `execgo-runtime` 仓库同步进来。
+推荐阅读顺序是：先看控制面 execgo，再看数据面 execgo-runtime；如果你正在把现有 Agent 接入可靠执行层，直接进入“与通用 Agent 的结合”；如果你关心版本、仓库边界和未来扩展，再进入 execgo 生态。

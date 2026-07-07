@@ -1,14 +1,16 @@
 ---
-title: 生态总览
-description: ExecGo、execgo-runtime 与 Agent 接入的稳定产品模型。
+title: execgo 生态
+description: 介绍 execgo、execgo-runtime、网站文档与未来扩展组件如何独立发布并共同演进。
 ---
 
-ExecGo 生态有两个刻意拆分的运行层：
+execgo 生态不是一个总仓库，也不应该把所有组件强行合并成同一个发布单元。它由多个独立项目组成，每个项目有自己的版本、发布节奏和工程边界，但通过清晰的 API、任务契约和文档站统一展示。
 
-- **ExecGo** 是控制面。它校验任务、调度依赖图、标准化状态、协调取消，并暴露面向 Agent 的 HTTP 接口。
-- **execgo-runtime** 是数据面。它执行进程密集型工作、持久化任务 artifact、上报事件，并负责宿主级资源与沙箱策略。
+- **execgo** 是控制面项目，负责任务 DSL、TaskGraph、executor 路由、Agent adapter、状态与调度语义。
+- **execgo-runtime** 是数据面项目，负责真实进程执行、artifact、事件、资源账本、capability 和运行时运维。
+- **execgo-publish-website** 是文档展示项目，负责把多个独立仓库的内容同步到统一 MDX 文档站。
+- **未来扩展组件** 可以围绕 skills、bridge、adapter、runtime executor 或部署模板继续生长，但不应破坏已有边界。
 
-保持两层分离，可以让 Go 控制面保持轻量、易嵌入，也让 Rust runtime 作为运维型执行服务独立演进、独立发布。
+生态层文档关注的是“项目如何组合”，不是替代控制面或数据面的具体 API 文档。
 
 <DocsGrid>
   <DocsCard
@@ -21,20 +23,38 @@ ExecGo 生态有两个刻意拆分的运行层：
     href="/docs/ecosystem/versioning"
     eyebrow="发布"
     title="版本与兼容性"
-    description="保持两个仓库独立发布，同时文档化受支持的集成面。"
+    description="说明如何保持独立仓库发布，同时文档化受支持的集成面与兼容规则。"
   />
   <DocsCard
     href="/docs/execgo"
     eyebrow="控制面"
-    title="ExecGo 文档"
-    description="阅读调度器、适配器、部署、API、Task DSL 与客户端接入文档。"
+    title="控制面 execgo"
+    description="进入控制面文档，阅读调度器、适配器、部署、API、Task DSL 与客户端接入。"
   />
   <DocsCard
     href="/docs/runtime"
     eyebrow="数据面"
-    title="Runtime 文档"
-    description="阅读架构、API、CLI、部署、开发与 runtime 运维文档。"
+    title="数据面 execgo-runtime"
+    description="进入数据面文档，阅读架构、API、CLI、部署、开发与 runtime 运维。"
+  />
+  <DocsCard
+    href="/docs/agent"
+    eyebrow="Agent"
+    title="通用 Agent 结合"
+    description="了解 Claude Code、Codex、Hermes Agent、OpenClaw 等如何接入可靠执行层。"
   />
 </DocsGrid>
 
-建议先阅读 [ExecGo 与 execgo-runtime](/docs/ecosystem/execgo-and-runtime)，再进入具体产品章节查看实现细节。
+```mermaid
+flowchart TB
+  A["execgo 控制面仓库"] --> E["统一文档站"]
+  B["execgo-runtime 数据面仓库"] --> E
+  C["adapter / bridge / skills 扩展"] -.-> E
+  D["部署模板与示例"] -.-> E
+  A <--> B
+  C --> A
+  D --> A
+  D --> B
+```
+
+生态规划的基本原则是：仓库独立管理，版本独立发布；文档统一展示，契约统一说明；控制面保持轻量，数据面保持可运维；新增组件优先围绕明确的 API 和执行边界扩展。
