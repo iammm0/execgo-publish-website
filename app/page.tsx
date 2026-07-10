@@ -1,12 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-  ExternalLink,
+  Bot,
   CheckCircle2,
+  ExternalLink,
+  Rocket,
   Server,
 } from "lucide-react";
 
-import { ExecgoDocsMenu } from "@/components/execgo-docs-menu";
 import { GitHubMenu } from "@/components/github-menu";
 
 const AGENT_EXPERIENCES: {
@@ -72,13 +73,20 @@ export default function Home() {
           面向 AI Agent 的任务执行内核与运行时生态。
         </p>
         <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap sm:justify-center sm:gap-4">
-          <ExecgoDocsMenu
-            triggerClassName="inline-flex min-h-11 w-full cursor-pointer list-none items-center justify-center gap-2 border border-[var(--button-primary)] bg-[var(--button-primary)] px-5 py-2 text-sm font-medium text-white hover:border-[var(--button-primary-hover)] hover:bg-[var(--button-primary-hover)] sm:w-auto"
-            panelClassName="mt-2 grid gap-2 border border-[var(--border)] bg-[var(--panel)] p-3 shadow-sm sm:absolute sm:left-0 sm:top-full sm:z-20 sm:w-80"
-            itemClassName="block border border-[var(--border)] bg-[var(--background-soft)] px-3 py-2 hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)]"
-            titleClassName="block text-sm font-medium text-[var(--foreground)]"
-            descriptionClassName="mt-1 block text-xs leading-relaxed text-[var(--muted)]"
-          />
+          <Link
+            href="/docs/execgo/quickstart"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-[var(--button-primary)] bg-[var(--button-primary)] px-5 py-2 text-sm font-medium text-white hover:border-[var(--button-primary-hover)] hover:bg-[var(--button-primary-hover)] sm:w-auto"
+          >
+            <Rocket className="h-4 w-4" aria-hidden="true" />
+            快速开始
+          </Link>
+          <Link
+            href="/docs/agent"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)] sm:w-auto"
+          >
+            <Bot className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
+            Agent 接入
+          </Link>
           <Link
             href="/docs/runtime"
             className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)] sm:w-auto"
@@ -106,9 +114,9 @@ export default function Home() {
             href="https://github.com/iammm0/execgo-skills/tree/main/skills/execgo-agent-bridge"
             target="_blank"
             rel="noreferrer"
-            className="mt-3 inline-flex min-w-0 items-center gap-2 break-all font-mono text-xs font-medium text-[var(--accent-strong)] underline decoration-[rgba(47,128,237,0.35)] underline-offset-2 hover:text-[var(--accent)] sm:text-sm"
+            className="mt-3 inline-flex min-w-0 items-center gap-2 text-sm font-medium text-[var(--accent-strong)] underline decoration-[rgba(47,128,237,0.35)] underline-offset-2 hover:text-[var(--accent)]"
           >
-            https://github.com/iammm0/execgo-skills/tree/main/skills/execgo-agent-bridge
+            查看 execgo-agent-bridge skill
             <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
           </a>
         </div>
