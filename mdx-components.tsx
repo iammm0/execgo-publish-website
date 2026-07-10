@@ -17,7 +17,7 @@ type DocsCardProps = {
 
 function DocsGrid({ children }: DocsGridProps) {
   return (
-    <div className="not-prose my-6 grid gap-3 md:grid-cols-2 2xl:grid-cols-4">
+    <div className="not-prose my-8 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
       {children}
     </div>
   );

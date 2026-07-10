@@ -60,15 +60,14 @@ export default async function DocsRoutePage({ params }: DocsRouteProps) {
         themeSwitch={{ enabled: false }}
         containerProps={{
           style: {
-            "--fd-layout-width": "100%",
+            "--fd-layout-width": "118rem",
             "--fd-docs-row-1": "3.5rem",
           } as CSSProperties,
         }}
       >
         <DocsPage
-          className="max-w-none"
+          className="execgo-docs-page"
           toc={page.data.toc}
-          full
           tableOfContent={{ enabled: true }}
           footer={{ enabled: false }}
         >

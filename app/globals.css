@@ -107,3 +107,58 @@ a {
   font-weight: 700;
   letter-spacing: -0.02em;
 }
+
+.execgo-docs-page {
+  max-width: 58rem;
+  width: min(100%, 58rem);
+  margin-inline: auto;
+}
+
+.execgo-docs-page [data-toc-popover] {
+  margin-inline: calc(var(--spacing) * -1);
+}
+
+.execgo-docs-page h1 {
+  font-size: clamp(2.125rem, 2vw + 1.5rem, 3.25rem);
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+
+.execgo-docs-page [class*="text-fd-muted"],
+.execgo-docs-page p {
+  line-height: 1.78;
+}
+
+.execgo-docs-page h2 {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.execgo-docs-page h2:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.execgo-docs-page h3 {
+  margin-top: 2rem;
+}
+
+.execgo-docs-page :where(pre, table) {
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.execgo-docs-page :where(pre) {
+  margin-block: 1.5rem;
+}
+
+.execgo-docs-page :where(table) {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.execgo-docs-page :where(code) {
+  overflow-wrap: anywhere;
+}
