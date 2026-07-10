@@ -53,9 +53,9 @@ const AGENT_EXPERIENCES: {
 
 export default function Home() {
   return (
-    <div className="w-full px-4 py-8 sm:px-6 sm:py-16">
-      <section>
-        <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+    <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-16 lg:px-8">
+      <section className="mx-auto max-w-4xl text-center">
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
           <Image
             src="/brand/execgo-logo-192.png"
             alt="execgo logo"
@@ -68,10 +68,10 @@ export default function Home() {
             execgo
           </h1>
         </div>
-        <p className="mt-4 max-w-2xl text-base text-[var(--muted)] sm:text-lg">
+        <p className="mx-auto mt-4 max-w-2xl text-base text-[var(--muted)] sm:text-lg">
           面向 AI Agent 的任务执行内核与运行时生态。
         </p>
-        <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap sm:gap-4">
+        <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap sm:justify-center sm:gap-4">
           <ExecgoDocsMenu
             triggerClassName="inline-flex min-h-11 w-full cursor-pointer list-none items-center justify-center gap-2 border border-[var(--button-primary)] bg-[var(--button-primary)] px-5 py-2 text-sm font-medium text-white hover:border-[var(--button-primary-hover)] hover:bg-[var(--button-primary-hover)] sm:w-auto"
             panelClassName="mt-2 grid gap-2 border border-[var(--border)] bg-[var(--panel)] p-3 shadow-sm sm:absolute sm:left-0 sm:top-full sm:z-20 sm:w-80"
@@ -94,11 +94,11 @@ export default function Home() {
             descriptionClassName="mt-0.5 block text-xs text-[var(--muted)]"
           />
         </div>
-        <div className="mt-8 border-l-2 border-[var(--accent-strong)] bg-[var(--background-soft)] px-4 py-4 sm:px-5">
+        <div className="mt-8 border-t-2 border-[var(--accent-strong)] bg-[var(--background-soft)] px-4 py-4 sm:px-5">
           <p className="text-sm font-semibold text-[var(--foreground)]">
             推荐接入：execgo-skills
           </p>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--muted)]">
+          <p className="mx-auto mt-2 max-w-3xl text-sm leading-relaxed text-[var(--muted)]">
             将 skill 连接到 Codex、Claude Code、Hermes Agent 或 OpenClaw，
             让 Agent 接入 ExecGo 与 execgo-runtime 时从 execgo-agent-bridge 开始。
           </p>
@@ -114,7 +114,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mt-12 border-t border-[var(--border)] pt-10 sm:mt-16 sm:pt-12">
+      <section className="mx-auto mt-12 max-w-4xl border-t border-[var(--border)] pt-10 text-center sm:mt-16 sm:pt-12">
         <h2 className="text-2xl font-bold text-[var(--foreground)]">
           execgo 是什么？
         </h2>
@@ -146,12 +146,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mt-12 border-t border-[var(--border)] pt-10 sm:mt-16 sm:pt-12">
-        <p className="section-eyebrow">可靠执行层</p>
-        <h2 className="mt-2 text-2xl font-bold text-[var(--foreground)]">
+      <section className="mx-auto mt-12 max-w-6xl border-t border-[var(--border)] pt-10 sm:mt-16 sm:pt-12">
+        <p className="section-eyebrow text-center">可靠执行层</p>
+        <h2 className="mt-2 text-center text-2xl font-bold text-[var(--foreground)]">
           为通用 Agent 接住真实世界的执行动作
         </h2>
-        <p className="mt-4 max-w-2xl text-[var(--muted)]">
+        <p className="mx-auto mt-4 max-w-3xl text-center text-[var(--muted)]">
           Claude Code、Codex、Hermes Agent、OpenClaw 这类通用 Agent 已经擅长上下文理解、
           规划和工具选择。ExecGo 补上它们最需要的工程执行层：把真实 shell、file、
           runtime 和工具调用变成可验证、可取消、可审计、可恢复的任务执行。
