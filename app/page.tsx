@@ -174,7 +174,8 @@ export default function Home() {
                     alt={item.iconAlt}
                     width={32}
                     height={32}
-                    className="h-8 w-8 object-contain"
+                    className="object-contain"
+                    style={{ width: 32, height: 32 }}
                   />
                 </div>
                 <div className="min-w-0">
