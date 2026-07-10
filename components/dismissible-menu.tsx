@@ -19,9 +19,13 @@ export function DismissibleMenu({
   children,
 }: DismissibleMenuProps) {
   const [open, setOpen] = useState(false);
-  const panelId = useId();
+  const baseId = useId();
+  const triggerId = `${baseId}-trigger`;
+  const panelId = `${baseId}-panel`;
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const focusPanelOnOpenRef = useRef(false);
 
   useEffect(() => {
     if (!open) {
@@ -56,21 +60,53 @@ export function DismissibleMenu({
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) {
+      focusPanelOnOpenRef.current = false;
+      return;
+    }
+
+    if (!focusPanelOnOpenRef.current) {
+      return;
+    }
+
+    focusPanelOnOpenRef.current = false;
+    const focusTarget = panelRef.current?.querySelector<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+
+    focusTarget?.focus();
+  }, [open]);
+
   return (
     <div ref={rootRef} className={wrapperClassName}>
       <button
         ref={triggerRef}
+        id={triggerId}
         type="button"
+        aria-haspopup="true"
         aria-expanded={open}
         aria-controls={panelId}
         className={triggerClassName}
         onClick={() => setOpen((current) => !current)}
+        onKeyDown={(event) => {
+          if (event.key !== "ArrowDown") {
+            return;
+          }
+
+          event.preventDefault();
+          focusPanelOnOpenRef.current = true;
+          setOpen(true);
+        }}
       >
         {triggerContent}
       </button>
       {open ? (
         <div
+          ref={panelRef}
           id={panelId}
+          role="region"
+          aria-labelledby={triggerId}
           className={panelClassName}
           onClickCapture={(event) => {
             if (event.target instanceof HTMLElement && event.target.closest("a")) {
