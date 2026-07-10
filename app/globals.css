@@ -118,6 +118,43 @@ a {
   margin-inline: calc(var(--spacing) * -1);
 }
 
+#nd-docs-layout :where([data-sidebar-placeholder], #nd-toc, [data-toc-popover]) {
+  position: static;
+  top: auto;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+}
+
+#nd-docs-layout :where([data-sidebar-placeholder], #nd-toc) {
+  align-self: start;
+}
+
+#nd-docs-layout #nd-sidebar {
+  position: relative;
+  inset: auto;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+}
+
+#nd-docs-layout #nd-sidebar > :where(.overflow-hidden) {
+  flex: none;
+  overflow: visible;
+}
+
+#nd-docs-layout #nd-sidebar [data-radix-scroll-area-viewport] {
+  height: auto !important;
+  overflow: visible !important;
+}
+
+#nd-docs-layout #nd-toc > :where(.overflow-auto) {
+  max-height: none;
+  overflow: visible;
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
 .execgo-docs-page h1 {
   font-size: clamp(2.125rem, 2vw + 1.5rem, 3.25rem);
   line-height: 1.08;
