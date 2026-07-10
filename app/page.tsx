@@ -10,6 +10,7 @@ import { GitHubMenu } from "@/components/github-menu";
 
 const AGENT_EXPERIENCES: {
   name: string;
+  href: string;
   iconSrc: string;
   iconAlt: string;
   signal: string;
@@ -18,6 +19,7 @@ const AGENT_EXPERIENCES: {
 }[] = [
   {
     name: "Codex",
+    href: "/docs/agent/codex",
     iconSrc: "/codex-color.svg",
     iconAlt: "Codex 图标",
     signal: "把一次性动作变成可审计任务",
@@ -26,6 +28,7 @@ const AGENT_EXPERIENCES: {
   },
   {
     name: "Claude Code",
+    href: "/docs/agent/claude-code",
     iconSrc: "/claude-color.svg",
     iconAlt: "Claude Code 图标",
     signal: "给团队代码库加一层安全动作面",
@@ -34,6 +37,7 @@ const AGENT_EXPERIENCES: {
   },
   {
     name: "Hermes Agent",
+    href: "/docs/agent/hermes-agent",
     iconSrc: "/agent-icons/hermes-agent.png",
     iconAlt: "Hermes Agent 图标",
     signal: "面向消息驱动 Agent 的动作内核",
@@ -42,6 +46,7 @@ const AGENT_EXPERIENCES: {
   },
   {
     name: "OpenClaw",
+    href: "/docs/agent/openclaw",
     iconSrc: "/agent-icons/openclaw.svg",
     iconAlt: "OpenClaw 图标",
     signal: "开放工具生态里的能力发现入口",
@@ -141,41 +146,47 @@ export default function Home() {
         </p>
         <ul className="mt-8 grid gap-4 sm:grid-cols-2">
           {AGENT_EXPERIENCES.map((item) => (
-            <li key={item.name} className="min-w-0 border border-[var(--border)] bg-[var(--panel)] p-4 sm:p-5">
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-[var(--border)] bg-white p-2">
-                  <Image
-                    src={item.iconSrc}
-                    alt={item.iconAlt}
-                    width={32}
-                    height={32}
-                    className="object-contain"
-                    style={{ width: 32, height: 32 }}
-                  />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-base font-semibold text-[var(--foreground)]">
-                    {item.name}
-                  </h3>
-                  <p className="mt-1 break-words text-sm font-medium text-[var(--accent-strong)]">
-                    {item.signal}
-                  </p>
-                </div>
-              </div>
-              <p className="mt-4 break-words text-sm leading-relaxed text-[var(--muted)]">
-                {item.body}
-              </p>
-              <ul className="mt-4 space-y-2">
-                {item.bullets.map((bullet) => (
-                  <li key={bullet} className="flex min-w-0 gap-2 text-sm text-[var(--muted)]">
-                    <CheckCircle2
-                      className="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent-strong)]"
-                      aria-hidden="true"
+            <li key={item.name} className="min-w-0">
+              <Link
+                href={item.href}
+                aria-label={`${item.name} 接入 ExecGo 文档`}
+                className="group block h-full min-w-0 border border-[var(--border)] bg-[var(--panel)] p-4 transition-colors hover:border-[var(--accent-strong)] hover:bg-[var(--accent-soft)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-strong)] sm:p-5"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-[var(--border)] bg-white p-2">
+                    <Image
+                      src={item.iconSrc}
+                      alt={item.iconAlt}
+                      width={32}
+                      height={32}
+                      className="object-contain"
+                      style={{ width: 32, height: 32 }}
                     />
-                    <span className="min-w-0 break-words">{bullet}</span>
-                  </li>
-                ))}
-              </ul>
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-base font-semibold text-[var(--foreground)] group-hover:text-[var(--accent-strong)]">
+                      {item.name}
+                    </h3>
+                    <p className="mt-1 break-words text-sm font-medium text-[var(--accent-strong)]">
+                      {item.signal}
+                    </p>
+                  </div>
+                </div>
+                <p className="mt-4 break-words text-sm leading-relaxed text-[var(--muted)]">
+                  {item.body}
+                </p>
+                <ul className="mt-4 space-y-2">
+                  {item.bullets.map((bullet) => (
+                    <li key={bullet} className="flex min-w-0 gap-2 text-sm text-[var(--muted)]">
+                      <CheckCircle2
+                        className="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent-strong)]"
+                        aria-hidden="true"
+                      />
+                      <span className="min-w-0 break-words">{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Link>
             </li>
           ))}
         </ul>
