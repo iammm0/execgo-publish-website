@@ -212,3 +212,49 @@ a {
 .execgo-docs-page :where(code) {
   overflow-wrap: anywhere;
 }
+
+.mermaid-monochrome svg {
+  background: transparent !important;
+}
+
+.mermaid-monochrome svg :where(.node rect, .node circle, .node ellipse, .node polygon, .node path) {
+  fill: #ffffff !important;
+  stroke: #000000 !important;
+  stroke-width: 1.25px !important;
+}
+
+.mermaid-monochrome svg :where(.cluster rect, .cluster polygon, .cluster path) {
+  fill: transparent !important;
+  stroke: #000000 !important;
+}
+
+.mermaid-monochrome svg :where(.edgePaths path, .flowchart-link, .messageLine0, .messageLine1, .loopLine, .actor-line, .relation) {
+  fill: none !important;
+  stroke: #000000 !important;
+  stroke-width: 1.25px !important;
+}
+
+.mermaid-monochrome svg :where(.actor, .actor-top, .actor-bottom) {
+  fill: #ffffff !important;
+  stroke: #000000 !important;
+}
+
+.mermaid-monochrome svg :where(marker path, marker polygon, .arrowheadPath) {
+  fill: #000000 !important;
+  stroke: #000000 !important;
+}
+
+.mermaid-monochrome svg :where(.edgeLabel, .labelBkg, .edgeLabel rect) {
+  background: transparent !important;
+  fill: transparent !important;
+}
+
+.mermaid-monochrome svg :where(.edgeLabel p, .label p, .nodeLabel p) {
+  background: transparent !important;
+}
+
+.mermaid-monochrome svg :where(text, tspan, .label, .nodeLabel, .edgeLabel, .cluster-label, .messageText, .loopText) {
+  color: #000000 !important;
+  fill: #000000 !important;
+  stroke: none !important;
+}

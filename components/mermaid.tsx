@@ -3,8 +3,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { AlertCircle, Loader2 } from "lucide-react";
 
-import { useTheme } from "@/lib/theme-context";
-
 export type MermaidProps = {
   chart: string;
   title?: string;
@@ -24,7 +22,6 @@ type RenderState =
 export function Mermaid({ chart, title, caption, className }: MermaidProps) {
   const id = useId();
   const containerRef = useRef<HTMLDivElement>(null);
-  const { resolvedTheme } = useTheme();
   const [state, setState] = useState<RenderState>({ status: "loading" });
   const normalizedChart = chart.trim().replaceAll("\\n", "\n");
 
@@ -39,7 +36,30 @@ export function Mermaid({ chart, title, caption, className }: MermaidProps) {
           startOnLoad: false,
           securityLevel: "loose",
           fontFamily: "inherit",
-          theme: resolvedTheme === "dark" ? "dark" : "default",
+          theme: "base",
+          themeVariables: {
+            background: "transparent",
+            primaryColor: "#ffffff",
+            primaryTextColor: "#000000",
+            primaryBorderColor: "#000000",
+            secondaryColor: "#ffffff",
+            secondaryTextColor: "#000000",
+            secondaryBorderColor: "#000000",
+            tertiaryColor: "#ffffff",
+            tertiaryTextColor: "#000000",
+            tertiaryBorderColor: "#000000",
+            mainBkg: "#ffffff",
+            secondBkg: "#ffffff",
+            tertiaryBkg: "#ffffff",
+            nodeBorder: "#000000",
+            clusterBkg: "transparent",
+            clusterBorder: "#000000",
+            lineColor: "#000000",
+            defaultLinkColor: "#000000",
+            edgeLabelBackground: "#ffffff",
+            textColor: "#000000",
+            titleColor: "#000000",
+          },
         });
 
         const result = await mermaid.render(
@@ -73,7 +93,7 @@ export function Mermaid({ chart, title, caption, className }: MermaidProps) {
     return () => {
       cancelled = true;
     };
-  }, [id, normalizedChart, resolvedTheme]);
+  }, [id, normalizedChart]);
 
   useEffect(() => {
     if (state.status !== "success" || !containerRef.current) {
@@ -85,7 +105,7 @@ export function Mermaid({ chart, title, caption, className }: MermaidProps) {
   return (
     <figure
       className={[
-        "not-prose my-6 border border-[var(--border)] bg-[var(--panel)] p-4",
+        "not-prose my-6 border border-[var(--border)] bg-transparent p-4",
         className,
       ]
         .filter(Boolean)
@@ -119,7 +139,7 @@ export function Mermaid({ chart, title, caption, className }: MermaidProps) {
       {state.status === "success" ? (
         <div
           ref={containerRef}
-          className="flex min-h-28 items-center justify-center overflow-x-auto [&_svg]:mx-auto [&_svg]:h-auto [&_svg]:max-w-full"
+          className="mermaid-monochrome flex min-h-28 items-center justify-center overflow-x-auto [&_svg]:mx-auto [&_svg]:h-auto [&_svg]:max-w-full"
           dangerouslySetInnerHTML={{ __html: state.svg }}
         />
       ) : null}
