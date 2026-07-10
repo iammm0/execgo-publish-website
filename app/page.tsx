@@ -3,9 +3,7 @@ import Image from "next/image";
 import {
   Bot,
   CheckCircle2,
-  ExternalLink,
   Rocket,
-  Server,
 } from "lucide-react";
 
 import { GitHubMenu } from "@/components/github-menu";
@@ -80,20 +78,15 @@ export default function Home() {
             <Rocket className="h-4 w-4" aria-hidden="true" />
             快速开始
           </Link>
-          <Link
-            href="/docs/agent"
+          <a
+            href="https://github.com/iammm0/execgo-skills/tree/main/skills/execgo-agent-bridge"
+            target="_blank"
+            rel="noreferrer"
             className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)] sm:w-auto"
           >
             <Bot className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
             Agent 接入
-          </Link>
-          <Link
-            href="/docs/runtime"
-            className="inline-flex min-h-11 w-full items-center justify-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)] sm:w-auto"
-          >
-            <Server className="h-4 w-4 text-[var(--accent-strong)]" aria-hidden="true" />
-            Runtime 文档
-          </Link>
+          </a>
           <GitHubMenu
             triggerClassName="inline-flex min-h-11 w-full cursor-pointer list-none items-center justify-center gap-2 border border-[var(--border)] bg-[var(--panel)] px-5 py-2 text-sm font-medium text-[var(--foreground)] hover:border-[var(--muted)] sm:w-auto"
             panelClassName="mt-2 grid gap-2 border border-[var(--border)] bg-[var(--panel)] p-3 shadow-sm sm:absolute sm:left-0 sm:top-full sm:z-20 sm:w-72"
@@ -101,24 +94,6 @@ export default function Home() {
             titleClassName="block font-medium text-[var(--foreground)]"
             descriptionClassName="mt-0.5 block text-xs text-[var(--muted)]"
           />
-        </div>
-        <div className="mt-8 border-t-2 border-[var(--accent-strong)] bg-[var(--background-soft)] px-4 py-4 sm:px-5">
-          <p className="text-sm font-semibold text-[var(--foreground)]">
-            推荐接入：execgo-skills
-          </p>
-          <p className="mx-auto mt-2 max-w-3xl text-sm leading-relaxed text-[var(--muted)]">
-            将 skill 连接到 Codex、Claude Code、Hermes Agent 或 OpenClaw，
-            让 Agent 接入 ExecGo 与 execgo-runtime 时从 execgo-agent-bridge 开始。
-          </p>
-          <a
-            href="https://github.com/iammm0/execgo-skills/tree/main/skills/execgo-agent-bridge"
-            target="_blank"
-            rel="noreferrer"
-            className="mt-3 inline-flex min-w-0 items-center gap-2 text-sm font-medium text-[var(--accent-strong)] underline decoration-[rgba(47,128,237,0.35)] underline-offset-2 hover:text-[var(--accent)]"
-          >
-            查看 execgo-agent-bridge skill
-            <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          </a>
         </div>
       </section>
 
