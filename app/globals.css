@@ -126,6 +126,19 @@ a {
   max-height: none;
 }
 
+#nd-docs-layout [data-toc-popover] {
+  position: static !important;
+  top: auto !important;
+  z-index: auto;
+  height: auto !important;
+  min-height: 0;
+  max-height: none;
+}
+
+#nd-docs-layout [data-toc-popover] > header {
+  position: static;
+}
+
 #nd-docs-layout :where([data-sidebar-placeholder], #nd-toc) {
   align-self: start;
 }
