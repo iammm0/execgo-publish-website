@@ -329,8 +329,9 @@ function toMdx(source, copy, sourcePath) {
   const withoutFrontmatter = stripFrontmatter(source).trim();
   const { title, body } = extractTitle(withoutFrontmatter, copy.title);
   const description = copy.description ?? inferDescription(body);
+  const sanitized = stripEmptyMarkdownLinks(removeShieldsBadges(body));
   const rewritten = rewriteMarkdownLinks(
-    normalizeAutolinks(escapeMdxExpressions(escapeTextPlaceholders(body))),
+    normalizeAutolinks(escapeMdxExpressions(escapeTextPlaceholders(sanitized))),
     copy.repo,
     sourcePath,
   ).trim();
@@ -410,6 +411,55 @@ function inferDescription(body) {
   }
 
   return "从源仓库同步的文档。";
+}
+
+function removeShieldsBadges(source) {
+  const lines = source.split(/\r?\n/);
+  let inFence = false;
+
+  return lines
+    .filter((line) => {
+      if (/^```/.test(line.trim())) {
+        inFence = !inFence;
+        return true;
+      }
+
+      if (inFence) {
+        return true;
+      }
+
+      return !isShieldsBadgeLine(line.trim());
+    })
+    .join("\n");
+}
+
+function isShieldsBadgeLine(line) {
+  return (
+    /^!\[[^\]]*]\(https?:\/\/img\.shields\.io\/[^)]*\)\s*$/.test(line) ||
+    /^\[!\[[^\]]*]\(https?:\/\/img\.shields\.io\/[^)]*\)]\([^)]*\)\s*$/.test(
+      line,
+    )
+  );
+}
+
+function stripEmptyMarkdownLinks(source) {
+  const lines = source.split(/\r?\n/);
+  let inFence = false;
+
+  return lines
+    .map((line) => {
+      if (/^```/.test(line.trim())) {
+        inFence = !inFence;
+        return line;
+      }
+
+      if (inFence) {
+        return line;
+      }
+
+      return line.replace(/\[([^\]]+)]\(\s*\)/g, "$1");
+    })
+    .join("\n");
 }
 
 function stripMarkdown(value) {
@@ -512,10 +562,6 @@ function rewriteHref(href, repoName, sourcePath) {
 
   const { pathname, suffix } = splitHref(href);
 
-  if (!pathname.toLowerCase().endsWith(".md")) {
-    return href;
-  }
-
   let decodedPath = pathname;
 
   try {
@@ -525,6 +571,22 @@ function rewriteHref(href, repoName, sourcePath) {
   }
 
   const sourceTarget = path.resolve(path.dirname(sourcePath), decodedPath);
+
+  if (!pathname.toLowerCase().endsWith(".md")) {
+    const repo = repos[repoName];
+    const relative = slash(path.relative(repo.root, sourceTarget));
+
+    if (!relative.startsWith("../") && !path.isAbsolute(relative)) {
+      const fileExists = existsSync(sourceTarget);
+
+      if (fileExists) {
+        return `${repo.github}/${encodePath(relative)}${suffix}`;
+      }
+    }
+
+    return href;
+  }
+
   const mappedUrl = sourceToUrl.get(pathKey(sourceTarget));
 
   if (mappedUrl) {
