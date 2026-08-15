@@ -7,7 +7,9 @@ import { ThemeProvider } from "@/lib/theme-context";
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider>
-      <RootProvider search={{ enabled: false }}>{children}</RootProvider>
+      <RootProvider search={{ enabled: true }}>
+        {children}
+      </RootProvider>
     </ThemeProvider>
   );
 }
