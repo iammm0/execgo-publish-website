@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import type { MDXComponents } from "mdx/types";
 
 import { Mermaid } from "@/components/mermaid";
-import { RichCodeBlock } from "@/components/rich-code-block";
 
 type DocsGridProps = {
   children: ReactNode;
@@ -54,7 +53,6 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     DocsGrid,
     DocsCard,
     Mermaid,
-    pre: RichCodeBlock,
     ...components,
   };
 }
