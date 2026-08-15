@@ -95,7 +95,7 @@ export default async function DocsRoutePage({ params }: DocsRouteProps) {
         containerProps={{
           className: "execgo-docs-layout",
           style: {
-            "--fd-layout-width": "100%",
+            "--fd-layout-width": "90rem",
             "--fd-docs-row-1": "3.75rem",
           } as CSSProperties,
         }}
