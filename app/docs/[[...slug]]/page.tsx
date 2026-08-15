@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { CSSProperties } from "react";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Code2 } from "lucide-react";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
@@ -61,9 +62,14 @@ export default async function DocsRoutePage({ params }: DocsRouteProps) {
           url: "/docs",
           title: (
             <span className="execgo-docs-brand">
-              <span className="execgo-docs-brand-mark" aria-hidden="true">
-                E
-              </span>
+              <Image
+                src="/brand/execgo-logo-48.png"
+                alt=""
+                width={48}
+                height={48}
+                className="execgo-docs-brand-mark"
+                aria-hidden="true"
+              />
               <span>ExecGo</span>
               <span className="execgo-docs-badge">Docs</span>
             </span>
