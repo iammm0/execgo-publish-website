@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import { Providers } from "@/components/providers";
 import { SiteFooter } from "@/components/site-footer";
@@ -53,6 +55,8 @@ export default function RootLayout({
             <SiteFooter />
           </div>
         </Providers>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
