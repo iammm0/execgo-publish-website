@@ -348,3 +348,16 @@ body:has(.execgo-docs-layout) {
   fill: #000000 !important;
   stroke: none !important;
 }
+
+.dark .mermaid-monochrome svg :where(.cluster rect, .cluster polygon, .cluster path) {
+  stroke: #ffffff !important;
+}
+
+.dark .mermaid-monochrome svg :where(.edgePaths path, .edgePath path, .flowchart-link, .messageLine0, .messageLine1, .loopLine, .actor-line, .relation, line) {
+  stroke: #ffffff !important;
+}
+
+.dark .mermaid-monochrome svg :where(marker path, marker polygon, .arrowheadPath) {
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
